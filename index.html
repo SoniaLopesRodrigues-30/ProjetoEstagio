@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Login</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+}
+
+.login-box {
+    width: 300px;
+    margin: 120px auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 6px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.2);
+}
+
+.login-box h2 {
+    text-align: center;
+}
+
+.login-box label {
+    display: block;
+    margin-top: 10px;
+}
+
+.login-box input {
+    width: 100%;
+    padding: 6px;
+    margin-top: 4px;
+}
+
+.login-box button {
+    width: 100%;
+    margin-top: 15px;
+    padding: 8px;
+    cursor: pointer;
+}
+/* subs pelo block*/
+.erro {
+    display: none;
+}
+</style>
+</head>
+
+<body>
+<!-- // login // -->
+<div class="login-box">
+    <h2>Login</h2>
+
+    <label>Usuário</label>
+    <input type="text" id="usuario">
+
+    <label>Senha</label>
+    <input type="password" id="senha">
+
+    <button onclick="login()">Entrar</button>
+
+    <div style="color: red;margin-top: 10px;text-align: center;" id="erro" class="erro">
+        Usuário ou senha inválidos
+    </div>
+</div>
+ 
+<!-- // script //-->
+<script>
+function login() {
+// -- declara -- //
+    const usuario = document.getElementById("usuario").value;    // pega os valores dos campos //
+    const senha = document.getElementById("senha").value;
+    // -- info de login corretas -- //
+    if (usuario === "cinema" && senha === "123") {
+        // -- sessionStorage -- //
+        sessionStorage.setItem("logado", "true");
+        window.location.href = "filmes.html";
+    } else {
+        document.getElementById("erro").style.display = "block";        
+    }
+}
+</script>
+</body>
+</html>
