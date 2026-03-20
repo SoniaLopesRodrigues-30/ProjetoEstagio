@@ -7,69 +7,201 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Login</title>
 
 <style>
-body {
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
     font-family: Arial, sans-serif;
-    background: #f2f2f2;
 }
 
-.login-box {
-    width: 300px;
-    margin: 120px auto;
-    background: #fff;
-    padding: 20px;
-    border-radius: 6px;
-    box-shadow: 0 0 8px rgba(0,0,0,0.2);
+body {
+    height: 100vh;
 }
 
-.login-box h2 {
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+/* div esquerda*/
+.login-area {
+    flex: 1;
+    padding: 80px;
+}
+
+.login-area h1 {
+    font-size: 36px;
+}
+
+.sub {
+    color: #8f8b8bfe;
+    margin: 10px 0 40px;
+}
+
+.campo {
+    display: flex;
+    align-items: center;
+    border: 1px solid #d7bbbbbf;
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.campo input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 16px;
+    margin-left: 10px;
+}
+
+.btn-entrar {
+    width: 100%;
+    padding: 14px;
+    background: #24a953;
+    color: #ffffff;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.erro {
+    color: red;
+    margin-top: 15px;
+    display: none;
     text-align: center;
 }
 
-.login-box label {
-    display: block;
-    margin-top: 10px;
+.links {
+    margin-top: 30px;
+    text-align: center;
 }
 
-.login-box input {
-    width: 100%;
-    padding: 6px;
-    margin-top: 4px;
+.links a {
+    color: #ff6a3d;
+    text-decoration: none;
+    font-size: 13px;
 }
 
-.login-box button {
-    width: 100%;
-    margin-top: 15px;
-    padding: 8px;
-    cursor: pointer;
+/* div direita */
+.info-area {
+    flex: 1;
+    background: linear-gradient(180deg, #001f2d, #002f40);
+    color: #ffffff;
+    padding: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
-/* subs pelo block*/
-.erro {
-    display: none;
+
+.info-area h2 {
+    font-size: 42px;
+    line-height: 1.2;
 }
+
+.linha {
+    width: 180px;
+    height: 6px;
+    background: #24a953;
+    margin: 20px 0;
+    border-radius: 4px;
+}
+
+.info-area p {
+    font-size: 18px;
+    max-width: 300px;
+}
+
+.logo {
+    margin-top: auto;
+    font-size: 40px;
+    font-weight: bold;
+    text-align: center;
+    color: rgb(227, 189, 117);
+}
+
+.logo span {
+    font-size: 32px;
+}
+
+/* mobile */
+/*  texte
+@media (max-width: 900px) {
+
+    .container {
+        flex-direction: column;
+    }
+    /* sem div direita *//*
+    .info-area {
+        display: none;
+    }
+
+    .login-area {
+        width: 100%;
+        padding: 40px 20px;
+    }
+}*/
+/* mudar para baixo */
+@media (max-width: 900px) {
+
+    .container {
+        flex-direction: column;
+    }
+
+    .info-area {
+        width: 100%;
+        min-height: auto;
+        padding: 20px;
+        order: 2;
+        
+    }
+
+    .login-area {
+        width: 100%;
+        order: 1;
+        padding: 40px 20px;
+    }
+}
+
 </style>
 </head>
 
 <body>
+<div class="container">
+<!-- // Div esquerdo // -->
 <!-- // login // -->
-<div class="login-box">
-    <h2>Login</h2>
+    <div class="login-area">
+        <h1>Conecte-se</h1>
+        <p class="sub">Insira seu endereço de e-mail e senha.</p>
+        <!-- usuario-->
+        <div class="campo">
+            <span class="icon">&#128100;</span>
+            <input type="text" id="usuario" placeholder="Usuario: cinema">
+        </div>
+        <!-- senha -->
+        <div class="campo">
+            <span class="icon">&#128274;</span>
+            <input type="password" id="senha" placeholder="Senha: 123">
+        </div>
+        <button class="btn-entrar" onclick="login()">ENTRAR</button>
+<!-- // msg de erro // -->
+        <div id="erro" class="erro">Usuário ou senha inválidos</div>
+    </div>
+<!-- // Div direito //-->
+    <div class="info-area">
+        <h2>Bem-vindo de<br>volta à<br><strong>O Login</strong></h2>
+        <div class="linha"></div>
+        <p>Faça login para continuar acessando sua conta.</p>
 
-    <label>Usuário</label>
-    <input type="text" id="usuario">
-
-    <label>Senha</label>
-    <input type="password" id="senha">
-
-    <button onclick="login()">Entrar</button>
-
-    <div style="color: red;margin-top: 10px;text-align: center;" id="erro" class="erro">
-        Usuário ou senha inválidos
+        <div class="logo">OL<br><span>Filmes</span></div>
     </div>
 </div>
- 
+
 <!-- // script //-->
 <script>
 function login() {
