@@ -8,21 +8,37 @@
 :root {
   --cor-primaria: #3498db;   
   --cor-secundaria: #2ecc71; 
-  --cor-texto: #333333;      
-  --cor-fundo: #f5f5f5; 
+  --cor-texto: #333333;
+  --cor-titulo:#ea4e4e;      
+  --cor-fundo: #f5f5f5;
+  --cor-bordas:#ffffff; 
+  --cor-sombras: rgba(0,0,0,0.2);
 }    
 body {
     background: linear-gradient(135deg, #0f172a, #1e293b);
     /*color: #fdfafa;*/
-    color: var(--cor-primaria);
+    color: var(--cor-texto);
     padding: 20px;
 }
 /*container*/
 .container {
     max-width: 1000px;
     margin: auto;
-    background:var(--cor-fundo);
+    background:var(--cor-primaria);
     border-radius: 10px;
     padding: 25px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    box-shadow: 0 10px 25px var(--cor-sombras);
+}
+h1,
+h2 {
+    margin-bottom: 20px;
+    color:var(--cor-titulo);
+}
+/*cards*/
+.card {
+    background:var(--cor-fundo);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid var(--cor-bordas);
 }
