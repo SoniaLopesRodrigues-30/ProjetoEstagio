@@ -11,7 +11,7 @@
   --cor-texto: #333333;
   --cor-titulo:#ea4e4e;      
   --cor-fundo: #f5f5f5;
-  --cor-bordas:#ffffff; 
+  --cor-bordas:#5721d4; 
   --cor-sombras: rgba(0,0,0,0.2);
 }    
 body {
@@ -41,4 +41,30 @@ h2 {
     padding: 20px;
     margin-bottom: 20px;
     border: 1px solid var(--cor-bordas);
+}
+/*campos e linhas*/
+.linha {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+.campo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+/*label e inputs*/
+label {
+    font-size: 15px;
+    margin-bottom: 5px;
+    color: var(--cor-texto);
+}
+input, 
+select {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--cor-bordas);
+    outline: none;
+    transition: 0.3s;
 }
