@@ -1,0 +1,28 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+/*em teste*/
+:root {
+  --cor-primaria: #3498db;   
+  --cor-secundaria: #2ecc71; 
+  --cor-texto: #333333;      
+  --cor-fundo: #f5f5f5; 
+}    
+body {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    /*color: #fdfafa;*/
+    color: var(--cor-primaria);
+    padding: 20px;
+}
+/*container*/
+.container {
+    max-width: 1000px;
+    margin: auto;
+    background:var(--cor-fundo);
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
