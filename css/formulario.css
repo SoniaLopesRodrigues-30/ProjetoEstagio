@@ -6,14 +6,20 @@
 }
 /*em teste*/
 :root {
-  --cor-primaria: #3498db;   
-  --cor-secundaria: #2ecc71; 
-  --cor-texto: #333333;
-  --cor-titulo:#ea4e4e;      
-  --cor-fundo: #f5f5f5;
-  --cor-bordas:#5721d4; 
-  --cor-sombras: rgba(0,0,0,0.2);
-}    
+    --cor-primaria: #f7f9fb;
+    --cor-secundaria: #aadabf;
+    --cor-texto: #333333;
+    --cor-texto-btn:#ffffff;
+    --cor-titulo: #af4eea;
+    --cor-fundo: #c9f4f7;
+    --cor-bordas: #e4dcf7;
+    --cor-foco: #6b5dcc;
+    --cor-sombras: rgb(11 10 10 / 25%);
+    /*btn*/
+    --cor-btn-positivo:#34ed59;
+    --cor-btn-negativo:#ed2424;
+    --cor-btn-padrao:#4a9fd8;
+}
 body {
     background: linear-gradient(135deg, #0f172a, #1e293b);
     /*color: #fdfafa;*/
@@ -67,4 +73,36 @@ select {
     border: 1px solid var(--cor-bordas);
     outline: none;
     transition: 0.3s;
+}
+input:focus, 
+select:focus {
+    border-color: var(--cor-foco);
+}
+/*btns*/
+.botoes {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+button {
+    padding: 10px 17px;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    font-weight: bold;
+}
+.salvar {
+    background: var(--cor-btn-positivo);
+    color: var(--cor-texto-btn);
+}
+.novo {
+    background: var(--cor-btn-padrao);
+    color: var(--cor-texto-btn);
+}
+.cancelar {
+    background: var(--cor-btn-negativo);
+    color: var(--cor-texto-btn);
+}
+button:hover {
+    opacity: 0.9;
 }
