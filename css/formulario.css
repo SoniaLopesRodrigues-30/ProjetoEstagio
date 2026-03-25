@@ -114,3 +114,25 @@ button {
 button:hover {
     opacity: 0.9;
 }
+/* css relacionado as abas*/
+.seletor-abas{
+    display: flex;
+    gap: 5px;
+    margin-top: 20px;
+    border-bottom: 2px solid var(--cor-bordas);
+}
+.btn-aba {
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 10px 10px 0 0;   /*cima cima baixo baixo*/
+    background: var(--cor-fundo);
+}
+.btn-aba.ativa {
+    background: var(--cor-btn-padrao);
+    color: var(--cor-texto-btn);
+}
+
+
+
+
+
