@@ -131,6 +131,14 @@ button:hover {
     background: var(--cor-btn-padrao);
     color: var(--cor-texto-btn);
 }
+/*esconte a aba*/
+.aba {
+    display: none;
+    padding: 15px;
+}
+.aba.ativa {
+    display: block;
+}
 
 
 

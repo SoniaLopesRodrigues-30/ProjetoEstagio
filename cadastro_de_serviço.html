@@ -42,9 +42,9 @@
         </div>
         <!-- // seletor de abas // -->
         <div class="seletor-abas">
-            <div class="btn-aba ativa">Serviços / Produtos</div>
-            <div class="btn-aba">Baixas</div>
-            <div class="btn-aba">Dados do Cliente</div>
+            <div class="btn-aba ativa" onclick="trocarAba(0)">Serviços / Produtos</div>
+            <div class="btn-aba" onclick="trocarAba(1)">Baixas</div>
+            <div class="btn-aba" onclick="trocarAba(2)">Dados do Cliente</div>
         </div>
 
         <!-- // primeir aba(1*) // -->
@@ -182,4 +182,22 @@
 
         
     </div>
+
+
+<script>
+/*funcao teste*/
+function trocarAba(index) {
+    const abas = document.querySelectorAll(".btn-aba");
+    const conteudos = document.querySelectorAll(".aba");
+
+    abas.forEach(aba => aba.classList.remove("ativa"));
+    conteudos.forEach(c => c.classList.remove("ativa"));
+
+    abas[index].classList.add("ativa");
+    conteudos[index].classList.add("ativa");
+}
+</script>
+
+
+
 </body>
