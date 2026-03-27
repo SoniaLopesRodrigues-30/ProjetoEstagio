@@ -28,8 +28,6 @@ uf.addEventListener('change', (e) => {
     optUf = e.target.value;    
 });
 
-
-
 // Captura os eventos do formulário Clientes
 form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -39,13 +37,29 @@ form.addEventListener('submit', (e) => {
              e.preventDefault();
 
         //TESTA PARA VER SE O NOME DO CLIENTE FOI Informado
-        console.log("o nome do xliente " + razao)
+        
         if (razao.value===""){
             alert ("Informe o Nome/Razão Social")
             return
         }     
+
+        const dado = localStorage.getItem('clientes');
+
+        //cria um código para cada Cliente somando a quantidade total +1       
+
+        const listaString = localStorage.getItem('clientes');
+
+        //  Transforma em Array e conta o .length
+        let codigoTerceiro=1
+        if (listaString) {
+            const codigoCli = JSON.parse(listaString);                              
+            codigoTerceiro = codigoCli.length + 1; 
+        }
+
+       
         // Captura os valores
         const novoCliente = {
+            codigo: codigoTerceiro,
             nome: document.getElementById('nomeCliente').value,
             rua: document.getElementById('rua').value,
             email: document.getElementById('email').value,
