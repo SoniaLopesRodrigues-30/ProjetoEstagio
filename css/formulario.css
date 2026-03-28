@@ -98,6 +98,8 @@ button {
     border-radius: 15px;
     cursor: pointer;
     font-weight: bold;
+    background:var(--cor-btn-padrao);
+    color: var(--cor-texto-btn);
 }
 .salvar {
     background: var(--cor-btn-positivo);
@@ -139,8 +141,39 @@ button:hover {
 .aba.ativa {
     display: block;
 }
+/*aba 1*/
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th, 
+td {
+    border: 1px solid #cbd5e1;
+    padding: 8px;
+    text-align: left;
+}
+/*display lfax*/
+.flex {
+    display: flex;
+    gap: 20px;
+}
 
-
-
-
-
+/*tabela responsiva */
+.card table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;      /*barra para puxar a tabela*/
+}
+/*evita que as colunas quebrem, ottimo*/
+table th, 
+table td {
+    white-space: nowrap;
+}
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    .card {
+        padding: 15px;
+    }
+}

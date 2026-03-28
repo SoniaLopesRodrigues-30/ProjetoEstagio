@@ -51,7 +51,7 @@
         <div class="aba ativa">     <!--serviços-->
             <div class="card">
                                         <!-- ///////// talves este //////////-->    
-                <!--
+               
                 <table>
                     <tr>
                         <th>Descriçao</th>
@@ -67,71 +67,45 @@
                         <td><input type="text"></td>
                         <td><input type="date"></td>
                     </tr>
-                </table>
-                -->
-                                        <!-- //////// DEVO ALTERAR ///////-->
-                 
-                <!--descriçao-->
-                <div class="campo">
-                    <label>Descrição</label>
-                    <input type="text">
-                </div>                                  
-                 <!--valor-->
-                 
-                <div class="campo">
-                    <label>Valor</label>
-                    <input type="text">
-                </div>                                  
-                 <!--qtl-->
-                <div class="campo">
-                    <label>QTL</label>
-                    <input type="text">
-                </div>                                  
-                 <!--total-->
-                <div class="campo">
-                    <label>Total</label>
-                    <input type="text">
-                </div>                                  
-                 <!--data-->
-                <div class="campo">
-                    <label>Data</label>
-                    <input type="text">
-                </div>                                  
+                </table>                                       
             </div>
         </div>
         <!-- // segunda aba(2*) // -->    
         <div class="aba">    <!--baixas-->
-            <div class="card">
-
-                <!--linha-->
-                <div class="linha">
-                    <!--valor total-->
-                    <div class="campo">
-                        <label>Valor Total</label>
-                        <input type="text">
+            <div class="flex">
+                <div class="card" style="flex:1;">
+                    <h2>Pagamentos</h2>
+                    <!--linha-->
+                    <div class="linha">
+                        <!--valor total-->
+                        <div class="campo">
+                            <label>Valor Total</label>
+                            <input type="text">
+                        </div>
+                        <!--pago-->
+                        <div class="campo">
+                            <label>Pago</label>
+                            <input type="text">
+                        </div>
+                        <!--pendente-->
+                        <div class="campo">
+                            <label>Valor Pendente</label>
+                            <input type="text">
+                        </div>
                     </div>
-                    <!--pago-->
-                    <div class="campo">
-                        <label>Pago</label>
-                        <input type="text">
-                    </div>
-                    <!--pendente-->
-                    <div class="campo">
-                        <label>Valor Pendente</label>
-                        <input type="text">
-                    </div>
-                </div>
-                <!--linha-->
-                <div class="linha">
-                    <!--data de pagamento-->
-                    <div class="campo">
-                        <label>Data do Pagamento</label>
-                        <input type="text">
-                    </div>
-                    <!--valor pago-->
-                    <div class="campo">
-                        <label>Valor Pago</label>
-                        <input type="date">
+                    <!--linha-->
+                    <div class="linha">
+                        <!--data de pagamento-->
+                        <div class="campo">
+                            <label>Data do Pagamento</label>
+                            <input type="text">
+                        </div>
+                        <!--valor pago-->
+                        <div class="campo">
+                            <label>Valor Pago</label>
+                            <input type="date">
+                        </div>
+                         <button>Confirmar</button>
                     </div>
                 </div>
             </div>
@@ -178,8 +152,6 @@
                 </div>
             </div>
         </div>
-    
-
         
     </div>
 
@@ -197,7 +169,5 @@ function trocarAba(index) {
     conteudos[index].classList.add("ativa");
 }
 </script>
-
-
 
 </body>
