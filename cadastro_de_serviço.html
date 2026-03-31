@@ -69,7 +69,8 @@
                     </tr>
                 </table>                                       
             </div>
-        </div>
+        </div> <!-- // fim aba 1 // -->
+        
         <!-- // segunda aba(2*) // -->    
         <div class="aba">    <!--baixas-->
             <div class="flex">
@@ -109,7 +110,8 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div><!-- // fim aba 2 // -->
+
         <!-- // terceira aba(3*) // -->
         <div class="aba"> <!--clientes-->
             <div class="card">
@@ -125,6 +127,7 @@
                         <label>Numero</label>
                         <input type="text">
                     </div>
+                </div>
                 <!--linha-->
                 <div class="linha">
                     <!--cidade-->
@@ -137,6 +140,7 @@
                         <label>Estado</label>
                         <input type="text">
                     </div>
+                </div>
                 <!--linha-->
                 <div class="linha">
                     <!--telefone-->
@@ -151,9 +155,42 @@
                     </div>
                 </div>
             </div>
+        </div>  <!-- // fim aba 3 // -->
+
+       <!-- //// fora das abas //// -->
+        <div class="card">
+            <div class="flex-resumo">
+                <!-- // observaçoes // -->
+                <div style="flex:1;">
+                    <label>Observações</label>
+                    <textarea></textarea>
+                </div>
+                <!-- // resumo // -->
+                <div class="resumo">
+                    <!--pendente-->
+                    <label>Total Pendente</label>
+                    <input type="text">
+                    <!--faturado-->
+                    <label>Total Faturado</label>
+                    <input type="text">
+                    <!--geral-->
+                    <label>Total Geral</label>
+                    <input type="text">
+                </div>
+            </div>
         </div>
-        
-    </div>
+
+        <!-- // botoes //  -->
+        <div class="botoes">
+            <div class="botoes_esquerda"></div>
+                <button class="novo">Novo</button>
+            <div class="botoes_direita">
+                <button id="btnSalvar" class="salvar">Salvar</button>
+                <button id="btnCancelar" class="cancelar">Cancelar</button>
+            </div> 
+        </div>
+    </div><!-- //// fim do container //// -->
+    
 
 
 <script>
