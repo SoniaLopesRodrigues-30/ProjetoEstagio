@@ -1,0 +1,201 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+/*em teste*/
+:root {
+    --cor-primaria: #f7f9fb;
+    --cor-secundaria: #aadabf;
+    --cor-texto: #333333;
+    --cor-texto-btn:#ffffff;
+    --cor-titulo: #af4eea;
+    --cor-fundo: #c9f4f7;
+    --cor-bordas: #e4dcf7;
+    --cor-foco: #6b5dcc;
+    --cor-sombras: rgb(11 10 10 / 25%);
+    /*btn*/
+    --cor-btn-positivo:#34ed59;
+    --cor-btn-negativo:#ed2424;
+    --cor-btn-padrao:#4a9fd8;
+}
+body {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    /*color: #fdfafa;*/
+    color: var(--cor-texto);
+    padding: 20px;
+}
+/*container*/
+.container {
+    max-width: 1000px;
+    margin: auto;
+    background:var(--cor-primaria);
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 10px 25px var(--cor-sombras);
+}
+h1,
+h2 {
+    margin-bottom: 20px;
+    color:var(--cor-titulo);
+}
+/*cards*/
+.card {
+    background:var(--cor-fundo);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid var(--cor-bordas);
+}
+/*campos e linhas*/
+.linha {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+.campo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+/*label e inputs*/
+label {
+    font-size: 15px;
+    margin-bottom: 5px;
+    color: var(--cor-texto);
+}
+input, 
+select {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--cor-bordas);
+    outline: none;
+    transition: 0.3s;
+}
+input:focus, 
+select:focus {
+    border-color: var(--cor-foco);
+}
+/*btns*/
+.botoes{
+    display: flex;
+}
+.botoes_direita {
+   display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+.botoes_esquerda {
+   display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+}
+button {
+    padding: 10px 17px;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    font-weight: bold;
+    background:var(--cor-btn-padrao);
+    color: var(--cor-texto-btn);
+}
+.salvar {
+    background: var(--cor-btn-positivo);
+    color: var(--cor-texto-btn);
+}
+.novo {
+    background: var(--cor-btn-padrao);
+    color: var(--cor-texto-btn);
+}
+.cancelar {
+    background: var(--cor-btn-negativo);
+    color: var(--cor-texto-btn);
+}
+button:hover {
+    opacity: 0.9;
+}
+/* css relacionado as abas*/
+.seletor-abas{
+    display: flex;
+    gap: 5px;
+    margin-top: 20px;
+    border-bottom: 2px solid var(--cor-bordas);
+}
+.btn-aba {
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 10px 10px 0 0;   /*cima cima baixo baixo*/
+    background: var(--cor-fundo);
+}
+.btn-aba.ativa {
+    background: var(--cor-btn-padrao);
+    color: var(--cor-texto-btn);
+}
+/*esconte a aba*/
+.aba {
+    display: none;
+    padding: 15px;
+}
+.aba.ativa {
+    display: block;
+}
+/*aba 1*/
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th, 
+td {
+    border: 1px solid #cbd5e1;
+    padding: 8px;
+    text-align: left;
+}
+/*display lfax*/
+.flex {
+    display: flex;
+    gap: 20px;
+}
+
+/*tabela responsiva */
+.card table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;      /*barra para puxar a tabela*/
+}
+/*evita que as colunas quebrem, ottimo*/
+table th, 
+table td {
+    white-space: nowrap;
+}
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    .card {
+        padding: 15px;
+    }
+}
+/*parte fora da aba (baixo)*/
+.flex-resumo {
+    display: flex;
+    gap: 20px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+/*lado esquerdo*/
+.flex-resumo textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--cor-bordas);
+}
+/*lado direito*/
+.resumo {
+    min-width: 220px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}

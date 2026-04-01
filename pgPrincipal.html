@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- // css // -->
+    <link rel="stylesheet" href="./css/formulario.css">
+</head>
+
+<body>
+    <div class="container"> <!-- //// inicio do container //// -->
+
+        <h1>Cadastro de Terceiros</h1>
+
+        <!-- // primeiro card (1*) // -->
+        <div class="card">
+            <div class="linha">
+                <div class="campo">
+                    <label>Nome / Razão Social</label>
+                    <input type="text" id="nomeCliente">
+                </div>
+                <div class="campo">
+                    <label>Classificação</label>
+                    <select>
+                        <option id="optCliente">Cliente</option>
+                        <option id="optFornecedor">Fornecedor</option>
+                        <option id="optOutros">Outro</option>
+                    </select>
+                </div>
+            </div>
+        </div> <!--fim card 1-->
+
+        <!-- // segundo card (2*) // -->
+        <div class="card">
+            <h2>Endereço</h2>
+            <!--/linha/-->
+            <div class="linha">
+                <!--rua-->
+                <div class="campo">
+                    <label>Rua</label>
+                    <input id="rua" type="text">
+                </div>
+                <!--numero-->
+                <div class="campo">
+                    <label>Numero</label>
+                    <input id="numero" type="text">
+                </div>
+                <!--CEP-->
+                <div class="campo">
+                    <label>CEP</label>
+                    <input id="cep" type="text">
+                </div>
+            </div>
+            <!--/linha/-->
+            <div class="linha">
+                <!--cidade-->
+                <div class="campo">
+                    <label>Cidade</label>
+                    <input id="cidade" type="text">
+                </div>
+                <!--estado-->
+                <div class="campo">
+                    <label>UF</label>
+                    <select>
+                        <option>RS</option>
+                        <option>SC</option>
+                        <option>PR</option>
+                    </select>
+                </div>
+            </div>
+            <!--/linha/-->
+            <div class="linha">
+                <!--bairro-->
+                <div class="campo">
+                    <label>Bairro</label>
+                    <input id="bairro" type="text">
+                </div>
+            </div>
+        </div>  <!--fim card 2-->
+
+        <!-- // terceiro card (3*) // -->
+         <div class="card">
+            <h2>Documentos</h2>
+            <!--/linha/-->
+            <div class="linha">
+                <!--cpf-->
+                <div class="campo">
+                    <label>CPF</label>
+                    <input id="cpf" type="text">
+                </div>
+                <!--cnpj-->
+                <div class="campo">
+                    <label>CNPJ</label>
+                    <input id="cnpj" type="text">
+                </div>
+            </div>
+             <!--/linha/-->
+            <div class="linha">
+                <!--inscricao-->
+                <div class="campo">
+                    <label>Inscriçao Estadual</label>
+                    <input id="inscEstadual" type="text">
+                </div>
+            </div>
+        </div> <!-- // fim card 3 // -->
+
+        <!-- // quarto card (4*) // -->
+        <div class="card">
+            <h2>Contato</h2>
+            <!--/linha/-->
+            <div class="linha">
+                <!--telefone-->
+                <div class="campo">
+                    <label>Telefone</label>
+                    <input id="fone" type="text">
+                </div>
+                <!--celular-->
+                <div class="campo">
+                    <label>Celular</label>
+                    <input id="celular" type="text">
+                </div>
+            </div>
+            <!--/linha/-->
+            <div class="linha">
+                <!--email-->
+                <div class="campo">
+                    <label>Email</label>
+                    <input id="email" type="email">
+                </div>
+                <!--responsavel-->
+                <div class="campo">
+                    <label>Responsavel</label>
+                    <input id="resp" type="text">
+                </div>
+            </div>
+        </div> <!-- // fim card 4 // -->
+
+        <!-- // quinto card (5*) // -->
+        <div class="card">
+            <h2>Iinformaçoes Extras</h2>
+            <!--/linha/-->
+            <div class="linha">
+                <!--aniversario-->
+                <div class="campo">
+                    <label>Aniversario</label>
+                    <input id="aniver" type="date">
+                </div>
+                <!--Site-->
+                <div class="campo">
+                    <label>Site</label>
+                    <input id="site" type="text">
+                </div>
+            </div>
+        </div> <!-- // fim card 5 // -->
+
+    <!--///// pausa /////-->
+
+        <!-- // botoes //  -->
+         <div class="botoes">
+            <button class="novo">Novo</button>
+            <button class="salvar">Salvar</button>
+            <button class="cancelar">cancelar</button>
+         </div>
+
+
+
+    </div> <!-- //// fim do container //// -->
+
+
+
+</body>

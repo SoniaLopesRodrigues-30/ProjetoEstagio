@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- // css // -->
+    <link rel="stylesheet" href="./css/formulario.css">
+</head>
+
+<body>
+    <div class="container"> <!-- //// inicio do container //// -->
+
+        <h1>Ordem de Serviço</h1>
+
+        <!-- // primeiro card (1*) // -->
+        <div class="card">
+            <!--/linha/-->
+            <div class="linha">
+                <!--o.s numero-->
+                <div class="campo">
+                    <label>O.S Numero</label>
+                    <input type="text">
+                </div>
+                <!--data-->
+                <div class="campo">
+                    <label>Data</label>
+                    <input type="date">
+                </div>
+                <!--pagamento-->
+                <div class="campo">
+                    <label>Condicao de Pagamento</label>
+                    <input type="text">
+                </div>
+                <!--cliente-->
+                <div class="campo">
+                    <label>Cliente</label>
+                    <input type="text">
+                </div>
+                
+            </div>
+        </div>
+        <!-- // seletor de abas // -->
+        <div class="seletor-abas">
+            <div class="btn-aba ativa" onclick="trocarAba(0)">Serviços / Produtos</div>
+            <div class="btn-aba" onclick="trocarAba(1)">Baixas</div>
+            <div class="btn-aba" onclick="trocarAba(2)">Dados do Cliente</div>
+        </div>
+
+        <!-- // primeir aba(1*) // -->
+        <div class="aba ativa">     <!--serviços-->
+            <div class="card">
+                                        <!-- ///////// talves este //////////-->    
+               
+                <table>
+                    <tr>
+                        <th>Descriçao</th>
+                        <th>Valor</th>
+                        <th>Qtd</th>
+                        <th>Total</th>
+                        <th>Data</th>
+                    </tr>
+                    <tr>
+                        <td><input type="text"></td>
+                        <td><input type="text"></td>
+                        <td><input type="text"></td>
+                        <td><input type="text"></td>
+                        <td><input type="date"></td>
+                    </tr>
+                </table>                                       
+            </div>
+        </div> <!-- // fim aba 1 // -->
+        
+        <!-- // segunda aba(2*) // -->    
+        <div class="aba">    <!--baixas-->
+            <div class="flex">
+                <div class="card" style="flex:1;">
+                    <h2>Pagamentos</h2>
+                    <!--linha-->
+                    <div class="linha">
+                        <!--valor total-->
+                        <div class="campo">
+                            <label>Valor Total</label>
+                            <input type="text">
+                        </div>
+                        <!--pago-->
+                        <div class="campo">
+                            <label>Pago</label>
+                            <input type="text">
+                        </div>
+                        <!--pendente-->
+                        <div class="campo">
+                            <label>Valor Pendente</label>
+                            <input type="text">
+                        </div>
+                    </div>
+                    <!--linha-->
+                    <div class="linha">
+                        <!--data de pagamento-->
+                        <div class="campo">
+                            <label>Data do Pagamento</label>
+                            <input type="text">
+                        </div>
+                        <!--valor pago-->
+                        <div class="campo">
+                            <label>Valor Pago</label>
+                            <input type="date">
+                        </div>
+                         <button>Confirmar</button>
+                    </div>
+                </div>
+            </div>
+        </div><!-- // fim aba 2 // -->
+
+        <!-- // terceira aba(3*) // -->
+        <div class="aba"> <!--clientes-->
+            <div class="card">
+                <!--linha-->
+                <div class="linha">
+                    <!--endereço-->
+                    <div class="campo">
+                        <label>Endereço</label>
+                        <input type="text">
+                    </div>
+                    <!--numero-->
+                    <div class="campo">
+                        <label>Numero</label>
+                        <input type="text">
+                    </div>
+                </div>
+                <!--linha-->
+                <div class="linha">
+                    <!--cidade-->
+                    <div class="campo">
+                        <label>Cidade</label>
+                        <input type="text">
+                    </div>
+                    <!--estado-->
+                    <div class="campo">
+                        <label>Estado</label>
+                        <input type="text">
+                    </div>
+                </div>
+                <!--linha-->
+                <div class="linha">
+                    <!--telefone-->
+                    <div class="campo">
+                        <label>Telefone</label>
+                        <input type="text">
+                    </div>
+                    <!--cnpj-->
+                    <div class="campo">
+                        <label>CNPJ</label>
+                        <input type="text">
+                    </div>
+                </div>
+            </div>
+        </div>  <!-- // fim aba 3 // -->
+
+       <!-- //// fora das abas //// -->
+        <div class="card">
+            <div class="flex-resumo">
+                <!-- // observaçoes // -->
+                <div style="flex:1;">
+                    <label>Observações</label>
+                    <textarea></textarea>
+                </div>
+                <!-- // resumo // -->
+                <div class="resumo">
+                    <!--pendente-->
+                    <label>Total Pendente</label>
+                    <input type="text">
+                    <!--faturado-->
+                    <label>Total Faturado</label>
+                    <input type="text">
+                    <!--geral-->
+                    <label>Total Geral</label>
+                    <input type="text">
+                </div>
+            </div>
+        </div>
+
+        <!-- // botoes //  -->
+        <div class="botoes">
+            <div class="botoes_esquerda"></div>
+                <button class="novo">Novo</button>
+            <div class="botoes_direita">
+                <button id="btnSalvar" class="salvar">Salvar</button>
+                <button id="btnCancelar" class="cancelar">Cancelar</button>
+            </div> 
+        </div>
+    </div><!-- //// fim do container //// -->
+    
+
+
+<script>
+/*funcao teste*/
+function trocarAba(index) {
+    const abas = document.querySelectorAll(".btn-aba");
+    const conteudos = document.querySelectorAll(".aba");
+
+    abas.forEach(aba => aba.classList.remove("ativa"));
+    conteudos.forEach(c => c.classList.remove("ativa"));
+
+    abas[index].classList.add("ativa");
+    conteudos[index].classList.add("ativa");
+}
+</script>
+
+</body>
