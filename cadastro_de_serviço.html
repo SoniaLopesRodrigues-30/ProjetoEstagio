@@ -9,202 +9,193 @@
 </head>
 
 <body>
-    <div class="container"> <!-- //// inicio do container //// -->
 
-        <h1>Ordem de Serviço</h1>
+    <form id="formOrdServ">
+            <div class="container"> <!-- //// inicio do container //// -->
 
-        <!-- // primeiro card (1*) // -->
-        <div class="card">
-            <!--/linha/-->
-            <div class="linha">
-                <!--o.s numero-->
-                <div class="campo">
-                    <label>O.S Numero</label>
-                    <input id="nrServico" type="text">
+                <h1>Ordem de Serviço</h1>
+
+                <!-- // primeiro card (1*) // -->
+                <div class="card">
+                    <!--/linha/-->
+                    <div class="linha">
+                        <!--o.s numero-->
+                        <div class="campo">
+                            <label>O.S Numero</label>
+                            <input id="nrServico" type="text">
+                        </div>
+                        <!--data-->
+                        <div class="campo">
+                            <label>Data</label>
+                            <input id="dataServ" type="date">
+                        </div>
+                        <!--pagamento-->
+                        <div class="campo">
+                            <label>Condicao de Pagamento</label>
+                            <input id="condPgto" type="text">
+                        </div>
+                        <!--cliente-->
+                        <div class="campo">
+                            <label>Cliente</label>
+                            <input id="nmCliente" type="text">
+                        </div>
+                        
+                    </div>
                 </div>
-                <!--data-->
-                <div class="campo">
-                    <label>Data</label>
-                    <input id="dataServ" type="date">
+                <!-- // seletor de abas // -->
+                <div class="seletor-abas">
+                    <div class="btn-aba ativa" onclick="trocarAba(0)">Serviços / Produtos</div>
+                    <div class="btn-aba" onclick="trocarAba(1)">Baixas</div>
+                    <div class="btn-aba" onclick="trocarAba(2)">Dados do Cliente</div>
                 </div>
-                <!--pagamento-->
-                <div class="campo">
-                    <label>Condicao de Pagamento</label>
-                    <input id="condPgto" type="text">
-                </div>
-                <!--cliente-->
-                <div class="campo">
-                    <label>Cliente</label>
-                    <input id="nmCliente" type="text">
-                </div>
+
+                <!-- // primeir aba(1*) // -->
+                <div class="aba ativa">     <!--serviços-->
+                    <div class="card">
+                        <!-- ///////// talves este //////////--   SIM PODE SER SIM -->                        
+                        <table>
+                            <tr>
+                                <th>Descriçao</th>
+                                <th>Valor</th>
+                                <th>Qtd</th>
+                                <th>Total</th>
+                                <th>Data</th>
+                            </tr>
+                            <tr>
+                                <td><input type="text"></td>
+                                <td><input type="text"></td>
+                                <td><input type="text"></td>
+                                <td><input type="text"></td>
+                                <td><input type="date"></td>
+                            </tr>
+                        </table>                                       
+                    </div>
+                </div> 
+                <!-- // fim aba 1 // -->
                 
-            </div>
-        </div>
-        <!-- // seletor de abas // -->
-        <div class="seletor-abas">
-            <div class="btn-aba ativa" onclick="trocarAba(0)">Serviços / Produtos</div>
-            <div class="btn-aba" onclick="trocarAba(1)">Baixas</div>
-            <div class="btn-aba" onclick="trocarAba(2)">Dados do Cliente</div>
-        </div>
-
-        <!-- // primeir aba(1*) // -->
-        <div class="aba ativa">     <!--serviços-->
-            <div class="card">
-                                        <!-- ///////// talves este //////////--   SIM PODE SER SIM>    
-               
-                <table>
-                    <tr>
-                        <th>Descriçao</th>
-                        <th>Valor</th>
-                        <th>Qtd</th>
-                        <th>Total</th>
-                        <th>Data</th>
-                    </tr>
-                    <tr>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="date"></td>
-                    </tr>
-                </table>                                       
-            </div>
-        </div !-- // fim aba 1 // -->
-        
-        <!-- // segunda aba(2*) // -->    
-        <div class="aba">    <!--baixas-->
-            <div class="flex">
-                <div class="card" style="flex:1;">
-                    <h2>Pagamentos</h2>
-                    <!--linha-->
-                    <div class="linha">
-                        <!--valor total-->
-                        <div class="campo">
-                            <label>Valor Total</label>
-                            <input id="vlTotal" type="text">
-                        </div>
-                        <!--pago-->
-                        <div class="campo">
-                            <label>Pago</label>
-                            <input  id="vlPago" type="text">
-                        </div>
-                        <!--pendente-->
-                        <div class="campo">
-                            <label>Valor Pendente</label>
-                            <input  id="vlPendente" type="text">
+                <!-- // segunda aba(2*) // -->    
+                <div class="aba">    <!--baixas-->
+                    <div class="flex">
+                        <div class="card" style="flex:1;">
+                            <h2>Pagamentos</h2>
+                            <!--linha-->
+                            <div class="linha">
+                                <!--valor total-->
+                                <div class="campo">
+                                    <label>Valor Total</label>
+                                    <input id="vlTotal" type="text">
+                                </div>
+                                <!--pago-->
+                                <div class="campo">
+                                    <label>Pago</label>
+                                    <input type="text">
+                                </div>
+                                <!--pendente-->
+                                <div class="campo">
+                                    <label>Valor Pendente</label>
+                                    <input  id="vlPendente" type="text">
+                                </div>
+                            </div>
+                            <!--linha-->
+                            <div class="linha">
+                                <!--data de pagamento-->
+                                <div class="campo">
+                                    <label>Data do Pagamento</label>
+                                    <input  id="dtPag" type="text">
+                                </div>
+                                <!--valor pago-->
+                                <div class="campo">
+                                    <label>Valor Pago</label>
+                                    <input  id="vlPago" type="date">
+                                </div>
+                                <button type ="button" >Confirmar</button>
+                            </div>
                         </div>
                     </div>
-                    <!--linha-->
-                    <div class="linha">
-                        <!--data de pagamento-->
-                        <div class="campo">
-                            <label>Data do Pagamento</label>
-                            <input  id="dtPag" type="text">
+                </div><!-- // fim aba 2 // -->
+
+                <!-- // terceira aba(3*) // -->
+                <div class="aba"> <!--clientes-->
+                    <div class="card">
+                        <!--linha-->
+                        <div class="linha">
+                            <!--endereço-->
+                            <div class="campo">
+                                <label>Endereço</label>
+                                <input id="endCli" type="text">
+                            </div>
+                            <!--numero-->
+                            <div class="campo">
+                                <label>Numero</label>
+                                <input id="endNr" type="text">
+                            </div>
                         </div>
-                        <!--valor pago-->
-                        <div class="campo">
-                            <label>Valor Pago</label>
-                            <input  id="vlPago" type="date">
+                        <!--linha-->
+                        <div class="linha">
+                            <!--cidade-->
+                            <div class="campo">
+                                <label>Cidade</label>
+                                <input id="endCidade" type="text">
+                            </div>
+                            <!--estado-->
+                            <div class="campo">
+                                <label>Estado</label>
+                                <input id="endUf" type="text">
+                            </div>
                         </div>
-                         <button>Confirmar</button>
+                        <!--linha-->
+                        <div class="linha">
+                            <!--telefone-->
+                            <div class="campo">
+                                <label>Telefone</label>
+                                <input id="fone" type="text">
+                            </div>
+                            <!--cnpj-->
+                            <div class="campo">
+                                <label>CNPJ</label>
+                                <input id="cnpj" type="text">
+                            </div>
+                        </div>
+                    </div>
+                </div>  <!-- // fim aba 3 // -->
+
+            <!-- //// fora das abas //// -->
+                <div class="card">
+                    <div class="flex-resumo">
+                        <!-- // observaçoes // -->
+                        <div style="flex:1;">
+                            <label>Observações</label>
+                            <textarea id="obs"></textarea>
+                        </div>
+                        <!-- // resumo // -->
+                        <div class="resumo">
+                            <!--pendente-->
+                            <label>Total Pendente</label>
+                            <input id="vlTotPend" type="text">
+                            <!--faturado-->
+                            <label>Total Faturado</label>
+                            <input id="vlTotFat" type="text">
+                            <!--geral-->
+                            <label>Total Geral</label>
+                            <input id="vlTotGeral" type="text">
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div><!-- // fim aba 2 // -->
 
-        <!-- // terceira aba(3*) // -->
-        <div class="aba"> <!--clientes-->
-            <div class="card">
-                <!--linha-->
-                <div class="linha">
-                    <!--endereço-->
-                    <div class="campo">
-                        <label>Endereço</label>
-                        <input id="endCli" type="text">
+                              <!-- // botoes //  -->
+                <div class="botoes">
+                    <div class="botoes_esquerda">
+                        <button type="button" class="novo" id="btnNovo">Novo</button>
                     </div>
-                    <!--numero-->
-                    <div class="campo">
-                        <label>Numero</label>
-                        <input id="endNr" type="text">
-                    </div>
+                    <div class="botoes_direita">
+                        <button type="submit" id="btnSalvar" class="salvar">Salvar</button>
+                        <button type="button" id="btnCancelar" class="cancelar">Cancelar</button>
+                    </div> 
                 </div>
-                <!--linha-->
-                <div class="linha">
-                    <!--cidade-->
-                    <div class="campo">
-                        <label>Cidade</label>
-                        <input id="endCidade" type="text">
-                    </div>
-                    <!--estado-->
-                    <div class="campo">
-                        <label>Estado</label>
-                        <input id="endUf" type="text">
-                    </div>
-                </div>
-                <!--linha-->
-                <div class="linha">
-                    <!--telefone-->
-                    <div class="campo">
-                        <label>Telefone</label>
-                        <input id="fone" type="text">
-                    </div>
-                    <!--cnpj-->
-                    <div class="campo">
-                        <label>CNPJ</label>
-                        <input id="cnpj" type="text">
-                    </div>
-                </div>
-            </div>
-        </div>  <!-- // fim aba 3 // -->
 
-       <!-- //// fora das abas //// -->
-        <div class="card">
-            <div class="flex-resumo">
-                <!-- // observaçoes // -->
-                <div style="flex:1;">
-                    <label>Observações</label>
-                    <textarea id="obs"></textarea>
-                </div>
-                <!-- // resumo // -->
-                <div class="resumo">
-                    <!--pendente-->
-                    <label>Total Pendente</label>
-                    <input id="vlTotPend" type="text">
-                    <!--faturado-->
-                    <label>Total Faturado</label>
-                    <input id="vlTotFat" type="text">
-                    <!--geral-->
-                    <label>Total Geral</label>
-                    <input id="vlTotGeral" type="text">
-                </div>
-            </div>
-        </div>
+            </div><!-- //// fim do container //// -->
+    </form> <!-- Final do formulário - AGORA OS BOTOES ESTÃO DENTRO -->
 
-        <!-- // botoes //  -->
-        <div class="botoes">
-            <div class="botoes_esquerda"></div>
-                <button class="novo">Novo</button>
-            <div class="botoes_direita">
-                <button id="btnSalvar" class="salvar">Salvar</button>
-                <button id="btnCancelar" class="cancelar">Cancelar</button>
-            </div> 
-        </div>
-    </div><!-- //// fim do container //// -->
-    
-
-
-<script>
-/*funcao teste*/
-function trocarAba(index) {
-    const abas = document.querySelectorAll(".btn-aba");
-    const conteudos = document.querySelectorAll(".aba");
-
-    abas.forEach(aba => aba.classList.remove("ativa"));
-    conteudos.forEach(c => c.classList.remove("ativa"));
-
-    abas[index].classList.add("ativa");
-    conteudos[index].classList.add("ativa");
-}
-</script>
-
+    <script src="./js/script.js"></script>
 </body>
+</html>

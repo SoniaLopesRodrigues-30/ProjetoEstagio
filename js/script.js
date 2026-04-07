@@ -12,7 +12,8 @@ function login() {
     }
 }
 const btnSalvar= document.getElementById('btnSalvar');
-const form = document.getElementById('formCliente');
+const formCliente = document.getElementById('formCliente');
+const formOrdServ = document.getElementById('formOrdServ');
 const tpTerceiro= document.getElementById('tpTerceiro');
 const uf=document.getElementById('uf');
 const razao=document.getElementById('nomeCliente');
@@ -20,8 +21,13 @@ let tipoTerceiro="";
 let optUf="";
 
 
-tpTerceiro.addEventListener('change', (e) => tipoTerceiro = e.target.value);
-uf.addEventListener('change', (e) => optUf = e.target.value);
+if (tpTerceiro) {
+    tpTerceiro.addEventListener('change', (e) => tipoTerceiro = e.target.value);
+}
+if (uf) {
+    uf.addEventListener('change', (e) => optUf = e.target.value);
+}
+
 
 // A FUNÇÃO SALVAR CLIENTES
 function salvarCliente() {
@@ -36,7 +42,7 @@ function salvarCliente() {
     // Busca dados existentes
     const clientes = JSON.parse(localStorage.getItem('clientes')) || [];
 
-    // Cria o objeto (Capturando os valores na hora do clique)
+    // Cria o objeto com os dados CLIENTES
     const novoCliente = {
         codigo: clientes.length + 1,
         nome: nomeInput.value,
@@ -65,14 +71,63 @@ function salvarCliente() {
     return true; 
 }
 
-// O EVENTO DE SUBMIT (Chama a função)
-form.addEventListener('submit', (e) => {
-    e.preventDefault();
+
+// FUNÇÃO SALVAR ORDENS DE SERVIÇO
+function salvarOrdemServ() {
     
-    if (salvarCliente()) {
-        form.reset();
-        alert('Salvo com sucesso!');
-        // MAIS ADIANTE LISTAR OS CLIENTES JÁ SALVOS:
-        // listarClientes(); 
+    const nmCliente = document.getElementById('nmCliente');
+    
+    if (!nmCliente || nmCliente.value.trim() === "") {
+        alert("Informe o Cliente!");
+        return false;
     }
-});
+
+    // Busca dados existentes 
+    const ordServ = JSON.parse(localStorage.getItem('ordServ')) || [];
+
+    const novaOrdem = {
+        codigo: document.getElementById('nrServico').value, 
+        data: document.getElementById('dataServ').value,
+        condPgto: document.getElementById('condPgto').value,
+        cliente: nmCliente.value,
+        vlTotal: document.getElementById('vlTotal').value,
+        dtPag: document.getElementById('dtPag').value,
+        vlPago: document.getElementById('vlPago').value,
+        vlTotPend: document.getElementById('vlTotPend').value,
+        vlTotFat: document.getElementById('vlTotFat').value,
+        vlTotGeral: document.getElementById('vlTotGeral').value,
+        obs: document.getElementById('obs').value
+    };
+
+    ordServ.push(novaOrdem);
+    localStorage.setItem('ordServ', JSON.stringify(ordServ));
+    
+    return true; 
+}
+
+
+// O EVENTO DE SUBMIT (Chama a função)
+
+if (formCliente) {
+    formCliente.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (salvarCliente()) {
+            formCliente.reset();
+            alert('Cliente salvo com sucesso!');
+        }   
+    });
+}
+
+
+if (formOrdServ) {
+    formOrdServ.addEventListener('submit', (e) => {
+        e.preventDefault();        
+
+        const resultado = salvarOrdemServ();        
+
+        if (resultado) {
+            formOrdServ.reset();
+            alert('Ordem de Serviço salva com sucesso!');                       
+        }
+    });
+}
