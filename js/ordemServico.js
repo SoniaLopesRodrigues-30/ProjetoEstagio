@@ -1,73 +1,103 @@
-// FUNÇÃO SALVAR ORDENS DE SERVIÇO
+// 1. LÓGICA DE CÁLCULO E ADIÇÃO DE LINHAS (DELEGAÇÃO DE EVENTO)
+document.addEventListener('input', function(e) {
+    
+    // Cálculo por linha (usando classes)
+    if (e.target.classList.contains('valor') || e.target.classList.contains('qtd')) {
+        const linha = e.target.closest('tr');
+        const v = parseFloat(linha.querySelector('.valor').value.replace(',', '.')) || 0;
+        const q = parseFloat(linha.querySelector('.qtd').value) || 0;
+        
+        const totalLinha = v * q;
+        linha.querySelector('.total').value = totalLinha.toFixed(2);
+        
+        atualizarTotalGeral();
+    }
+
+    // Adicionar nova linha ao preencher a data da última linha
+    if (e.target.classList.contains('data-servico')) {
+        const tbody = document.querySelector('#tabelaServicos tbody');
+        const linhas = tbody.getElementsByClassName('linha-servico');
+        const ultimaLinha = linhas[linhas.length - 1];
+
+        if (e.target.closest('tr') === ultimaLinha && e.target.value !== "") {
+            const novaLinha = ultimaLinha.cloneNode(true);
+            novaLinha.querySelectorAll('input').forEach(input => input.value = "");
+            tbody.appendChild(novaLinha);
+        }
+    }
+});
+
+// 2. FUNÇÃO PARA SOMAR TODAS AS LINHAS NO TOTAL GERAL
+function atualizarTotalGeral() {
+    const todosTotais = document.querySelectorAll('.total');
+    let somaGeral = 0;
+    
+    todosTotais.forEach(campo => {
+        somaGeral += parseFloat(campo.value) || 0;
+    });
+
+    const vlTotalGeral = document.getElementById('vlTotGeral');
+    if (vlTotalGeral) {
+        vlTotalGeral.value = somaGeral.toFixed(2);
+    }
+}
+
+// 3. FUNÇÃO SALVAR (ATUALIZADA PARA PEGAR MÚLTIPLOS ITENS)
 function salvarOrdemServ() {
-    
     const nmCliente = document.getElementById('nmCliente');
-    
     if (!nmCliente || nmCliente.value.trim() === "") {
         alert("Informe o Cliente!");
         return false;
     }
 
-    // Busca dados existentes 
     const ordServ = JSON.parse(localStorage.getItem('ordServ')) || [];
+
+    // Captura os itens da tabela
+    const itens = [];
+    document.querySelectorAll('.linha-servico').forEach(linha => {
+        const desc = linha.querySelector('.descProd').value;
+        if (desc) { // Só salva se tiver descrição
+            itens.push({
+                descricao: desc,
+                valor: linha.querySelector('.valor').value,
+                qtd: linha.querySelector('.qtd').value,
+                total: linha.querySelector('.total').value,
+                data: linha.querySelector('.data-servico').value
+            });
+        }
+    });
 
     const novaOrdem = {
         codigo: document.getElementById('nrServico').value, 
         data: document.getElementById('dataServ').value,
-        condPgto: document.getElementById('condPgto').value,
         cliente: nmCliente.value,
-        vlTotal: document.getElementById('vlTotal').value,
-        dtPag: document.getElementById('dtPag').value,
-        vlPago: document.getElementById('vlPago').value,
-        vlTotPend: document.getElementById('vlTotPend').value,
-        vlTotFat: document.getElementById('vlTotFat').value,
+        itens: itens, // Agora salva a lista de serviços!
         vlTotGeral: document.getElementById('vlTotGeral').value,
         obs: document.getElementById('obs').value
     };
 
     ordServ.push(novaOrdem);
     localStorage.setItem('ordServ', JSON.stringify(ordServ));
-    
     return true; 
 }
 
+// 4. EVENTO DE SUBMIT
+const formOrdServ = document.getElementById('formOrdServ');
 if (formOrdServ) {
     formOrdServ.addEventListener('submit', (e) => {
         e.preventDefault();        
-
-        const resultado = salvarOrdemServ();        
-
-        if (resultado) {
+        if (salvarOrdemServ()) {
             formOrdServ.reset();
+            // Limpa a tabela deixando apenas uma linha
+            document.querySelector('#tabelaServicos tbody').innerHTML = `
+                <tr class="linha-servico">
+                    <td><input class="descProd" type="text"></td>
+                    <td><input class="valor" type="number" step="0.01"></td>
+                    <td><input class="qtd" type="number"></td>
+                    <td><input class="total" type="text" readonly></td>
+                    <td><input class="data-servico" type="date"></td>
+                </tr>`;
             alert('Ordem de Serviço salva com sucesso!');                       
         }
     });
 }
-
-// Delegação de evento: Funciona mesmo se a tabela for carregada depois
-document.addEventListener('input', function(e) {
-    // Verifica se quem disparou o evento foi o campo 'valor' ou 'qtd'
-    if (e.target.id === 'valor' || e.target.id === 'qtd') {
-        
-        const inputValor = document.getElementById('valor');
-        const inputQtd = document.getElementById('qtd');
-        const campoTotal = document.getElementById('total');
-
-        if (inputValor && inputQtd && campoTotal) {
-            // Converte valores (trata vírgula e vazio)
-            const v = parseFloat(inputValor.value.replace(',', '.')) || 0;
-            const q = parseFloat(inputQtd.value.replace(',', '.')) || 0;
-            
-            const resultado = v * q;
-            
-            // Atribui ao campo total com 2 casas decimais
-            campoTotal.value = resultado.toFixed(2);
-            
-            // Opcional: Atualiza também o campo de Valor Total Geral da OS se ele existir
-            const vlTotalGeral = document.getElementById('vlTotGeral');
-            if (vlTotalGeral) {
-                vlTotalGeral.value = resultado.toFixed(2);
-            }
-        }
-    }
-});
