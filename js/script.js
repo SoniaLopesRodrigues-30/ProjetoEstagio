@@ -1,3 +1,5 @@
+
+
 function login() {
 // -- declara -- //
     const usuario = document.getElementById("usuario").value;    // pega os valores dos campos //
@@ -11,6 +13,8 @@ function login() {
         document.getElementById("erro").style.display = "block";        
     }
 }
+
+
 const btnSalvar= document.getElementById('btnSalvar');
 const formCliente = document.getElementById('formCliente');
 const formOrdServ = document.getElementById('formOrdServ');
@@ -131,3 +135,33 @@ if (formOrdServ) {
         }
     });
 }
+
+
+
+// Delegação de evento: Funciona mesmo se a tabela for carregada depois
+document.addEventListener('input', function(e) {
+    // Verifica se quem disparou o evento foi o campo 'valor' ou 'qtd'
+    if (e.target.id === 'valor' || e.target.id === 'qtd') {
+        
+        const inputValor = document.getElementById('valor');
+        const inputQtd = document.getElementById('qtd');
+        const campoTotal = document.getElementById('total');
+
+        if (inputValor && inputQtd && campoTotal) {
+            // Converte valores (trata vírgula e vazio)
+            const v = parseFloat(inputValor.value.replace(',', '.')) || 0;
+            const q = parseFloat(inputQtd.value.replace(',', '.')) || 0;
+            
+            const resultado = v * q;
+            
+            // Atribui ao campo total com 2 casas decimais
+            campoTotal.value = resultado.toFixed(2);
+            
+            // Opcional: Atualiza também o campo de Valor Total Geral da OS se ele existir
+            const vlTotalGeral = document.getElementById('vlTotGeral');
+            if (vlTotalGeral) {
+                vlTotalGeral.value = resultado.toFixed(2);
+            }
+        }
+    }
+});
