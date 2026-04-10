@@ -157,12 +157,15 @@ td {
     padding: 8px;
     text-align: left;
 }
+td input {
+    max-width: 164px;
+    height: 28px;
+}
 /*display lfax*/
 .flex {
     display: flex;
     gap: 20px;
 }
-
 /*tabela responsiva */
 .card table {
     display: block;
