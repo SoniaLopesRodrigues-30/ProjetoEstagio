@@ -258,6 +258,7 @@ table td {
 /* para responsivo */
 .btn-menu {
     display: none;
+    cursor: pointer;
 }
 @media (max-width: 755px) {
     .nav {
