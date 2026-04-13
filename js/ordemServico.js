@@ -101,3 +101,14 @@ if (formOrdServ) {
         }
     });
 }
+// -/-/-/- troca de aba -/-/-/- //
+function trocarAba(index) {
+    const abas = document.querySelectorAll(".btn-aba");
+    const conteudos = document.querySelectorAll(".aba");
+
+    abas.forEach(aba => aba.classList.remove("ativa"));
+    conteudos.forEach(c => c.classList.remove("ativa"));
+
+    abas[index].classList.add("ativa");
+    conteudos[index].classList.add("ativa");
+}
