@@ -1,4 +1,5 @@
-// 1. LÓGICA DE CÁLCULO E ADIÇÃO DE LINHAS (DELEGAÇÃO DE EVENTO)
+
+// SOMA E ADICIONA AS LINHAS DA TABELA CONFORME FOREM SENDO PREENCHIDAS
 document.addEventListener('input', function(e) {
     
     // Cálculo por linha (usando classes)
@@ -27,7 +28,7 @@ document.addEventListener('input', function(e) {
     }
 });
 
-// 2. FUNÇÃO PARA SOMAR TODAS AS LINHAS NO TOTAL GERAL
+// FUNÇÃO PARA SOMAR TODAS AS LINHAS NO TOTAL GERAL
 function atualizarTotalGeral() {
     const todosTotais = document.querySelectorAll('.total');
     let somaGeral = 0;
@@ -42,7 +43,7 @@ function atualizarTotalGeral() {
     }
 }
 
-// 3. FUNÇÃO SALVAR (ATUALIZADA PARA PEGAR MÚLTIPLOS ITENS)
+// FUNÇÃO SALVAR (ATUALIZADA PARA PEGAR MÚLTIPLOS ITENS)
 function salvarOrdemServ() {
     const nmCliente = document.getElementById('nmCliente');
     if (!nmCliente || nmCliente.value.trim() === "") {
@@ -101,6 +102,32 @@ if (formOrdServ) {
         }
     });
 }
+
+
+// FUNÇÃO QUE GERA O PRÓXIMO NUMERO DA ORDEM DE SERVIÇO
+function nrOS() {
+  // Busca o numero da últma ordem cadastrada
+  const valorBanco = localStorage.getItem('ordServ');
+
+  // Tenta converter
+  const ultimaOS = parseInt(valorBanco) || 0;
+  
+  // soma + 1 pra gerar o próximo
+  const proximaOS = ultimaOS + 1;  
+  
+  let numeroFormatado = proximaOS.toString().padStart(4, '0');
+  
+  const campo = document.getElementById('nrServico');
+  if (campo) {
+      campo.value = numeroFormatado;
+  }
+  
+  console.log("Valor no storage:", valorBanco);
+  console.log("Número formatado:", numeroFormatado);
+}
+
+
+
 // -/-/-/- troca de aba -/-/-/- //
 function trocarAba(index) {
     const abas = document.querySelectorAll(".btn-aba");
@@ -112,3 +139,8 @@ function trocarAba(index) {
     abas[index].classList.add("ativa");
     conteudos[index].classList.add("ativa");
 }
+
+//chama algumas funções ao abrir a página
+document.addEventListener("DOMContentLoaded", function() {
+  nrOS()   
+})
