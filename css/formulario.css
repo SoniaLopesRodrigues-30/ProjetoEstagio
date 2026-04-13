@@ -255,3 +255,26 @@ table td {
     font-size: 20px;
     cursor: pointer;
 }
+/* para responsivo */
+.btn-menu {
+    display: none;
+}
+@media (max-width: 755px) {
+    .nav {
+        position: absolute;
+        top: 70px;
+        background: var(--cor-primaria);
+        flex-direction: column;
+        width: 100%;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: var(--cor-sombra-neon);
+        display: none;
+    }
+    .nav.ativo {
+        display: flex;
+    }
+    .btn-menu {
+        display: block;
+    }
+}
