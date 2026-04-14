@@ -82,7 +82,7 @@ function salvarOrdemServ() {
     return true; 
 }
 
-// 4. EVENTO DE SUBMIT
+//  EVENTO DE SUBMIT
 const formOrdServ = document.getElementById('formOrdServ');
 if (formOrdServ) {
     formOrdServ.addEventListener('submit', (e) => {
@@ -121,10 +121,58 @@ function nrOS() {
   if (campo) {
       campo.value = numeroFormatado;
   }
-  
-  console.log("Valor no storage:", valorBanco);
-  console.log("Número formatado:", numeroFormatado);
+    
 }
+
+//abre uma lista de clientes cadastrados no localStorage
+function selecionaCliente(idInput, chaveLocalStorage) {
+    const input = document.getElementById(idInput);
+    if (!input) return;
+
+    const idDatalist = `lista-${idInput}`;
+    let dataList = document.getElementById(idDatalist) || document.createElement('datalist');
+    
+    if (!dataList.id) {
+        dataList.id = idDatalist;
+        input.parentNode.appendChild(dataList);
+        input.setAttribute('list', idDatalist);
+    }
+
+    // 1. Lógica para mostrar as sugestões (Autocomplete)
+    input.addEventListener('input', () => {
+        const termo = input.value.toLowerCase();
+        const dados = JSON.parse(localStorage.getItem(chaveLocalStorage) || '[]');
+        dataList.innerHTML = '';
+
+        if (termo.length > 0) {
+            dados.filter(item => item.nome && item.nome.toLowerCase().includes(termo))
+                 .forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.nome;
+                    dataList.appendChild(option);
+                 });
+        }
+    });
+
+    // SELECIONA O CLIENTE DO LOCALSTORAGE APENAS
+    input.addEventListener('change', () => {
+        const dados = JSON.parse(localStorage.getItem(chaveLocalStorage) || '[]');
+        const nomeDigitado = input.value;
+
+        // Verifica se o nome existe no array
+        const existe = dados.find(item => item.nome === nomeDigitado);
+
+        if (!existe && nomeDigitado !== "") {
+            alert("Cliente não cadastrado! Selecione na lista ou cadastre o Cliente!");
+            input.value = ""; 
+            input.focus();    
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    selecionaCliente('nmCliente', 'clientes');
+});
 
 
 
