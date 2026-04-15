@@ -138,7 +138,7 @@ function selecionaCliente(idInput, chaveLocalStorage) {
         input.setAttribute('list', idDatalist);
     }
 
-    // 1. Lógica para mostrar as sugestões (Autocomplete)
+    // mostra os clientes cadastrados
     input.addEventListener('input', () => {
         const termo = input.value.toLowerCase();
         const dados = JSON.parse(localStorage.getItem(chaveLocalStorage) || '[]');
@@ -154,20 +154,42 @@ function selecionaCliente(idInput, chaveLocalStorage) {
         }
     });
 
-    // SELECIONA O CLIENTE DO LOCALSTORAGE APENAS
     input.addEventListener('change', () => {
-        const dados = JSON.parse(localStorage.getItem(chaveLocalStorage) || '[]');
-        const nomeDigitado = input.value;
+    const dados = JSON.parse(localStorage.getItem(chaveLocalStorage) || '[]');
+    const nomeDigitado = input.value.trim();
 
-        // Verifica se o nome existe no array
-        const existe = dados.find(item => item.nome === nomeDigitado);
+    if (nomeDigitado === "") return;
 
-        if (!existe && nomeDigitado !== "") {
-            alert("Cliente não cadastrado! Selecione na lista ou cadastre o Cliente!");
-            input.value = ""; 
-            input.focus();    
-        }
-    });
+    //  Busca os dados do cliente
+    const clienteEncontrado = dados.find(item => 
+        item.nome.toLowerCase() === nomeDigitado.toLowerCase()
+    );
+
+    if (clienteEncontrado) {
+        // 2. Preenche os campos com os dados encontrados
+        
+        document.getElementById('inputEmail').value = clienteEncontrado.email || "";
+        document.getElementById('inputTelefone').value = clienteEncontrado.telefone || "";
+        document.getElementById('inputEndereco').value = clienteEncontrado.endereco || "";
+        
+        // Dica: Se quiser garantir que o nome fique idêntico ao salvo (ex: maiúsculas)
+        input.value = clienteEncontrado.nome;
+    } else {
+        alert("Cliente não cadastrado! Selecione na lista ou cadastre o Cliente!");
+        input.value = ""; 
+        input.focus();
+        
+        // 3. Opcional: Limpa os campos se o cliente não for encontrado
+        limparCampos();
+    }
+});
+
+function limparCampos() {
+    document.getElementById('inputEmail').value = "";
+    document.getElementById('inputTelefone').value = "";
+    document.getElementById('inputEndereco').value = "";
+}
+    
 }
 
 document.addEventListener('DOMContentLoaded', () => {
