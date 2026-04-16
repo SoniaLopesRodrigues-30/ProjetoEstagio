@@ -30,7 +30,7 @@ body {
     /*color: #fdfafa;*/
     color: var(--cor-texto);
     padding: 20px;
-    padding-top: 80px;
+    padding-top: 100px;
 }
 /*container*/
 .container {
@@ -230,8 +230,9 @@ table td {
 }
 /* logo */
 .header img {
-   width: 160px;
+   width: 140px;
    height: auto;
+   margin-left: 20%;
 }
 /* menu */
 .nav {
@@ -266,7 +267,7 @@ table td {
 @media (max-width: 755px) {
     .nav {
         position: absolute;
-        top: 70px;
+        top: 85px;
         background: var(--cor-primaria);
         flex-direction: column;
         width: 100%;
