@@ -267,7 +267,7 @@ table td {
 @media (max-width: 755px) {
     .nav {
         position: absolute;
-        top: 85px;
+        top: 105px;
         background: var(--cor-primaria);
         flex-direction: column;
         width: 100%;
