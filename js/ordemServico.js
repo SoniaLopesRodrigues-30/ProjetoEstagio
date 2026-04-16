@@ -32,15 +32,21 @@ document.addEventListener('input', function(e) {
 function atualizarTotalGeral() {
     const todosTotais = document.querySelectorAll('.total');
     let somaGeral = 0;
+    let somaPendente=0;
+    let somaFaturado=0
+
     
     todosTotais.forEach(campo => {
         somaGeral += parseFloat(campo.value) || 0;
+        somaPendente += parseFloat(campo.value) || 0;
+        somaFaturado += parseFloat(campo.value) || 0;
     });
 
     const vlTotalGeral = document.getElementById('vlTotGeral');
     if (vlTotalGeral) {
         vlTotalGeral.value = somaGeral.toFixed(2);
-    }
+    }    
+    
 }
 
 // FUNÇÃO SALVAR (ATUALIZADA PARA PEGAR MÚLTIPLOS ITENS)
@@ -194,7 +200,7 @@ function selecionaCliente(idInput, chaveLocalStorage) {
 
 }
    
-
+// QUANDO DIGITO O NOME DO CLIENTE
 document.addEventListener('DOMContentLoaded', () => {
     selecionaCliente('nmCliente', 'clientes');
 });
