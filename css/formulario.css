@@ -15,6 +15,7 @@
     --cor-bordas: #e4dcf7;
     --cor-foco: #6b5dcc;
     --cor-sombras: rgb(11 10 10 / 25%);
+    --cor-aba-nao-editavel:#2af381;
     /*btn*/
     --cor-btn-positivo:#34ed59;
     --cor-btn-negativo:#ed2424;
@@ -52,6 +53,9 @@ h2 {
     padding: 20px;
     margin-bottom: 20px;
     border: 1px solid var(--cor-bordas);
+}
+#nao-editavel {
+    background: var(--cor-aba-nao-editavel);
 }
 /*campos e linhas*/
 .linha {
@@ -225,10 +229,9 @@ table td {
     box-shadow: var(--cor-sombra-neon);
 }
 /* logo */
-.logo {
-    font-weight: bold;
-    color: var(--cor-titulo);
-    font-size: 20px;
+.header img {
+   width: 160px;
+   height: auto;
 }
 /* menu */
 .nav {
