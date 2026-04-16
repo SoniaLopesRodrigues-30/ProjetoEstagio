@@ -71,7 +71,16 @@ function salvarOrdemServ() {
     const novaOrdem = {
         codigo: document.getElementById('nrServico').value, 
         data: document.getElementById('dataServ').value,
+
+        //SE CASO MUDAR OS DADOS NO CADASTRO DE CLIENTES NÃO ALTERA OS DADOS NA ORDEM DE SERVIÇO
         cliente: nmCliente.value,
+        endCli : document.getElementById('endCli').value,
+        endNr: document.getElementById('endNr').value,
+        endCidade:document.getElementById('endCidade').value,
+        endUF:document.getElementById('endUf').value,
+        cnpj:document.getElementById('cnpj').value,
+        foneCli:document.getElementById('fone').value,
+
         itens: itens, // Agora salva a lista de serviços!
         vlTotGeral: document.getElementById('vlTotGeral').value,
         obs: document.getElementById('obs').value
@@ -106,22 +115,27 @@ if (formOrdServ) {
 
 // FUNÇÃO QUE GERA O PRÓXIMO NUMERO DA ORDEM DE SERVIÇO
 function nrOS() {
-  // Busca o numero da últma ordem cadastrada
-  const valorBanco = localStorage.getItem('ordServ');
+    const valorBanco = localStorage.getItem('ordServ');
+    let proximoNumero = 1;
 
-  // Tenta converter
-  const ultimaOS = parseInt(valorBanco) || 0;
-  
-  // soma + 1 pra gerar o próximo
-  const proximaOS = ultimaOS + 1;  
-  
-  let numeroFormatado = proximaOS.toString().padStart(4, '0');
-  
-  const campo = document.getElementById('nrServico');
-  if (campo) {
-      campo.value = numeroFormatado;
-  }
+    if (valorBanco) {
+        const listaOS = JSON.parse(valorBanco);
+        
+        if (listaOS.length > 0) {
+            // Pega todos os códigos, converte para número e acha o maior
+            const codigos = listaOS.map(os => parseInt(os.codigo) || 0);
+            const maiorCodigo = Math.max(...codigos);
+            proximoNumero = maiorCodigo + 1;
+        }
+    }
+
+    // Formata com zeros à esquerda (ex: 0004)
+    const numeroFormatado = proximoNumero.toString().padStart(4, '0');
     
+    const campo = document.getElementById('nrServico');
+    if (campo) {
+        campo.value = numeroFormatado;
+    }
 }
 
 //abre uma lista de clientes cadastrados no localStorage
