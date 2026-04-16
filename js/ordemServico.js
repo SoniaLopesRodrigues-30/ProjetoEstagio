@@ -140,57 +140,46 @@ function selecionaCliente(idInput, chaveLocalStorage) {
 
     // mostra os clientes cadastrados
     input.addEventListener('input', () => {
-        const termo = input.value.toLowerCase();
-        const dados = JSON.parse(localStorage.getItem(chaveLocalStorage) || '[]');
-        dataList.innerHTML = '';
-
-        if (termo.length > 0) {
-            dados.filter(item => item.nome && item.nome.toLowerCase().includes(termo))
-                 .forEach(item => {
-                    const option = document.createElement('option');
-                    option.value = item.nome;
-                    dataList.appendChild(option);
-                 });
-        }
-    });
-
-    input.addEventListener('change', () => {
+    const termo = input.value.toLowerCase();
     const dados = JSON.parse(localStorage.getItem(chaveLocalStorage) || '[]');
-    const nomeDigitado = input.value.trim();
+    dataList.innerHTML = '';
 
-    if (nomeDigitado === "") return;
+    if (termo.length > 0) {
+        //  Filtra os clientes para as sugestões
+        const filtrados = dados.filter(item => item.nome && item.nome.toLowerCase().includes(termo));
 
-    //  Busca os dados do cliente
-    const clienteEncontrado = dados.find(item => 
-        item.nome.toLowerCase() === nomeDigitado.toLowerCase()
-    );
+        filtrados.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item.nome;
+            dataList.appendChild(option);
+        });
 
-    if (clienteEncontrado) {
-        // 2. Preenche os campos com os dados encontrados
         
-        document.getElementById('inputEmail').value = clienteEncontrado.email || "";
-        document.getElementById('inputTelefone').value = clienteEncontrado.telefone || "";
-        document.getElementById('inputEndereco').value = clienteEncontrado.endereco || "";
-        
-        // Dica: Se quiser garantir que o nome fique idêntico ao salvo (ex: maiúsculas)
-        input.value = clienteEncontrado.nome;
-    } else {
-        alert("Cliente não cadastrado! Selecione na lista ou cadastre o Cliente!");
-        input.value = ""; 
-        input.focus();
-        
-        // 3. Opcional: Limpa os campos se o cliente não for encontrado
-        limparCampos();
+        // preenche os dados dos clientes selecionados
+        const clienteSelecionado = filtrados.find(item => item.nome.toLowerCase() === termo);
+        console.log(clienteSelecionado);
+        if (clienteSelecionado) {
+            
+            const endCli = document.getElementById('endCli');
+            const endNr= document.getElementById('endNr');
+            const endCidade=document.getElementById('endCidade');
+            const endUF=document.getElementById('endUf');
+            const cnpj=document.getElementById('cnpj');
+            const foneCli=document.getElementById('fone');
+
+            if (endCli) endCli.value = clienteSelecionado.rua || ""; 
+            if (endNr) endNr.value = clienteSelecionado.numero || "";
+            if (endCidade) endCidade.value = clienteSelecionado.cidade || "";
+            if (endUF) endUF.value = clienteSelecionado.uf || "";
+            if (cnpj) cnpj.value = clienteSelecionado.cnpj || "";
+            if (foneCli) foneCli.value = clienteSelecionado.fone || "";
+           
+        }
     }
 });
 
-function limparCampos() {
-    document.getElementById('inputEmail').value = "";
-    document.getElementById('inputTelefone').value = "";
-    document.getElementById('inputEndereco').value = "";
 }
-    
-}
+   
 
 document.addEventListener('DOMContentLoaded', () => {
     selecionaCliente('nmCliente', 'clientes');

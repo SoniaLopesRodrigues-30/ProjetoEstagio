@@ -5,7 +5,8 @@ const tpTerceiro= document.getElementById('tpTerceiro');
 const uf=document.getElementById('uf');
 const razao=document.getElementById('nomeCliente');
 let tipoTerceiro="";
-let optUf="";
+//POR PADRÃO SELECIONADO RS
+let optUf="RS";
 
 
 if (tpTerceiro) {
@@ -13,9 +14,11 @@ if (tpTerceiro) {
 }
 
 if (uf) {
-    uf.addEventListener('change', (e) => optUf = e.target.value);
+    uf.addEventListener('change', (e) => {
+        optUf = e.target.value;
+        console.log("UF selecionada:", optUf);
+    });
 }
-
 
 // A FUNÇÃO SALVAR CLIENTES
 function salvarCliente() {
