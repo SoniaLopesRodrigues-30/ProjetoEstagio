@@ -259,6 +259,26 @@ table td {
     font-size: 20px;
     cursor: pointer;
 }
+.notificacao:hover .texto-span {
+    opacity: 1;
+}
+.texto-span {
+    position: absolute;
+    bottom: -30px;    /* aparece embaixo */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #000;
+    color: #fff;
+    box-shadow: var(--cor-sombra-neon);
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.3s;
+    white-space: nowrap;
+}
+
 /* para responsivo */
 .btn-menu {
     display: none;
