@@ -1,4 +1,10 @@
 
+
+// Garante que o número e a data apareçam assim que a página carregar
+window.onload = function() {
+    nrOS();
+};
+
 // SOMA E ADICIONA AS LINHAS DA TABELA CONFORME FOREM SENDO PREENCHIDAS
 document.addEventListener('input', function(e) {
     
@@ -49,75 +55,124 @@ function atualizarTotalGeral() {
     
 }
 
-// FUNÇÃO SALVAR (ATUALIZADA PARA PEGAR MÚLTIPLOS ITENS)
+//FUNÇÃO PARA SALVAR A ORDEM
 function salvarOrdemServ() {
     const nmCliente = document.getElementById('nmCliente');
-    if (!nmCliente || nmCliente.value.trim() === "") {
+    
+    if (!nmCliente?.value.trim()) {
         alert("Informe o Cliente!");
         return false;
     }
 
-    const ordServ = JSON.parse(localStorage.getItem('ordServ')) || [];
+    try {
+        const ordServ = JSON.parse(localStorage.getItem('ordServ')) || [];
+        const nrServico = document.getElementById('nrServico').value;
 
-    // Captura os itens da tabela
-    const itens = [];
-    document.querySelectorAll('.linha-servico').forEach(linha => {
-        const desc = linha.querySelector('.descProd').value;
-        if (desc) { // Só salva se tiver descrição
-            itens.push({
-                descricao: desc,
+        // Captura itens com Map para um código mais limpo
+        const itens = Array.from(document.querySelectorAll('.linha-servico'))
+            .map(linha => ({
+                descricao: linha.querySelector('.descProd').value,
                 valor: linha.querySelector('.valor').value,
                 qtd: linha.querySelector('.qtd').value,
                 total: linha.querySelector('.total').value,
                 data: linha.querySelector('.data-servico').value
-            });
+            }))
+            .filter(item => item.descricao.trim() !== ""); // Remove linhas vazias
+
+        const novaOrdem = {
+            codigo: nrServico,
+            data: document.getElementById('dataServ').value,
+            cliente: nmCliente.value,
+            endCli: document.getElementById('endCli').value,
+            endNr: document.getElementById('endNr').value,
+            endCidade: document.getElementById('endCidade').value,
+            endUF: document.getElementById('endUf').value,
+            cnpj: document.getElementById('cnpj').value,
+            foneCli: document.getElementById('fone').value,
+            itens: itens,
+            vlTotGeral: document.getElementById('vlTotGeral').value,
+            obs: document.getElementById('obs').value,
+            dataRegistro: new Date().toISOString() 
+        };
+
+        // Verifica se é uma edição ou nova ordem
+        const index = ordServ.findIndex(os => os.codigo === nrServico);
+        if (index !== -1) {
+            ordServ[index] = novaOrdem; // Atualiza a existente
+        } else {
+            ordServ.push(novaOrdem); // Adiciona nova
         }
-    });
 
-    const novaOrdem = {
-        codigo: document.getElementById('nrServico').value, 
-        data: document.getElementById('dataServ').value,
+        localStorage.setItem('ordServ', JSON.stringify(ordServ));
+        alert("Ordem de Serviço salva com sucesso!");               
+        limparOrdem();      
+        return true;
 
-        //SE CASO MUDAR OS DADOS NO CADASTRO DE CLIENTES NÃO ALTERA OS DADOS NA ORDEM DE SERVIÇO
-        cliente: nmCliente.value,
-        endCli : document.getElementById('endCli').value,
-        endNr: document.getElementById('endNr').value,
-        endCidade:document.getElementById('endCidade').value,
-        endUF:document.getElementById('endUf').value,
-        cnpj:document.getElementById('cnpj').value,
-        foneCli:document.getElementById('fone').value,
-
-        itens: itens, // Agora salva a lista de serviços!
-        vlTotGeral: document.getElementById('vlTotGeral').value,
-        obs: document.getElementById('obs').value
-    };
-
-    ordServ.push(novaOrdem);
-    localStorage.setItem('ordServ', JSON.stringify(ordServ));
-    return true; 
+    } catch (error) {
+        console.error("Erro ao salvar no localStorage:", error);
+        alert("Erro ao salvar os dados.");
+        return false;
+    }
 }
+
+//FUNÇÃO PARA LIMPAR
+function limparOrdem() {
+    
+    document.getElementById('formOrdServ').reset();   
+    
+    const tabela = document.querySelector('#tabelaItens tbody');
+    if (tabela) {
+        tabela.innerHTML = '';
+    }
+    
+    nrOS();
+}
+
+
+//FUNÇÃO PARA EXCLUIR ORDEM
+function excluirOrdemServ(nrOS) {
+    // Confirmação do usuário
+    if (!confirm(`Tem certeza que deseja excluir a OS nº ${codigoParaExcluir}?`)) {
+        return;
+    }
+
+    // Busca os dados atuais
+    let ordServ = JSON.parse(localStorage.getItem('ordServ')) || [];
+
+    // Filtra a lista mantendo apenas o que NÃO for o código informado
+    const novaLista = ordServ.filter(ordem => ordem.codigo !== codigoParaExcluir);
+
+    // Verifica se algo foi removido de fato
+    if (ordServ.length === novaLista.length) {
+        alert("Ordem de serviço não encontrada.");
+        return;
+    }
+
+    // Salva a nova lista e atualiza a tela
+    localStorage.setItem('ordServ', JSON.stringify(novaLista));
+    alert("Ordem de serviço excluída!");
+    
+    
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const btn = document.getElementById('btnSalvar');
+    if (btn) {
+        btn.addEventListener('click', salvarOrdemServ);
+    }
+});
 
 //  EVENTO DE SUBMIT
-const formOrdServ = document.getElementById('formOrdServ');
-if (formOrdServ) {
-    formOrdServ.addEventListener('submit', (e) => {
-        e.preventDefault();        
-        if (salvarOrdemServ()) {
-            formOrdServ.reset();
-            // Limpa a tabela deixando apenas uma linha
-            document.querySelector('#tabelaServicos tbody').innerHTML = `
-                <tr class="linha-servico">
-                    <td><input class="descProd" type="text"></td>
-                    <td><input class="valor" type="number" step="0.01"></td>
-                    <td><input class="qtd" type="number"></td>
-                    <td><input class="total" type="text" readonly></td>
-                    <td><input class="data-servico" type="date"></td>
-                </tr>`;
-            alert('Ordem de Serviço salva com sucesso!');                       
-        }
-    });
-}
 
+const formOrdServ = document.getElementById('formOrdServ');
+formOrdServ.addEventListener('submit', (e) => {
+    e.preventDefault(); 
+    
+    
+    if (salvarOrdemServ()) {
+      return true
+    }
+});
 
 // FUNÇÃO QUE GERA O PRÓXIMO NUMERO DA ORDEM DE SERVIÇO
 function nrOS() {
@@ -140,7 +195,12 @@ function nrOS() {
     
     const campo = document.getElementById('nrServico');
     if (campo) {
-        campo.value = numeroFormatado;
+        campo.value = numeroFormatado;        
+    }
+
+    const campoData = document.getElementById('dataServ');     
+    if (campoData) {
+        campoData.value = new Date().toISOString().split('T')[0];
     }
 }
 
