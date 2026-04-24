@@ -324,3 +324,11 @@ table td {
     background: var(--cor-foco);
     box-shadow: var(--cor-sombra-neon);
 }
+.seta-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.seta-box:hover .texto-span {
+    opacity: 1;
+}
