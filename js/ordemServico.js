@@ -55,6 +55,9 @@ function atualizarTotalGeral() {
     
 }
 
+
+
+
 //FUNÇÃO PARA SALVAR A ORDEM
 function salvarOrdemServ() {
     const nmCliente = document.getElementById('nmCliente');
@@ -113,6 +116,69 @@ function salvarOrdemServ() {
         alert("Erro ao salvar os dados.");
         return false;
     }
+}
+
+
+//FUNÇÃO PARA EXIBIR OS DADOS NA TELA
+let idxOrdServ = 0; 
+
+function exibirDados() {
+    const tabela = JSON.parse(localStorage.getItem("ordServ")) || [];    
+    const contador = document.getElementById('contador');
+
+    if (tabela.length === 0) {
+        console.log("Nenhum cadastro encontrado.");
+        if (contador) contador.innerText = "0 / 0";
+        return;
+    }
+
+    if (idxOrdServ >= tabela.length) idxOrdServ = 0;
+    if (idxOrdServ < 0) idxOrdServ = tabela.length - 1;
+
+    const ordem = tabela[idxOrdServ];
+
+    // PREENCHE OS CAMPOS PRINCIPAIS
+    document.getElementById('nrServico').value = ordem.codigo || "";
+    document.getElementById('dataServ').value = ordem.data || "";
+    document.getElementById('nmCliente').value = ordem.cliente || "";
+    document.getElementById('endCli').value = ordem.endCli || "";
+    document.getElementById('endNr').value = ordem.endNr || "";
+    document.getElementById('endCidade').value = ordem.endCidade || "";
+    document.getElementById('endUf').value = ordem.endUF || "";
+    document.getElementById('cnpj').value = ordem.cnpj || "";
+    document.getElementById('fone').value = ordem.foneCli || "";
+    document.getElementById('vlTotGeral').value = ordem.vlTotGeral || "";
+    document.getElementById('obs').value = ordem.obs || "";
+
+    // ITENS DA TABELA SERVIÇOS
+    renderizarItensOrdem(ordem.itens);
+
+    if (contador) {
+        contador.innerText = `${idxOrdServ + 1} de ${tabela.length}`;
+    }
+}
+
+// Função auxiliar para reconstruir as linhas de produtos/serviços
+function renderizarItensOrdem(itens) {
+    const container = document.getElementById('container-itens'); // Ajuste para o ID do seu container/tbody
+    if (!container) return;
+
+    container.innerHTML = ""; // Limpa os itens atuais
+
+    itens.forEach(item => {
+        // Aqui você deve chamar a sua função existente que cria uma linha vazia 
+        // e depois preencher os valores, ou criar o HTML direto:
+        const novaLinha = document.createElement('div');
+        novaLinha.className = 'linha-servico';
+        novaLinha.innerHTML = `
+            <input type="text" class="descProd" value="${item.descricao}">
+            <input type="number" class="valor" value="${item.valor}">
+            <input type="number" class="qtd" value="${item.qtd}">
+            <input type="text" class="total" value="${item.total}">
+            <input type="date" class="data-servico" value="${item.data}">
+        `;
+        container.appendChild(novaLinha);
+    });
 }
 
 
@@ -320,6 +386,13 @@ document.addEventListener('DOMContentLoaded', function() {
     if (baixa) {
         baixa.addEventListener('click', baixarOrdem);
     }
+
+    //BOTÃO MOVIMENTAR CADASTRO NA TELA
+    const movCadastro=document.getElementById('id-btn-menu')
+    if (movCadastro) {
+        movCadastro.addEventListener('click', exibirDados);
+    }
+
 });
 
 
