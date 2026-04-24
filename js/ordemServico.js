@@ -115,6 +115,71 @@ function salvarOrdemServ() {
     }
 }
 
+
+
+
+//FUNÇÃO PARA BAIXAR PARCIALMENTE A ORDEM---ABA BAIXAS
+function baixarOrdem(nrServico, valorPago) {
+    try {
+        let ordServ = JSON.parse(localStorage.getItem('ordServ')) || [];
+        const index = ordServ.findIndex(os => os.codigo === nrServico);
+
+        if (index === -1) {
+            alert("Ordem de Serviço não encontrada!");
+            return;
+        }
+
+        let os = ordServ[index];
+
+        // PEGA VALORES JÁ BAIXADOS PARA ORDEM ATUAL, SE NÃO TIVER NADA FICA 0
+        if (!os.valorPagoAcumulado) os.valorPagoAcumulado = 0;
+        if (!os.historicoPagamentos) os.historicoPagamentos = [];
+
+        // CONVERTE PARA VALORES
+        const valorParcela = parseFloat(valorPago);
+        const totalGeral = parseFloat(os.vlTotGeral);
+
+        if (isNaN(valorParcela) || valorParcela <= 0) {
+            alert("Informe um valor de pagamento válido!");
+            return;
+        }
+
+        // VERIFICA SE O VALOR INFORMADO PARA BAIXA NÃO É MAIOR QUE O TOTAL DA ORDEM
+        const saldoRestante = totalGeral - os.valorPagoAcumulado;
+        if (valorParcela > saldoRestante) {
+            alert(`Valor excede o saldo devedor! Saldo atual: R$ ${saldoRestante.toFixed(2)}`);
+            return;
+        }
+
+        // ATUALIZA OS DADOS
+        os.valorPagoAcumulado += valorParcela;
+        os.historicoPagamentos.push({
+            data: new Date().toISOString(),
+            valor: valorParcela
+        });
+
+        // ATUALIZA STATUS DA ORDEM
+        if (os.valorPagoAcumulado >= totalGeral) {
+            os.status = "PAGO";
+        } else {
+            os.status = "PENDENTE";
+        }
+
+        // SALVA DE VOLTA NO  LocalStorage
+        ordServ[index] = os;
+        localStorage.setItem('ordServ', JSON.stringify(ordServ));
+
+        alert(`Baixa de R$ ${valorParcela.toFixed(2)} registrada com sucesso!`);
+        return true;
+
+    } catch (error) {
+        console.error("Erro ao dar baixa:", error);
+    }
+}
+
+
+
+
 //FUNÇÃO PARA LIMPAR
 function limparOrdem() {
     
@@ -155,24 +220,6 @@ function excluirOrdemServ(nrOS) {
     
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    const btn = document.getElementById('btnSalvar');
-    if (btn) {
-        btn.addEventListener('click', salvarOrdemServ);
-    }
-});
-
-//  EVENTO DE SUBMIT
-
-const formOrdServ = document.getElementById('formOrdServ');
-formOrdServ.addEventListener('submit', (e) => {
-    e.preventDefault(); 
-    
-    
-    if (salvarOrdemServ()) {
-      return true
-    }
-});
 
 // FUNÇÃO QUE GERA O PRÓXIMO NUMERO DA ORDEM DE SERVIÇO
 function nrOS() {
@@ -259,6 +306,33 @@ function selecionaCliente(idInput, chaveLocalStorage) {
 });
 
 }
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    //SALVAR
+    const btn = document.getElementById('btnSalvar');
+    if (btn) {
+        btn.addEventListener('click', salvarOrdemServ);
+    }
+
+    //BAIXAR VALOR
+    const baixa = document.getElementById('btnBaixar');
+    if (baixa) {
+        baixa.addEventListener('click', baixarOrdem);
+    }
+});
+
+
+//  EVENTO DE SUBMIT
+const formOrdServ = document.getElementById('formOrdServ');
+formOrdServ.addEventListener('submit', (e) => {
+    e.preventDefault();     
+    
+    if (salvarOrdemServ()) {
+      return true
+    }
+});
+
    
 // QUANDO DIGITO O NOME DO CLIENTE
 document.addEventListener('DOMContentLoaded', () => {
