@@ -5,10 +5,10 @@ function login() {
     const usuario = document.getElementById("usuario").value;    // pega os valores dos campos //
     const senha = document.getElementById("senha").value;
     // -- info de login corretas -- //
-    if (usuario === "cinema" && senha === "123") {
+    if (usuario === "magalhaes" && senha === "123") {
         // -- sessionStorage -- //
         sessionStorage.setItem("logado", "true");
-        window.location.href = "filmes.html";
+        window.location.href = "./pgPrincipal.html";
     } else {
         document.getElementById("erro").style.display = "block";        
     }

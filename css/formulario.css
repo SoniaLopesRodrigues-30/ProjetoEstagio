@@ -303,3 +303,23 @@ table td {
         display: block;
     }
 }
+
+/* --- btns de navegaçao ---*/
+.nav-setas {
+    display: flex;
+    gap: 5px;
+    margin-right: 10px;
+}
+.seta {
+    background: var(--cor-btn-padrao);
+    color: var(--cor-texto-btn);
+    border: none;
+    padding: 6px 10px;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: 0.3s;
+}
+.seta:hover {
+    background: var(--cor-foco);
+}
