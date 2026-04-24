@@ -322,4 +322,5 @@ table td {
 }
 .seta:hover {
     background: var(--cor-foco);
+    box-shadow: var(--cor-sombra-neon);
 }
