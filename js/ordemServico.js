@@ -1,38 +1,67 @@
-
-
-// Garante que o número e a data apareçam assim que a página carregar
-window.onload = function() {
+document.addEventListener('DOMContentLoaded', () => {
+    inicializarTabelaServicos();
     nrOS();
-};
-
-// SOMA E ADICIONA AS LINHAS DA TABELA CONFORME FOREM SENDO PREENCHIDAS
-document.addEventListener('input', function(e) {
-    
-    // Cálculo por linha (usando classes)
-    if (e.target.classList.contains('valor') || e.target.classList.contains('qtd')) {
-        const linha = e.target.closest('tr');
-        const v = parseFloat(linha.querySelector('.valor').value.replace(',', '.')) || 0;
-        const q = parseFloat(linha.querySelector('.qtd').value) || 0;
-        
-        const totalLinha = v * q;
-        linha.querySelector('.total').value = totalLinha.toFixed(2);
-        
-        atualizarTotalGeral();
-    }
-
-    // Adicionar nova linha ao preencher a data da última linha
-    if (e.target.classList.contains('data-servico')) {
-        const tbody = document.querySelector('#tabelaServicos tbody');
-        const linhas = tbody.getElementsByClassName('linha-servico');
-        const ultimaLinha = linhas[linhas.length - 1];
-
-        if (e.target.closest('tr') === ultimaLinha && e.target.value !== "") {
-            const novaLinha = ultimaLinha.cloneNode(true);
-            novaLinha.querySelectorAll('input').forEach(input => input.value = "");
-            tbody.appendChild(novaLinha);
-        }
-    }
 });
+
+
+// FUNÇÕES DA ORDEM DE SERVIÇO
+function inicializarTabelaServicos() {
+    const tabela = document.querySelector('#tabelaServicos');
+    if (!tabela) return;
+
+    tabela.addEventListener('input', function(e) {
+        const target = e.target;
+        const linha = target.closest('tr');
+
+        // Lógica de Cálculo de Preço
+        if (target.classList.contains('valor') || target.classList.contains('qtd')) {
+            calcularTotalLinha(linha);
+            atualizarTotalGeral();
+        }
+
+        // Adicionar Nova Linha
+        if (target.classList.contains('data-servico')) {
+            verificarEAdicionarLinha(target, linha);
+        }
+    });
+}
+
+//  Função que calcula o total de uma linha
+function calcularTotalLinha(linha) {
+    const v = parseFloat(linha.querySelector('.valor').value.replace(',', '.')) || 0;
+    const q = parseFloat(linha.querySelector('.qtd').value) || 0;
+    const campoTotal = linha.querySelector('.total');
+    
+    if (campoTotal) {
+        campoTotal.value = (v * q).toFixed(2);
+    }
+}
+
+// Função para adicionar linha automaticamente
+function verificarEAdicionarLinha(inputData, linhaAtual) {
+    const tbody = inputData.closest('tbody');
+    const linhas = tbody.getElementsByClassName('linha-servico');
+    const ultimaLinha = linhas[linhas.length - 1];
+
+    if (linhaAtual === ultimaLinha && inputData.value !== "") {
+        const novaLinha = ultimaLinha.cloneNode(true);
+        // Limpa os valores dos inputs da nova linha
+        novaLinha.querySelectorAll('input').forEach(input => input.value = "");
+        tbody.appendChild(novaLinha);
+    }
+}
+
+// 4. Função para somar todos os totais
+function atualizarTotalGeral() {
+    let soma = 0;
+    document.querySelectorAll('.total').forEach(input => {
+        soma += parseFloat(input.value) || 0;
+    });
+    
+    const campoTotalGeral = document.getElementById('id_total_geral');
+    if (campoTotalGeral) campoTotalGeral.value = soma.toFixed(2);
+}
+
 
 // FUNÇÃO PARA SOMAR TODAS AS LINHAS NO TOTAL GERAL
 function atualizarTotalGeral() {
@@ -56,8 +85,6 @@ function atualizarTotalGeral() {
 }
 
 
-
-
 //FUNÇÃO PARA SALVAR A ORDEM
 function salvarOrdemServ() {
     const nmCliente = document.getElementById('nmCliente');
@@ -71,7 +98,7 @@ function salvarOrdemServ() {
         const ordServ = JSON.parse(localStorage.getItem('ordServ')) || [];
         const nrServico = document.getElementById('nrServico').value;
 
-        // Captura itens com Map para um código mais limpo
+        // seleciona as linhas da tabela
         const itens = Array.from(document.querySelectorAll('.linha-servico'))
             .map(linha => ({
                 descricao: linha.querySelector('.descProd').value,
@@ -122,6 +149,25 @@ function salvarOrdemServ() {
 //FUNÇÃO PARA EXIBIR OS DADOS NA TELA
 let idxOrdServ = 0; 
 
+function mudarCadastro(direcao) {
+    const tabela = JSON.parse(localStorage.getItem("ordServ")) || [];
+    
+    if (tabela.length === 0) return;
+    
+    idxOrdServ += direcao;
+
+    if (idxOrdServ >= tabela.length) {
+        idxOrdServ = 0;
+    }
+    if (idxOrdServ < 0) {
+        idxOrdServ = tabela.length - 1;
+    }
+
+    exibirDados(); 
+}
+
+
+
 function exibirDados() {
     const tabela = JSON.parse(localStorage.getItem("ordServ")) || [];    
     const contador = document.getElementById('contador');
@@ -160,27 +206,38 @@ function exibirDados() {
 
 // Função auxiliar para reconstruir as linhas de produtos/serviços
 function renderizarItensOrdem(itens) {
-    const container = document.getElementById('container-itens'); // Ajuste para o ID do seu container/tbody
-    if (!container) return;
+    const tbody = document.querySelector('#tabelaServicos tbody');
+    if (!tbody) return;
 
-    container.innerHTML = ""; // Limpa os itens atuais
+    tbody.innerHTML = ""; // Limpa a tabela
 
-    itens.forEach(item => {
-        // Aqui você deve chamar a sua função existente que cria uma linha vazia 
-        // e depois preencher os valores, ou criar o HTML direto:
-        const novaLinha = document.createElement('div');
-        novaLinha.className = 'linha-servico';
-        novaLinha.innerHTML = `
-            <input type="text" class="descProd" value="${item.descricao}">
-            <input type="number" class="valor" value="${item.valor}">
-            <input type="number" class="qtd" value="${item.qtd}">
-            <input type="text" class="total" value="${item.total}">
-            <input type="date" class="data-servico" value="${item.data}">
-        `;
-        container.appendChild(novaLinha);
-    });
+    if (itens && itens.length > 0) {
+        itens.forEach(item => {
+            const tr = document.createElement('tr');
+            tr.className = 'linha-servico';
+            tr.innerHTML = `
+                <td><input type="date" class="data-servico" value="${item.data}"></td>
+                <td><input type="text" class="descProd" value="${item.descricao}"></td>
+                <td><input type="number" class="qtd" value="${item.qtd}"></td>
+                <td><input type="text" class="valor" value="${item.valor}"></td>
+                <td><input type="text" class="total" value="${item.total}" readonly></td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+    
+    // Adiciona uma linha vazia no final para novas edições
+    const trVazia = document.createElement('tr');
+    trVazia.className = 'linha-servico';
+    trVazia.innerHTML = `
+        <td><input type="date" class="data-servico"></td>
+        <td><input type="text" class="descProd"></td>
+        <td><input type="number" class="qtd" value="0"></td>
+        <td><input type="text" class="valor" value="0,00"></td>
+        <td><input type="text" class="total" value="0.00" readonly></td>
+    `;
+    tbody.appendChild(trVazia);
 }
-
 
 
 
@@ -243,27 +300,44 @@ function baixarOrdem(nrServico, valorPago) {
     }
 }
 
-
-
-
-//FUNÇÃO PARA LIMPAR
 function limparOrdem() {
+    // Limpa todos os campos do formulário
+    document.querySelectorAll('input, textarea').forEach(el => el.value = "");
     
-    document.getElementById('formOrdServ').reset();   
+    // Seleciona o corpo da tabela
+    const tbody = document.querySelector('#tabelaServicos tbody');
     
-    const tabela = document.querySelector('#tabelaItens tbody');
-    if (tabela) {
-        tabela.innerHTML = '';
+    if (tbody) {
+        // Remove todos os filhos (linhas) de forma explícita
+        while (tbody.firstChild) {
+            tbody.removeChild(tbody.firstChild);
+        }
+
+        //  Cria a "Linha Mestra" (única linha inicial)
+        const novaLinha = document.createElement('tr');
+        novaLinha.className = 'linha-servico';
+        novaLinha.innerHTML = `
+            <td><input type="date" class="data-servico"></td>
+            <td><input type="text" class="descProd"></td>
+            <td><input type="number" class="qtd" value="0"></td>
+            <td><input type="text" class="valor" value="0,00"></td>
+            <td><input type="text" class="total" value="0.00" readonly></td>
+        `;
+        
+        tbody.appendChild(novaLinha);
     }
     
-    nrOS();
+    // 4. Reset do número da OS e foco no primeiro campo
+    if (typeof nrOS === "function") nrOS();
+    document.getElementById('nmCliente')?.focus();
 }
+
 
 
 //FUNÇÃO PARA EXCLUIR ORDEM
 function excluirOrdemServ(nrOS) {
     // Confirmação do usuário
-    if (!confirm(`Tem certeza que deseja excluir a OS nº ${codigoParaExcluir}?`)) {
+    if (!confirm(`Tem certeza que deseja excluir a OS nº ${nrOS.value}?`)) {
         return;
     }
 
@@ -271,7 +345,7 @@ function excluirOrdemServ(nrOS) {
     let ordServ = JSON.parse(localStorage.getItem('ordServ')) || [];
 
     // Filtra a lista mantendo apenas o que NÃO for o código informado
-    const novaLista = ordServ.filter(ordem => ordem.codigo !== codigoParaExcluir);
+    const novaLista = ordServ.filter(ordem => ordem.codigo !== nrOS.value);
 
     // Verifica se algo foi removido de fato
     if (ordServ.length === novaLista.length) {
@@ -388,10 +462,34 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     //BOTÃO MOVIMENTAR CADASTRO NA TELA
-    const movCadastro=document.getElementById('id-btn-menu')
-    if (movCadastro) {
-        movCadastro.addEventListener('click', exibirDados);
+   const movAnterior = document.getElementById('btnAnterior');
+    if (movAnterior) {
+        // Passa -1 para voltar
+        movAnterior.addEventListener('click', () => mudarCadastro(-1));
     }
+
+    const movProximo = document.getElementById('btnProximo');
+    if (movProximo) {
+        // Passa 1 para avançar
+        movProximo.addEventListener('click', () => mudarCadastro(1));
+    }
+   //LIMPAR A TABELA --- 
+   limparOrdem()
+   const limpar =document.getElementById('btnNovo')
+   if (limpar) {
+        // limpa a tela
+        limpar.addEventListener('click', () => limparOrdem());
+    } 
+   
+
+   //EXCLUIR CADASTRO---
+   const excluir=document.getElementById('btnCancelar')
+    if (excluir) {
+        // excluir o cadastro
+        const nrOrdem = document.getElementById("nrServico")
+        excluir.addEventListener('click', () => excluirOrdemServ(nrOrdem));
+    } 
+   
 
 });
 
