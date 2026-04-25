@@ -93,25 +93,27 @@ function salvarOrdemServ() {
         alert("Informe o Cliente!");
         return false;
     }
+    
 
     try {
         const ordServ = JSON.parse(localStorage.getItem('ordServ')) || [];
         const nrServico = document.getElementById('nrServico').value;
 
-        // seleciona as linhas da tabela
+        // Captura itens e remove linhas que não tenham descrição OU que o total seja "0.00"
         const itens = Array.from(document.querySelectorAll('.linha-servico'))
             .map(linha => ({
-                descricao: linha.querySelector('.descProd').value,
+                descricao: linha.querySelector('.descProd').value.trim(),
                 valor: linha.querySelector('.valor').value,
                 qtd: linha.querySelector('.qtd').value,
                 total: linha.querySelector('.total').value,
                 data: linha.querySelector('.data-servico').value
             }))
-            .filter(item => item.descricao.trim() !== ""); // Remove linhas vazias
+            .filter(item => item.descricao !== "" && item.total !== "0.00" && item.total !== ""); 
 
         const novaOrdem = {
             codigo: nrServico,
             data: document.getElementById('dataServ').value,
+            condPgto: document.getElementById('condPgto').value,
             cliente: nmCliente.value,
             endCli: document.getElementById('endCli').value,
             endNr: document.getElementById('endNr').value,
@@ -185,6 +187,7 @@ function exibirDados() {
 
     // PREENCHE OS CAMPOS PRINCIPAIS
     document.getElementById('nrServico').value = ordem.codigo || "";
+    document.getElementById('condPgto').value= ordem.condPgto || "";
     document.getElementById('dataServ').value = ordem.data || "";
     document.getElementById('nmCliente').value = ordem.cliente || "";
     document.getElementById('endCli').value = ordem.endCli || "";
@@ -215,28 +218,18 @@ function renderizarItensOrdem(itens) {
         itens.forEach(item => {
             const tr = document.createElement('tr');
             tr.className = 'linha-servico';
-            tr.innerHTML = `
-                <td><input type="date" class="data-servico" value="${item.data}"></td>
+            tr.innerHTML = `                
                 <td><input type="text" class="descProd" value="${item.descricao}"></td>
                 <td><input type="number" class="qtd" value="${item.qtd}"></td>
                 <td><input type="text" class="valor" value="${item.valor}"></td>
                 <td><input type="text" class="total" value="${item.total}" readonly></td>
+                <td><input type="date" class="data-servico" value="${item.data}"></td>
             `;
             tbody.appendChild(tr);
         });
     }
     
-    // Adiciona uma linha vazia no final para novas edições
-    const trVazia = document.createElement('tr');
-    trVazia.className = 'linha-servico';
-    trVazia.innerHTML = `
-        <td><input type="date" class="data-servico"></td>
-        <td><input type="text" class="descProd"></td>
-        <td><input type="number" class="qtd" value="0"></td>
-        <td><input type="text" class="valor" value="0,00"></td>
-        <td><input type="text" class="total" value="0.00" readonly></td>
-    `;
-    tbody.appendChild(trVazia);
+    
 }
 
 
@@ -317,11 +310,12 @@ function limparOrdem() {
         const novaLinha = document.createElement('tr');
         novaLinha.className = 'linha-servico';
         novaLinha.innerHTML = `
-            <td><input type="date" class="data-servico"></td>
-            <td><input type="text" class="descProd"></td>
-            <td><input type="number" class="qtd" value="0"></td>
-            <td><input type="text" class="valor" value="0,00"></td>
-            <td><input type="text" class="total" value="0.00" readonly></td>
+            <td><input class="descProd" type="text"></td>
+            <td><input class="valor" type="number" step="0.01"></td>
+            <td><input class="qtd" type="number"></td>
+            <td><input class="total" type="text" readonly></td>
+            <td><input class="data-servico" type="date"></td>
+
         `;
         
         tbody.appendChild(novaLinha);
@@ -334,10 +328,19 @@ function limparOrdem() {
 
 
 
-//FUNÇÃO PARA EXCLUIR ORDEM
-function excluirOrdemServ(nrOS) {
+// FUNÇÃO PARA EXCLUIR ORDEM
+function excluirOrdemServ() {
+    // Captura o numero da ordem a ser excluida
+    const campoNrOS = document.getElementById('nrServico');
+    const valorOS = campoNrOS ? campoNrOS.value : "";
+
+    if (!valorOS) {
+        alert("Selecione uma ordem de serviço para excluir.");
+        return;
+    }
+
     // Confirmação do usuário
-    if (!confirm(`Tem certeza que deseja excluir a OS nº ${nrOS.value}?`)) {
+    if (!confirm(`Tem certeza que deseja excluir a OS nº ${valorOS}?`)) {
         return;
     }
 
@@ -345,11 +348,11 @@ function excluirOrdemServ(nrOS) {
     let ordServ = JSON.parse(localStorage.getItem('ordServ')) || [];
 
     // Filtra a lista mantendo apenas o que NÃO for o código informado
-    const novaLista = ordServ.filter(ordem => ordem.codigo !== nrOS.value);
+    const novaLista = ordServ.filter(ordem => ordem.codigo !== valorOS);
 
     // Verifica se algo foi removido de fato
     if (ordServ.length === novaLista.length) {
-        alert("Ordem de serviço não encontrada.");
+        alert("Ordem de serviço não encontrada no banco de dados.");
         return;
     }
 
@@ -357,7 +360,9 @@ function excluirOrdemServ(nrOS) {
     localStorage.setItem('ordServ', JSON.stringify(novaLista));
     alert("Ordem de serviço excluída!");
     
-    
+    // 2. Limpa a tela após excluir
+    limparOrdem();
+    if (typeof exibirDados === "function") exibirDados();
 }
 
 
@@ -473,6 +478,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Passa 1 para avançar
         movProximo.addEventListener('click', () => mudarCadastro(1));
     }
+
    //LIMPAR A TABELA --- 
    limparOrdem()
    const limpar =document.getElementById('btnNovo')
