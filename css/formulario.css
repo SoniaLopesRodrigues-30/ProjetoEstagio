@@ -244,6 +244,8 @@ table td {
     color: var(--cor-texto);
     font-weight: 500;
     transition: 0.3s;
+     clip-path: polygon(5% 0, 100% 0, 95% 100%, 0% 100%);
+     background: #2af381;
 }
 .nav a:hover {
     color: var(--cor-btn-padrao);
