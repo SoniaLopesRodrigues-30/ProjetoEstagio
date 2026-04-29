@@ -1,6 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
     inicializarTabelaServicos();
     nrOS();
+
+    document.getElementById('tabelaServicos').addEventListener('input', function(event) {
+    // Verifica se o que mudou foi realmente um input
+    if (event.target.tagName === 'INPUT') {
+        validarTabelaEmTempoReal();
+    }
+});
+
 });
 
 
@@ -36,6 +44,65 @@ function calcularTotalLinha(linha) {
         campoTotal.value = (v * q).toFixed(2);
     }
 }
+
+//FUNÇÃO VALIDA LINHAS DA TABELA
+function controlaservico() {
+    const nrLinhasServico = document.getElementById('tabelaServicos').rows;
+
+    // Verifica se a tabela tem linhas de dados
+    if (nrLinhasServico.length <= 1) {
+        alert("Informe pelo menos um serviço!");
+        return true;
+    }
+
+    // Percorre cada LINHA
+    for (let i = 1; i < nrLinhasServico.length; i++) {
+        const inputs = nrLinhasServico[i].querySelectorAll('input');
+
+        // Percorre cada coluna da linha atual
+        for (let input of inputs) {
+            // Se encontrar QUALQUER coluna vazia, barra o salvamento
+            if (input.value.trim() === "") {
+                alert("Atenção: Existem colunas não preenchidas na linha " + i + "!");
+                input.focus(); // Coloca o cursor no campo vazio para ajudar o usuário
+                return true; 
+            }
+        }
+    }
+
+    return false; 
+}
+
+
+function validarTabelaEmTempoReal() {
+    const btnSalvar = document.getElementById('btnSalvar');    
+    const tabelaVazia = checarTabelaVazia(); 
+    //não permite salvar caso alguma coluna esteja em branco
+    if (btnSalvar) {
+        btnSalvar.disabled = tabelaVazia;
+        btnSalvar.style.opacity = tabelaVazia ? "0.5" : "1";
+        btnSalvar.style.cursor = tabelaVazia ? "not-allowed" : "pointer";
+    }
+}
+
+//VERIFICA SE TODAS AS COLUNAS ESTÃO PREENCHIDAS
+function checarTabelaVazia() {
+    const rows = document.getElementById('tabelaServicos').rows;
+    if (rows.length <= 1) return true;
+
+    for (let i = 1; i < rows.length; i++) {
+        // Pega todos os inputs da linha atual
+        const inputs = rows[i].querySelectorAll('input');
+        for (let input of inputs) {
+            if (input.value.trim() !== "") {
+                return false; 
+            }
+        }
+    }
+    return true; //CADO CHEGUE AQUI A TABELA ESTÁ VAZIA NÃO DEIXARA SALVAR
+}
+
+
 
 // Função para adicionar linha automaticamente
 function verificarEAdicionarLinha(inputData, linhaAtual) {
@@ -86,14 +153,21 @@ function atualizarTotalGeral() {
 
 
 //FUNÇÃO PARA SALVAR A ORDEM
+
+
 function salvarOrdemServ() {
     const nmCliente = document.getElementById('nmCliente');
     
+    //Não permite salvar a ordem sem um cliente selecionado
     if (!nmCliente?.value.trim()) {
         alert("Informe o Cliente!");
         return false;
     }
-    
+
+    //TESTA PARA SABER SE TEM LINHAS NA TABELA 
+    if (controlaservico()) { 
+       return; 
+    }
 
     try {
         const ordServ = JSON.parse(localStorage.getItem('ordServ')) || [];
@@ -146,6 +220,8 @@ function salvarOrdemServ() {
         return false;
     }
 }
+
+
 
 
 //FUNÇÃO PARA EXIBIR OS DADOS NA TELA
