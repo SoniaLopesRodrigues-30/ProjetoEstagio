@@ -237,16 +237,24 @@ table td {
 /* menu */
 .nav {
     display: flex;
-    gap: 20px;
+    height: 100%;
+    gap: 0; /* remove espaço entre os itens */
+    background: var(--cor-btn-padrao);
 }
 .nav a {
+    display: flex;
+    align-items: center;
+    height: 50px;
+    padding: 0 20px;
     text-decoration: none;
     color: var(--cor-texto);
     font-weight: 500;
-    transition: 0.3s;
+    background: var(--cor-primaria);
+    clip-path: polygon(5% 0, 100% 0, 95% 100%, 0% 100%);
 }
 .nav a:hover {
-    color: var(--cor-btn-padrao);
+    color: var(--cor-texto-btn);
+    background: var(--cor-btn-padrao);
 }
 .acoes {
     display: flex;
