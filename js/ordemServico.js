@@ -397,7 +397,7 @@ function limparOrdem() {
         tbody.appendChild(novaLinha);
     }
     
-    // 4. Reset do número da OS e foco no primeiro campo
+    // Reset do número da OS e foco no primeiro campo
     if (typeof nrOS === "function") nrOS();
     document.getElementById('nmCliente')?.focus();
 }
