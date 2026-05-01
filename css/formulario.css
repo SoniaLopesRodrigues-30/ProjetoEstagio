@@ -340,3 +340,21 @@ table td {
 .seta-box:hover .texto-span {
     opacity: 1;
 }
+
+/*TESTE MODAL DE CONSULTA*/
+.busca-container { position: relative; width: 100%; }
+.dropdown-busca {
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    width: 100%;
+    z-index: 1000;
+    max-height: 200px;
+    overflow-y: auto;
+}
+.item-busca {
+    padding: 8px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+.item-busca:hover { background-color: #f0f0f0; }

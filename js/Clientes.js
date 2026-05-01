@@ -5,11 +5,15 @@ const formOrdServ = document.getElementById('formOrdServ');
 const tpTerceiro= document.getElementById('tpTerceiro');
 const uf=document.getElementById('uf');
 const razao=document.getElementById('nomeCliente');
+
+
+// VARIÁVEIS GLOBAIS
+//USADO NA FUNÇÃO que define qual o próximo cadastro a ser exibido na tela
+let idCliente = 0; 
 //SELECIONA PADRÃO CLIENTE
 let tipoTerceiro="";
 //POR PADRÃO SELECIONADO RS
 let optUf="RS";
-
 
 document.addEventListener('DOMContentLoaded', function() {
     //atualiza a tela
@@ -59,14 +63,14 @@ function salvarCliente() {
 
     let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
     
-    // 1. Pega o código atual como Número para comparação precisa
+    // Pega o código atual como Número para comparação
     const codigoBusca = Number(campoCodigo.value);
 
-    // 2. Procura se esse código já existe no banco
+    // Procura se esse código já existe no banco
     const indiceExistente = clientes.findIndex(c => Number(c.codigo) === codigoBusca);
 
     const dadosCliente = {
-        codigo: codigoBusca, // Salva sempre como número
+        codigo: codigoBusca, 
         nome: nomeInput.value,
         rua: document.getElementById('rua').value,        
         numero: document.getElementById('numero').value,
@@ -226,11 +230,6 @@ function exibirDados() {
 
 }
 
-
-
-//FUNÇÃO que define qual o próximo cadastro a ser exibido na tela
-let idCliente = 0; 
-
 function mudarCadastro(direcao) {
     const tabela = JSON.parse(localStorage.getItem("clientes")) || [];
     
@@ -247,3 +246,4 @@ function mudarCadastro(direcao) {
 
     exibirDados(); 
 }
+
