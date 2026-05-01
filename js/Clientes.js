@@ -1,4 +1,4 @@
-
+const btnExcluir=document.getElementById('btnExcluir');
 const btnSalvar= document.getElementById('btnSalvar');
 const formCliente = document.getElementById('formCliente');
 const formOrdServ = document.getElementById('formOrdServ');
@@ -19,23 +19,12 @@ document.addEventListener('DOMContentLoaded', function() {
     uf?.addEventListener('change', (e) => optUf = e.target.value);
     btnSalvar?.addEventListener('click', salvarCliente);
     btnNovo?.addEventListener('click', limparCliente);
+    btnExcluir?.addEventListener('click', excluirCliente);
 
     //Botões de Navegação (Mudar Cadastro)
     document.getElementById('btnAnterior')?.addEventListener('click', () => mudarCadastro(-1));
-    document.getElementById('btnProximo')?.addEventListener('click', () => mudarCadastro(1));
+    document.getElementById('btnProximo')?.addEventListener('click', () => mudarCadastro(1));  
    
-    //BOTÃO MOVIMENTAR CADASTRO NA TELA
-    const movAnterior = document.getElementById('btnAnterior');
-    if (movAnterior) {
-        // Passa -1 para voltar
-        movAnterior.addEventListener('click', () => mudarCadastro(-1));
-    }
-
-    const movProximo = document.getElementById('btnProximo');
-    if (movProximo) {
-        // Passa 1 para avançar
-        movProximo.addEventListener('click', () => mudarCadastro(1));
-    }
 });
 
 function mudarCadastro(direcao) {
@@ -118,37 +107,38 @@ function salvarCliente() {
 // FUNÇÃO PARA EXCLUIR O CADASTRO
 function excluirCliente() {
     // Captura o código do cliente para exclusão
-    const campoNrOS = document.getElementById('nrServico');
-    const valorOS = campoNrOS ? campoNrOS.value : "";
+    const codCli = document.getElementById('codigo');
+    const nmCliente= document.getElementById('nomeCliente');
+    const codExcluir = codCli ? codCli.value : "";
 
-    if (!valorOS) {
-        alert("Selecione uma ordem de serviço para excluir.");
+    if (!codExcluir) {
+        alert("Selecione um cliente/Fornecedor para excluir.");
         return;
     }
 
     // Confirmação do usuário
-    if (!confirm(`Tem certeza que deseja excluir a OS nº ${valorOS}?`)) {
+    if (!confirm(`Tem certeza que deseja excluir o Cliente  ${codExcluir} - ${nmCliente.value}?`)) {
         return;
     }
 
     // Busca os dados atuais
-    let ordServ = JSON.parse(localStorage.getItem('ordServ')) || [];
+    let clientesAtuais = JSON.parse(localStorage.getItem('clientes')) || [];
 
-    // Filtra a lista mantendo apenas o que NÃO for o código informado
-    const novaLista = ordServ.filter(ordem => ordem.codigo !== valorOS);
+    // Filtra a lista mantendo apenas o que NÃO for o código informado    
+    const novaLista = clientesAtuais.filter(item => String(item.codigo) !== String(codExcluir));
 
     // Verifica se algo foi removido de fato
-    if (ordServ.length === novaLista.length) {
-        alert("Ordem de serviço não encontrada no banco de dados.");
+    if (clientesAtuais.length === novaLista.length) {
+        alert("Cliente não encontrado no banco de dados.");
         return;
     }
 
     // Salva a nova lista e atualiza a tela
-    localStorage.setItem('ordServ', JSON.stringify(novaLista));
-    alert("Ordem de serviço excluída!");
+    localStorage.setItem('clientes', JSON.stringify(novaLista));
+    alert("Cliente/Fornecedor excluido com sucesso!");
     
-    // 2. Limpa a tela após excluir
-    limparOrdem();
+    // Limpa a tela após excluir
+    limparCliente();
     if (typeof exibirDados === "function") exibirDados();
 }
 
