@@ -115,6 +115,45 @@ function salvarCliente() {
     return true; 
 }
 
+// FUNÇÃO PARA EXCLUIR O CADASTRO
+function excluirCliente() {
+    // Captura o código do cliente para exclusão
+    const campoNrOS = document.getElementById('nrServico');
+    const valorOS = campoNrOS ? campoNrOS.value : "";
+
+    if (!valorOS) {
+        alert("Selecione uma ordem de serviço para excluir.");
+        return;
+    }
+
+    // Confirmação do usuário
+    if (!confirm(`Tem certeza que deseja excluir a OS nº ${valorOS}?`)) {
+        return;
+    }
+
+    // Busca os dados atuais
+    let ordServ = JSON.parse(localStorage.getItem('ordServ')) || [];
+
+    // Filtra a lista mantendo apenas o que NÃO for o código informado
+    const novaLista = ordServ.filter(ordem => ordem.codigo !== valorOS);
+
+    // Verifica se algo foi removido de fato
+    if (ordServ.length === novaLista.length) {
+        alert("Ordem de serviço não encontrada no banco de dados.");
+        return;
+    }
+
+    // Salva a nova lista e atualiza a tela
+    localStorage.setItem('ordServ', JSON.stringify(novaLista));
+    alert("Ordem de serviço excluída!");
+    
+    // 2. Limpa a tela após excluir
+    limparOrdem();
+    if (typeof exibirDados === "function") exibirDados();
+}
+
+
+//FUNÇÃO PARA LIMPAR A TELA
 function limparCliente() {
     // Limpa todos os inputs e selects
     document.querySelectorAll('input, textarea').forEach(el => el.value = "");
