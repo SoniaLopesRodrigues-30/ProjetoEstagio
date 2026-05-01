@@ -43,22 +43,25 @@ function mudarCadastro(direcao) {
     
     if (tabela.length === 0) return;
     
-    idxOrdServ += direcao;
+    idCliente += direcao;
 
-    if (idxOrdServ >= tabela.length) {
-        idxOrdServ = 0;
+    if (idCliente>= tabela.length) {
+        idCliente = 0;
     }
-    if (idxOrdServ < 0) {
-        idxOrdServ = tabela.length - 1;
+    if (idCliente < 0) {
+        idCliente = tabela.length - 1;
     }
 
     exibirDados(); 
 }
 
 //SALVA O CADASTRO
+// ... suas variáveis globais e listeners continuam iguais ...
+
+// SALVA O CADASTRO
 function salvarCliente() {
     const nomeInput = document.getElementById('nomeCliente');
-    const codigoCliente = document.getElementById('codigo');
+    const campoCodigo = document.getElementById('codigo');
 
     if (!nomeInput.value.trim()) {
         alert("Informe o Nome/Razão Social");
@@ -67,101 +70,74 @@ function salvarCliente() {
 
     let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
     
-    // Pega o valor atual do código (convertendo para número se necessário)
-    const codigoBusca = Number(codigoCliente.value);
+    // 1. Pega o código atual como Número para comparação precisa
+    const codigoBusca = Number(campoCodigo.value);
 
-    // 2. Procura no banco para ver se o cliente já existe    
+    // 2. Procura se esse código já existe no banco
     const indiceExistente = clientes.findIndex(c => Number(c.codigo) === codigoBusca);
+
     const dadosCliente = {
-        //DADOS DO CLIENTE *** CARD 1
-        codigo: document.getElementById('codigo').value,
+        codigo: codigoBusca, // Salva sempre como número
         nome: nomeInput.value,
-        
-        //DADOS DO ENDEREÇO *** CARD 2
         rua: document.getElementById('rua').value,        
         numero: document.getElementById('numero').value,
         bairro: document.getElementById('bairro').value,          
         cidade: document.getElementById('cidade').value,
         cep: document.getElementById('cep').value,      
         uf: optUf,               
-        
-        //DADOS DOCUMENTAÇÃO *** CARD 3
         cpf: document.getElementById('cpf').value,
         cnpj: document.getElementById('cnpj').value,
         inscEstadual: document.getElementById('inscEstadual').value,
-
-        //DADOS DOCUMENTAÇÃO *** CARD 4
         fone: document.getElementById('fone').value,
         celular: document.getElementById('celular').value,
         email: document.getElementById('email').value,
         responsavel: document.getElementById('resp').value,
-
-        //DADOS INFORMAÇÕES EXTRAS *** CARD 5
         aniver: document.getElementById('aniver').value,
         site: document.getElementById('site').value,
         tpTerceiro: tipoTerceiro,        
     };
 
-    // Testa se o cliente existe no banco
     if (indiceExistente !== -1) {
-        // MODO EDIÇÃO (Achou o código no array)
+        // MODO EDIÇÃO: Atualiza o cliente na posição encontrada
         clientes[indiceExistente] = dadosCliente;
         alert(`Cadastro ${codigoBusca} atualizado com sucesso!`);
     } else {
-        // MODO NOVO (Código não existe ou é "Novo Cadastro")
-        dadosCliente.codigo = clientes.length > 0 ? Math.max(...clientes.map(c => c.codigo)) + 1 : 1;
+        // MODO NOVO: Garante que o código seja o próximo da sequência caso não exista
+        const maiorCodigo = clientes.reduce((max, c) => Math.max(max, Number(c.codigo) || 0), 0);
+        dadosCliente.codigo = maiorCodigo + 1;
+        
         clientes.push(dadosCliente);
         alert('Cliente salvo com sucesso!');
     }
 
     localStorage.setItem('clientes', JSON.stringify(clientes));
-    limparCliente();
+    limparCliente(); // Limpa e já gera o próximo código automático
     return true; 
 }
 
 function limparCliente() {
-    // Limpa os campos do formulário
-    document.querySelectorAll('input, textarea, select').forEach(el => {
-        if (el.tagName === 'SELECT') {
-            el.selectedIndex = 0;
-        } else {
-            el.value = "";
-        }
-    });
-
-    // Gera o próximo código
-    const valorBanco = localStorage.getItem('clientes');
-    console.log("ultimo codigo" + valorBanco);
-    let proximoNumero = 1;
-
-    if (valorBanco) {
-        const listaClientes = JSON.parse(valorBanco);
-        if (listaClientes.length > 0) {
-            const codigos = listaClientes.map(c => parseInt(c.codigo) || 0);
-            const maiorCodigo = Math.max(...codigos);
-            proximoNumero = maiorCodigo + 1;
-        }
-    }
-
+    // Limpa todos os inputs e selects
+    document.querySelectorAll('input, textarea').forEach(el => el.value = "");
     
-    const campoCodigo = document.getElementById('codigo');
-    console.log(campoCodigo)
-    if (campoCodigo) {
-        campoCodigo.value = proximoNumero;
-    }
-    console.log("Próximo código gerado:", proximoNumero);
+    const tabela = JSON.parse(localStorage.getItem('clientes')) || [];
+    
+    // Define o próximo ID automático
+    const maiorCodigo = tabela.reduce((max, c) => Math.max(max, Number(c.codigo) || 0), 0);
+    const proximoNumero = maiorCodigo + 1;
 
+    const campoCodigo = document.getElementById('codigo');
+    if (campoCodigo) campoCodigo.value = proximoNumero;
+
+    // Reseta padrões
     const campoUf = document.getElementById('uf');
     if (campoUf) campoUf.value = "RS"; 
     
     tipoTerceiro = "";
     optUf = "RS";
-    idCliente = 0; // Reset do índice de navegação
-
+    idCliente = -1; 
     const contador = document.getElementById('contador');
     if (contador) contador.innerText = "Novo Cadastro";
 }
-
 
 
 //função que exibe os dados na tela
