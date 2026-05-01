@@ -22,6 +22,11 @@ if (uf) {
     });
 }
 
+//Botao Salvar Dados
+if (btnSalvar) {   
+   btnSalvar.addEventListener('click', salvarCliente); 
+}
+
 // FUNÇÃO SALVAR CLIENTES
 function salvarCliente() {
     const nomeInput = document.getElementById('nomeCliente');
@@ -34,6 +39,7 @@ function salvarCliente() {
     let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
     
     const dadosCliente = {
+        codigo: document.getElementById('codigo').value,
         nome: nomeInput.value,
         rua: document.getElementById('rua').value,
         email: document.getElementById('email').value,
@@ -53,20 +59,21 @@ function salvarCliente() {
         uf: optUf,               
     };
 
-    const contador = document.getElementById('contador');       
+    const contador = document.getElementById('codigo');       
     const valorContador = contador ? contador.value : "Novo Cadastro";
-
-    // LÓGICA DE DECISÃO
+    
     if (valorContador !== "Novo Cadastro" && valorContador !== "" && clientes[idCliente]) {
         // MODO EDIÇÃO
         dadosCliente.codigo = clientes[idCliente].codigo;
         clientes[idCliente] = dadosCliente;
         alert('Cadastro atualizado com sucesso!');
+         limparCliente();
     } else {
-        // MODO NOVO
+        // MODO NOVO       
         dadosCliente.codigo = clientes.length + 1;
         clientes.push(dadosCliente);
         alert('Cliente salvo com sucesso!');
+        limparCliente();
     }
 
    
@@ -77,38 +84,51 @@ function salvarCliente() {
 
 
 
-
-// O EVENTO DE SUBMIT (Chama a função)
-formCliente.addEventListener('submit', (e) => {
-    e.preventDefault();
-    if (salvarCliente()) {
-        formCliente.reset();
-        alert('Cliente salvo com sucesso!');
-    }   
-});
-
-
 // LIMPAR A TELA --- 
-
-const btnLimpar = document.getElementById('btnNovo'); // Use o ID do seu botão
+const btnLimpar = document.getElementById('btnNovo'); 
 if (btnNovo) {
     btnNovo.addEventListener('click', () => {
+       
         limparCliente();        
     });
 }
   
 function limparCliente() {
+    // Limpa os campos do formulário
     document.querySelectorAll('input, textarea, select').forEach(el => {
         if (el.tagName === 'SELECT') {
-            el.selectedIndex = 0; 
+            el.selectedIndex = 0;
         } else {
             el.value = "";
         }
     });
 
+    // Gera o próximo código
+    const valorBanco = localStorage.getItem('clientes');
+    console.log("ultimo codigo" + valorBanco);
+    let proximoNumero = 1;
+
+    if (valorBanco) {
+        const listaClientes = JSON.parse(valorBanco);
+        if (listaClientes.length > 0) {
+            const codigos = listaClientes.map(c => parseInt(c.codigo) || 0);
+            const maiorCodigo = Math.max(...codigos);
+            proximoNumero = maiorCodigo + 1;
+        }
+    }
+
+    // Aplica o próximo código ao campo
+    const campoCodigo = document.getElementById('codigo');
+    console.log(campoCodigo)
+    if (campoCodigo) {
+        campoCodigo.value = proximoNumero;
+    }
+
+    console.log("Próximo código gerado:", proximoNumero);
+
     const campoUf = document.getElementById('uf');
     if (campoUf) campoUf.value = "RS"; 
-
+    
     tipoTerceiro = "";
     optUf = "RS";
     idCliente = 0; // Reset do índice de navegação
