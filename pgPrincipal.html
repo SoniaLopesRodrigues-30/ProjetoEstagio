@@ -21,19 +21,27 @@
         </nav>
         <!-- // notificaçao // -->
         <div class="acoes">
-            
-            <!-- / sino / -->
-            <div class="notificacao">
-                &#128276; 
+
+        <!-- / sino / -->
+        <div class="notificacao" id="notificacao-container">
+            <div class="sino-icone">
+                🔔 
+                <span class="contador" id="notificacao-contador">3</span>
+            </div>
             <span class="texto-span">Notificação</span>
+            
+            <!-- Caixa suspensa com as notificações -->
+            <div class="dropdown-notificacoes" id="dropdown-notificacoes">
+                <div class="dropdown-header"></div>
+                <!-- aqui aparece as notificações via js -->
+                <div class="dropdown-lista"></div>
             </div>
-            <!-- / btn mobile / -->
-            <div class="btn-menu" id="id-btn-menu">
-                &#9776;          
-            </div>
+            
         </div>
     </header> <!-- //// fim cabeça //// -->
     <script src="./js/header.js"></script>
      <script src="./js/ordemServico.js"></script>
 </body>
 </html>
+
+
