@@ -71,15 +71,30 @@
                     <span class="texto-span">proximo</span>
                 </div>
             </div>
-            <!-- / sino / -->
-            <div class="notificacao">
-                &#128276; 
-                <span class="texto-span">Notificação</span>
+           
+        <!-- / sino / -->
+        <div class="notificacao" id="btnSino" style="position: relative; cursor: pointer;">
+            🔔 
+            <span class="texto-span">Notificação</span>
+            
+            <!-- Contador de notificações (Aparece apenas se houver aniversariantes) -->
+            <span id="contadorNiver" style="position: absolute; top: -5px; right: 5px; background: #ff4d4d; color: white; border-radius: 50%; padding: 2px 6px; font-size: 10px; font-weight: bold; display: none;">0</span>
+
+            <!-- Menu Dropdown dos aniversariantes -->
+            <div id="listaNiverDropdown" style="display: none; position: absolute; top: 100%; right: 0; background: white; border: 1px solid #ddd; width: 260px; box-shadow: 0px 4px 12px rgba(0,0,0,0.15); border-radius: 4px; z-index: 9999; max-height: 250px; overflow-y: auto; color: #333;">
+                <div style="padding: 10px; border-bottom: 1px solid #eee; font-weight: bold; background: #f8f9fa; font-size: 13px;">🎂 Aniversários Próximos</div>
+                <ul id="itensNotificacao" style="list-style: none; padding: 0; margin: 0;">
+                    <!-- Injetado via JavaScript -->
+                </ul>
             </div>
-            <!-- / btn mobile / -->
-            <div class="btn-menu" id="id-btn-menu">
-                &#9776;          
-            </div>
+        </div>
+
+        <!-- / btn mobile / -->
+        <div class="btn-menu" id="id-btn-menu">
+            ☰          
+        </div>
+
+
         </div>
     </header> <!-- //// fim cabeça //// -->
 
@@ -91,8 +106,7 @@
             <!-- // primeiro card (1*) // -->
             <div class="card">
                 <div class="linha">
-                    <div class="campo"
-
+                    <div class="campo">
 
                         <label>Codigo</label>
                         <input type='number' id='codigo'>
@@ -260,11 +274,8 @@
     <script type="text/javascript" src="./js/Clientes.js"> </script>
     <!-- // js do menu mobile // -->
     <script src="./js/header.js"></script>
-<<<<<<< HEAD
     <!-- // js Consulta Clientes // -->
     <script src="./js/Consulta.js"></script>
-=======
->>>>>>> d6668d4 (C:/Program Files/Git/cadastro_de_cliente.html/ = add funçao teste + ajutes css.)
 
     <!-- // js teste // -->
     <script>
