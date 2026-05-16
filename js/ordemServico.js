@@ -169,7 +169,7 @@ function verificarEAdicionarLinha(inputData, linhaAtual) {
 
 // FUNÇÃO PARA SOMAR TODAS AS LINHAS NO TOTAL GERAL
 function atualizarTotalGeral() {
-    alert("somando")
+
     const todosTotais = document.querySelectorAll('.resumo');
     let somaGeral = 0;
     let somaPendente=0;
