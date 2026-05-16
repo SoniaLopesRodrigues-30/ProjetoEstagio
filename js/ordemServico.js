@@ -198,7 +198,7 @@ function atualizarTotalGeral() {
 //FUNÇÃO PARA SALVAR A ORDEM
 function salvarOrdemServ() {
     const nmCliente = document.getElementById('nmCliente');
-    alert("salvar")
+
     //Não permite salvar a ordem sem um cliente selecionado
     if (!nmCliente?.value.trim()) {
         alert("Informe o Cliente!");
