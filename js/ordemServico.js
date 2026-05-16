@@ -1,3 +1,5 @@
+
+
 document.addEventListener('DOMContentLoaded', () => {
     inicializarTabelaServicos();
     nrOS();
@@ -7,6 +9,50 @@ document.addEventListener('DOMContentLoaded', () => {
     if (event.target.tagName === 'INPUT') {
         validarTabelaEmTempoReal();
     }
+
+     //SALVAR
+    const btn = document.getElementById('btnSalvar');
+    if (btn) {
+        btn.addEventListener('click', salvarOrdemServ);
+    }
+
+    //BAIXAR VALOR
+    const baixa = document.getElementById('btnBaixar');
+    if (baixa) {
+        baixa.addEventListener('click', baixarOrdem);
+    }
+
+    //BOTÃO MOVIMENTAR CADASTRO NA TELA
+   const movAnterior = document.getElementById('btnAnterior');
+    if (movAnterior) {
+        // Passa -1 para voltar
+        movAnterior.addEventListener('click', () => mudarCadastro(-1));
+    }
+
+    const movProximo = document.getElementById('btnProximo');
+    if (movProximo) {
+        // Passa 1 para avançar
+        movProximo.addEventListener('click', () => mudarCadastro(1));
+    }
+
+   //LIMPAR A TABELA --- 
+   limparOrdem()
+   const limpar =document.getElementById('btnNovo')
+   if (limpar) {
+        // limpa a tela
+        limpar.addEventListener('click', () => limparOrdem());
+    } 
+   
+
+   //EXCLUIR CADASTRO---
+   const excluir=document.getElementById('btnCancelar')
+    if (excluir) {
+        // excluir o cadastro
+        const nrOrdem = document.getElementById("nrServico")
+        excluir.addEventListener('click', () => excluirOrdemServ(nrOrdem));
+    } 
+   
+
 });
 
 });
@@ -21,7 +67,7 @@ function inicializarTabelaServicos() {
         const target = e.target;
         const linha = target.closest('tr');
 
-        // Lógica de Cálculo de Preço
+        // Calcula o total da linha
         if (target.classList.contains('valor') || target.classList.contains('qtd')) {
             calcularTotalLinha(linha);
             atualizarTotalGeral();
@@ -36,6 +82,7 @@ function inicializarTabelaServicos() {
 
 //  Função que calcula o total de uma linha
 function calcularTotalLinha(linha) {
+   
     const v = parseFloat(linha.querySelector('.valor').value.replace(',', '.')) || 0;
     const q = parseFloat(linha.querySelector('.qtd').value) || 0;
     const campoTotal = linha.querySelector('.total');
@@ -99,7 +146,7 @@ function checarTabelaVazia() {
             }
         }
     }
-    return true; //CADO CHEGUE AQUI A TABELA ESTÁ VAZIA NÃO DEIXARA SALVAR
+    return true; //CASO CHEGUE AQUI A TABELA ESTÁ VAZIA NÃO DEIXARA SALVAR
 }
 
 
@@ -118,21 +165,12 @@ function verificarEAdicionarLinha(inputData, linhaAtual) {
     }
 }
 
-// 4. Função para somar todos os totais
-function atualizarTotalGeral() {
-    let soma = 0;
-    document.querySelectorAll('.total').forEach(input => {
-        soma += parseFloat(input.value) || 0;
-    });
-    
-    const campoTotalGeral = document.getElementById('id_total_geral');
-    if (campoTotalGeral) campoTotalGeral.value = soma.toFixed(2);
-}
 
 
 // FUNÇÃO PARA SOMAR TODAS AS LINHAS NO TOTAL GERAL
 function atualizarTotalGeral() {
-    const todosTotais = document.querySelectorAll('.total');
+    alert("somando")
+    const todosTotais = document.querySelectorAll('.resumo');
     let somaGeral = 0;
     let somaPendente=0;
     let somaFaturado=0
@@ -144,20 +182,23 @@ function atualizarTotalGeral() {
         somaFaturado += parseFloat(campo.value) || 0;
     });
 
+    // Total geral fora da aba
     const vlTotalGeral = document.getElementById('vlTotGeral');
+    // Total Geral na aba baixa
+    const vlTotGeralBaixa=document.getElementById('vlTotal')
+
     if (vlTotalGeral) {
         vlTotalGeral.value = somaGeral.toFixed(2);
+        vlTotGeralBaixa.value = somaGeral.toFixed(2);
     }    
     
 }
 
 
 //FUNÇÃO PARA SALVAR A ORDEM
-
-
 function salvarOrdemServ() {
     const nmCliente = document.getElementById('nmCliente');
-    
+    alert("salvar")
     //Não permite salvar a ordem sem um cliente selecionado
     if (!nmCliente?.value.trim()) {
         alert("Informe o Cliente!");
@@ -221,9 +262,6 @@ function salvarOrdemServ() {
     }
 }
 
-
-
-
 //FUNÇÃO PARA EXIBIR OS DADOS NA TELA
 let idxOrdServ = 0; 
 
@@ -243,8 +281,6 @@ function mudarCadastro(direcao) {
 
     exibirDados(); 
 }
-
-
 
 function exibirDados() {
     const tabela = JSON.parse(localStorage.getItem("ordServ")) || [];    
@@ -307,8 +343,6 @@ function renderizarItensOrdem(itens) {
     
     
 }
-
-
 
 //FUNÇÃO PARA BAIXAR PARCIALMENTE A ORDEM---ABA BAIXAS
 function baixarOrdem(nrServico, valorPago) {
@@ -529,53 +563,6 @@ function selecionaCliente(idInput, chaveLocalStorage) {
 }
 
 
-document.addEventListener('DOMContentLoaded', function() {
-    //SALVAR
-    const btn = document.getElementById('btnSalvar');
-    if (btn) {
-        btn.addEventListener('click', salvarOrdemServ);
-    }
-
-    //BAIXAR VALOR
-    const baixa = document.getElementById('btnBaixar');
-    if (baixa) {
-        baixa.addEventListener('click', baixarOrdem);
-    }
-
-    //BOTÃO MOVIMENTAR CADASTRO NA TELA
-   const movAnterior = document.getElementById('btnAnterior');
-    if (movAnterior) {
-        // Passa -1 para voltar
-        movAnterior.addEventListener('click', () => mudarCadastro(-1));
-    }
-
-    const movProximo = document.getElementById('btnProximo');
-    if (movProximo) {
-        // Passa 1 para avançar
-        movProximo.addEventListener('click', () => mudarCadastro(1));
-    }
-
-   //LIMPAR A TABELA --- 
-   limparOrdem()
-   const limpar =document.getElementById('btnNovo')
-   if (limpar) {
-        // limpa a tela
-        limpar.addEventListener('click', () => limparOrdem());
-    } 
-   
-
-   //EXCLUIR CADASTRO---
-   const excluir=document.getElementById('btnCancelar')
-    if (excluir) {
-        // excluir o cadastro
-        const nrOrdem = document.getElementById("nrServico")
-        excluir.addEventListener('click', () => excluirOrdemServ(nrOrdem));
-    } 
-   
-
-});
-
-
 //  EVENTO DE SUBMIT
 const formOrdServ = document.getElementById('formOrdServ');
 formOrdServ.addEventListener('submit', (e) => {
@@ -606,7 +593,3 @@ function trocarAba(index) {
     conteudos[index].classList.add("ativa");
 }
 
-//chama algumas funções ao abrir a página
-document.addEventListener("DOMContentLoaded", function() {
-  nrOS()   
-})
