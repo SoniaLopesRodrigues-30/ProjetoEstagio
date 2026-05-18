@@ -4,20 +4,25 @@ document.addEventListener('DOMContentLoaded', () => {
     inicializarTabelaServicos();
     nrOS();
 
-     
-    selecionaCliente('nmCliente', 'clientes')
+    selecionaCliente('nmCliente', 'clientes');
 
     document.getElementById('tabelaServicos').addEventListener('input', function(event) {
-        // Verifica se o que mudou foi realmente um input
         if (event.target.tagName === 'INPUT') {
             validarTabelaEmTempoReal();
         }
     }); 
 
-    //  BOTÃO SALVAR
+    // BOTÃO SALVAR
     const btn = document.getElementById('btnSalvar');
     if (btn) {
-        btn.addEventListener('click', salvarOrdemServ);
+        btn.addEventListener('click', (e) => {
+            // Executa a validação rigorosa antes de enviar
+            if (controlaservico()) {
+                e.preventDefault(); // Bloqueia o envio se houver erros
+            } else {
+                salvarOrdemServ();
+            }
+        });
     }
 
     // BOTÃO BAIXAR VALOR
@@ -29,21 +34,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // BOTÕES DE MOVIMENTAÇÃO
     const movAnterior = document.getElementById('btnAnterior');
     if (movAnterior) {
-        // Passa -1 para voltar
         movAnterior.addEventListener('click', () => mudarCadastro(-1));
     }
 
     const movProximo = document.getElementById('btnProximo');
     if (movProximo) {
-        // Passa 1 para avançar
         movProximo.addEventListener('click', () => mudarCadastro(1));
     }
 
-    // 5. LIMPAR A TABELA
-    limparOrdem(); // Executa uma vez ao carregar a página
+    // LIMPAR A TABELA
+    limparOrdem(); 
     const limpar = document.getElementById('btnNovo');
     if (limpar) {
-        // limpa a tela ao clicar
         limpar.addEventListener('click', () => limparOrdem());
     } 
 
@@ -53,9 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const nrOrdem = document.getElementById("nrServico");
         excluir.addEventListener('click', () => excluirOrdemServ(nrOrdem));
     } 
-
-}); // <-- Fechou o DOMContentLoaded aqui
-
+}); 
 
 // FUNÇÕES DA ORDEM DE SERVIÇO
 function inicializarTabelaServicos() {
@@ -69,7 +69,7 @@ function inicializarTabelaServicos() {
         // Calcula o total da linha
         if (target.classList.contains('valor') || target.classList.contains('qtd')) {
             calcularTotalLinha(linha);
-            atualizarTotalGeral();
+            if (typeof atualizarTotalGeral === 'function') atualizarTotalGeral();
         }
 
         // Adicionar Nova Linha
@@ -79,9 +79,8 @@ function inicializarTabelaServicos() {
     });
 }
 
-//  Função que calcula o total de uma linha
+// Função que calcula o total de uma linha
 function calcularTotalLinha(linha) {
-   
     const v = parseFloat(linha.querySelector('.valor').value.replace(',', '.')) || 0;
     const q = parseFloat(linha.querySelector('.qtd').value) || 0;
     const campoTotal = linha.querySelector('.total');
@@ -91,64 +90,56 @@ function calcularTotalLinha(linha) {
     }
 }
 
-//FUNÇÃO VALIDA LINHAS DA TABELA
+// FUNÇÃO VALIDA LINHAS DA TABELA (Rigorosa - Executada no clique do botão)
 function controlaservico() {
     const nrLinhasServico = document.getElementById('tabelaServicos').rows;
 
-    // Verifica se a tabela tem linhas de dados
     if (nrLinhasServico.length <= 1) {
         alert("Informe pelo menos um serviço!");
         return true;
     }
 
-    // Percorre cada LINHA
     for (let i = 1; i < nrLinhasServico.length; i++) {
         const inputs = nrLinhasServico[i].querySelectorAll('input');
-
-        // Percorre cada coluna da linha atual
         for (let input of inputs) {
-            // Se encontrar QUALQUER coluna vazia, barra o salvamento
             if (input.value.trim() === "") {
                 alert("Atenção: Existem colunas não preenchidas na linha " + i + "!");
-                input.focus(); // Coloca o cursor no campo vazio para ajudar o usuário
+                input.focus(); 
                 return true; 
             }
         }
     }
-
     return false; 
 }
 
-
+// VALIDAÇÃO EM TEMPO REAL (Habilita/Desabilita o botão dinamicamente)
 function validarTabelaEmTempoReal() {
     const btnSalvar = document.getElementById('btnSalvar');    
-    const tabelaVazia = checarTabelaVazia(); 
-    //não permite salvar caso alguma coluna esteja em branco
+    const tabelaInvalida = checarTabelaInvalida(); 
+    
     if (btnSalvar) {
-        btnSalvar.disabled = tabelaVazia;
-        btnSalvar.style.opacity = tabelaVazia ? "0.5" : "1";
-        btnSalvar.style.cursor = tabelaVazia ? "not-allowed" : "pointer";
+        btnSalvar.disabled = tabelaInvalida;
+        btnSalvar.style.opacity = tabelaInvalida ? "0.5" : "1";
+        btnSalvar.style.cursor = tabelaInvalida ? "not-allowed" : "pointer";
     }
 }
 
-//VERIFICA SE TODAS AS COLUNAS ESTÃO PREENCHIDAS
-function checarTabelaVazia() {
+// CORRIGIDO: Verifica se EXISTE alguma coluna em branco na tabela
+function checarTabelaInvalida() {
     const rows = document.getElementById('tabelaServicos').rows;
-    if (rows.length <= 1) return true;
+    if (rows.length <= 1) return true; // Tabela sem linhas de dados é inválida
 
     for (let i = 1; i < rows.length; i++) {
-        // Pega todos os inputs da linha atual
         const inputs = rows[i].querySelectorAll('input');
         for (let input of inputs) {
-            if (input.value.trim() !== "") {
-                return false; 
+            // Se QUALQUER campo estiver vazio, a tabela é considerada inválida para salvar
+            if (input.value.trim() === "") {
+                return true; 
             }
         }
     }
-    return true; //CASO CHEGUE AQUI A TABELA ESTÁ VAZIA NÃO DEIXARA SALVAR
+    return false; 
 }
-
-
 
 // Função para adicionar linha automaticamente
 function verificarEAdicionarLinha(inputData, linhaAtual) {
@@ -158,39 +149,68 @@ function verificarEAdicionarLinha(inputData, linhaAtual) {
 
     if (linhaAtual === ultimaLinha && inputData.value !== "") {
         const novaLinha = ultimaLinha.cloneNode(true);
-        // Limpa os valores dos inputs da nova linha
-        novaLinha.querySelectorAll('input').forEach(input => input.value = "");
+        
+        // Limpa os valores e remove IDs duplicados para evitar bugs de seleção
+        novaLinha.querySelectorAll('input').forEach(input => {
+            input.value = "";
+            if(input.id) input.removeAttribute('id'); 
+        });
+
         tbody.appendChild(novaLinha);
+        validarTabelaEmTempoReal(); // Força a verificação do botão ao criar linha nova
     }
 }
 
 
 
+
+
 // FUNÇÃO PARA SOMAR TODAS AS LINHAS NO TOTAL GERAL
 function atualizarTotalGeral() {
-
-    const todosTotais = document.querySelectorAll('.resumo');
     let somaGeral = 0;
-    let somaPendente=0;
-    let somaFaturado=0
 
-    
+    // Seleciona os totais da tabela
+    const todosTotais = document.querySelectorAll('#tabelaServicos .linha-servico .total');
+
     todosTotais.forEach(campo => {
-        somaGeral += parseFloat(campo.value) || 0;
-        somaPendente += parseFloat(campo.value) || 0;
-        somaFaturado += parseFloat(campo.value) || 0;
+        const valorItem = parseFloat(campo.value) || 0;
+        somaGeral += valorItem;      
     });
 
-    // Total geral fora da aba
+    // Captura dos elementos do HTML
     const vlTotalGeral = document.getElementById('vlTotGeral');
-    // Total Geral na aba baixa
-    const vlTotGeralBaixa=document.getElementById('vlTotal')
+    const vltotPendBaixa = document.getElementById('vlTotPend');
+    const vlTotPago = document.getElementById('vlTotFat');
 
+    //aba Baixas
+    const vlPendente = document.getElementById('vlPendente');
+    const vlTotGeralBaixa = document.getElementById('vlTotal');
+    
+
+    // Captura o valor já faturado/pago (converte para número decimal)
+    const valorPago = vlTotPago ? parseFloat(vlTotPago.value.replace(',', '.')) || 0 : 0;
+
+    // Calcula o valor pendente 
+    const valorPendente = somaGeral - valorPago;
+
+    // Atualiza os campos na tela 
+    //Totais Geral
     if (vlTotalGeral) {
         vlTotalGeral.value = somaGeral.toFixed(2);
-        vlTotGeralBaixa.value = somaGeral.toFixed(2);
-    }    
+    }
+
+    if (vltotPendBaixa) {
+        vltotPendBaixa.value = valorPendente.toFixed(2);
+    }
     
+    //Totais gerais aba 3-Baixas
+    if (vlTotGeralBaixa) {
+        vlTotGeralBaixa.value = somaGeral.toFixed(2);
+    }
+
+    if (vlPendente) {
+        vlPendente.value = somaGeral.toFixed(2);
+    }
 }
 
 
@@ -225,20 +245,31 @@ function salvarOrdemServ() {
             .filter(item => item.descricao !== "" && item.total !== "0.00" && item.total !== ""); 
 
         const novaOrdem = {
+            //Dados gerais
+            dataRegistro: new Date().toISOString(), 
             codigo: nrServico,
             data: document.getElementById('dataServ').value,
             condPgto: document.getElementById('condPgto').value,
             cliente: nmCliente.value,
+
+            //Linhas da ordem de serviço, tabela 
+            itens: itens,
+
+            //Aba3 - Dados do Cliente 
             endCli: document.getElementById('endCli').value,
             endNr: document.getElementById('endNr').value,
             endCidade: document.getElementById('endCidade').value,
             endUF: document.getElementById('endUf').value,
             cnpj: document.getElementById('cnpj').value,
             foneCli: document.getElementById('fone').value,
-            itens: itens,
+
+            //Totais e observação da ordem
             vlTotGeral: document.getElementById('vlTotGeral').value,
             obs: document.getElementById('obs').value,
-            dataRegistro: new Date().toISOString() 
+            vlTotPend: document.getElementById('vlTotPend').value,
+
+            //vlPago:document.getElementById('vlPago').value
+            
         };
 
         // Verifica se é uma edição ou nova ordem
@@ -281,6 +312,7 @@ function mudarCadastro(direcao) {
     exibirDados(); 
 }
 
+//Mostra os dados na tela
 function exibirDados() {
     const tabela = JSON.parse(localStorage.getItem("ordServ")) || [];    
     const contador = document.getElementById('contador');
@@ -296,10 +328,12 @@ function exibirDados() {
 
     const ordem = tabela[idxOrdServ];
 
-    // PREENCHE OS CAMPOS PRINCIPAIS
+    // Campos gerais
     document.getElementById('nrServico').value = ordem.codigo || "";
     document.getElementById('condPgto').value= ordem.condPgto || "";
     document.getElementById('dataServ').value = ordem.data || "";
+
+    //Aba3 - Dados do Cliente 
     document.getElementById('nmCliente').value = ordem.cliente || "";
     document.getElementById('endCli').value = ordem.endCli || "";
     document.getElementById('endNr').value = ordem.endNr || "";
@@ -307,11 +341,15 @@ function exibirDados() {
     document.getElementById('endUf').value = ordem.endUF || "";
     document.getElementById('cnpj').value = ordem.cnpj || "";
     document.getElementById('fone').value = ordem.foneCli || "";
+
+     //Totais e observação da ordem    
     document.getElementById('vlTotGeral').value = ordem.vlTotGeral || "";
+    document.getElementById('vlTotPend').value = ordem.vlTotPend || "";
+    document.getElementById('vlPago').value =ordem.vlPago || "";
     document.getElementById('obs').value = ordem.obs || "";
 
     // ITENS DA TABELA SERVIÇOS
-    renderizarItensOrdem(ordem.itens);
+    renderizarItensOrdem(ordem.itens);vlTotPend
 
     if (contador) {
         contador.innerText = `${idxOrdServ + 1} de ${tabela.length}`;
