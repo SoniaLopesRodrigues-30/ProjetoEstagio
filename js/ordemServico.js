@@ -4,26 +4,28 @@ document.addEventListener('DOMContentLoaded', () => {
     inicializarTabelaServicos();
     nrOS();
 
+    
     document.getElementById('tabelaServicos').addEventListener('input', function(event) {
-    // Verifica se o que mudou foi realmente um input
-    if (event.target.tagName === 'INPUT') {
-        validarTabelaEmTempoReal();
-    }
+        // Verifica se o que mudou foi realmente um input
+        if (event.target.tagName === 'INPUT') {
+            validarTabelaEmTempoReal();
+        }
+    }); 
 
-     //SALVAR
+    //  BOTÃO SALVAR
     const btn = document.getElementById('btnSalvar');
     if (btn) {
         btn.addEventListener('click', salvarOrdemServ);
     }
 
-    //BAIXAR VALOR
+    // BOTÃO BAIXAR VALOR
     const baixa = document.getElementById('btnBaixar');
     if (baixa) {
         baixa.addEventListener('click', baixarOrdem);
     }
 
-    //BOTÃO MOVIMENTAR CADASTRO NA TELA
-   const movAnterior = document.getElementById('btnAnterior');
+    // BOTÕES DE MOVIMENTAÇÃO
+    const movAnterior = document.getElementById('btnAnterior');
     if (movAnterior) {
         // Passa -1 para voltar
         movAnterior.addEventListener('click', () => mudarCadastro(-1));
@@ -35,27 +37,22 @@ document.addEventListener('DOMContentLoaded', () => {
         movProximo.addEventListener('click', () => mudarCadastro(1));
     }
 
-   //LIMPAR A TABELA --- 
-   limparOrdem()
-   const limpar =document.getElementById('btnNovo')
-   if (limpar) {
-        // limpa a tela
+    // 5. LIMPAR A TABELA
+    limparOrdem(); // Executa uma vez ao carregar a página
+    const limpar = document.getElementById('btnNovo');
+    if (limpar) {
+        // limpa a tela ao clicar
         limpar.addEventListener('click', () => limparOrdem());
     } 
-   
 
-   //EXCLUIR CADASTRO---
-   const excluir=document.getElementById('btnCancelar')
+    // EXCLUIR CADASTRO
+    const excluir = document.getElementById('btnCancelar');
     if (excluir) {
-        // excluir o cadastro
-        const nrOrdem = document.getElementById("nrServico")
+        const nrOrdem = document.getElementById("nrServico");
         excluir.addEventListener('click', () => excluirOrdemServ(nrOrdem));
     } 
-   
 
-});
-
-});
+}); // <-- Fechou o DOMContentLoaded aqui
 
 
 // FUNÇÕES DA ORDEM DE SERVIÇO
