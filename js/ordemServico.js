@@ -4,7 +4,9 @@ document.addEventListener('DOMContentLoaded', () => {
     inicializarTabelaServicos();
     nrOS();
 
-    
+     
+    selecionaCliente('nmCliente', 'clientes')
+
     document.getElementById('tabelaServicos').addEventListener('input', function(event) {
         // Verifica se o que mudou foi realmente um input
         if (event.target.tagName === 'INPUT') {
@@ -558,24 +560,6 @@ function selecionaCliente(idInput, chaveLocalStorage) {
 });
 
 }
-
-
-//  EVENTO DE SUBMIT
-const formOrdServ = document.getElementById('formOrdServ');
-formOrdServ.addEventListener('submit', (e) => {
-    e.preventDefault();     
-    
-    if (salvarOrdemServ()) {
-      return true
-    }
-});
-
-   
-// QUANDO DIGITO O NOME DO CLIENTE
-document.addEventListener('DOMContentLoaded', () => {
-    selecionaCliente('nmCliente', 'clientes');
-});
-
 
 
 // -/-/-/- troca de aba -/-/-/- //
