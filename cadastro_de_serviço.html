@@ -59,7 +59,7 @@
                     <!--o.s numero-->
                     <div class="campo">
                         <label>O.S Numero</label>
-                        <input id="nrServico" type="text" inert>
+                        <input id="nrServico" type="text" readonly>
                     </div>
                     <!--data-->
                     <div class="campo">
@@ -119,25 +119,8 @@
             <div class="aba">    <!--baixas-->
                 <div class="flex">
                     <div class="card" style="flex:1;">
-                        <h2>Pagamentos</h2>
-                        <!--linha-->
-                        <div class="linha">
-                            <!--valor total-->
-                            <div class="campo">
-                                <label>Valor Total</label>
-                                <input id="vlTotal" type="text" inert>
-                            </div>
-                            <!--pago-->
-                            <div class="campo">
-                                <label>Pago</label>
-                                <input type="text">
-                            </div>
-                            <!--pendente-->
-                            <div class="campo">
-                                <label>Valor Pendente</label>
-                                <input  id="vlPendente" type="text" inert>
-                            </div>
-                        </div>
+                        <h2>Pagamentos</h2>                      
+                       
                         <!--linha-->
                         <div class="linha">
                             <!--data de pagamento-->
@@ -150,8 +133,24 @@
                                 <label>Valor Pago</label>
                                 <input  id="vlPago" type="text">
                             </div>
-                            <button type ="button" >Confirmar</button>
+                            <button id="btnBaixar" type ="button" >Confirmar</button>
                         </div>
+                    </div>
+                    
+                    <!--mostra as baixas já efetuadas para a ordem -->
+                    <div class="container-historico" style="margin-top: 20px;">
+                        <h3>Histórico de Pagamentos / Baixas</h3>
+                        <table id="tabelaHistoricoBaixas" style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+                            <thead>
+                                <tr style="background-color: #f2f2f2; text-align: left;">
+                                    <th style="padding: 8px; border-bottom: 1px solid #ddd;">Data / Hora</th>
+                                    <th style="padding: 8px; border-bottom: 1px solid #ddd;">Valor Pago</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- As linhas do histórico serão geradas aqui pelo JavaScript -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div><!-- // fim aba 2 // -->

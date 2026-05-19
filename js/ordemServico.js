@@ -1,14 +1,12 @@
-
-
 document.addEventListener('DOMContentLoaded', () => {
     inicializarTabelaServicos();
-    nrOS();
+    nrOS(); // Gera ou carrega o número da OS atual
 
     selecionaCliente('nmCliente', 'clientes');
 
     document.getElementById('tabelaServicos').addEventListener('input', function(event) {
         if (event.target.tagName === 'INPUT') {
-            validarTabelaEmTempoReal();
+            validarTabelaEmTempoReal(); 
         }
     }); 
 
@@ -16,9 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const btn = document.getElementById('btnSalvar');
     if (btn) {
         btn.addEventListener('click', (e) => {
-            // Executa a validação rigorosa antes de enviar
             if (controlaservico()) {
-                e.preventDefault(); // Bloqueia o envio se houver erros
+                e.preventDefault(); 
             } else {
                 salvarOrdemServ();
             }
@@ -42,20 +39,19 @@ document.addEventListener('DOMContentLoaded', () => {
         movProximo.addEventListener('click', () => mudarCadastro(1));
     }
 
-    // LIMPAR A TABELA
-    limparOrdem(); 
+    //LIMPAR A ORDEM
     const limpar = document.getElementById('btnNovo');
     if (limpar) {
         limpar.addEventListener('click', () => limparOrdem());
     } 
 
-    // EXCLUIR CADASTRO
+    //EXCLUIR A ORDEM
     const excluir = document.getElementById('btnCancelar');
-    if (excluir) {
-        const nrOrdem = document.getElementById("nrServico");
-        excluir.addEventListener('click', () => excluirOrdemServ(nrOrdem));
+    if (excluir) {        
+        excluir.addEventListener('click', excluirOrdemServ);
     } 
-}); 
+});
+
 
 // FUNÇÕES DA ORDEM DE SERVIÇO
 function inicializarTabelaServicos() {
@@ -90,51 +86,30 @@ function calcularTotalLinha(linha) {
     }
 }
 
-// FUNÇÃO VALIDA LINHAS DA TABELA (Rigorosa - Executada no clique do botão)
 function controlaservico() {
-    const nrLinhasServico = document.getElementById('tabelaServicos').rows;
+    const tabela = document.getElementById('tabelaServicos');
+    const linhas = tabela.querySelectorAll('tbody tr');
 
-    if (nrLinhasServico.length <= 1) {
+    if (linhas.length === 0) {
         alert("Informe pelo menos um serviço!");
         return true;
     }
 
-    for (let i = 1; i < nrLinhasServico.length; i++) {
-        const inputs = nrLinhasServico[i].querySelectorAll('input');
-        for (let input of inputs) {
-            if (input.value.trim() === "") {
-                alert("Atenção: Existem colunas não preenchidas na linha " + i + "!");
-                input.focus(); 
-                return true; 
-            }
-        }
-    }
-    return false; 
-}
+    for (const [index, linha] of linhas.entries()) {
+        const inputs = linha.querySelectorAll('input:not([type="hidden"]):not([disabled])');
+        if (inputs.length === 0) continue; // Pula a linha se não houver inputs válidos
 
-// VALIDAÇÃO EM TEMPO REAL (Habilita/Desabilita o botão dinamicamente)
-function validarTabelaEmTempoReal() {
-    const btnSalvar = document.getElementById('btnSalvar');    
-    const tabelaInvalida = checarTabelaInvalida(); 
-    
-    if (btnSalvar) {
-        btnSalvar.disabled = tabelaInvalida;
-        btnSalvar.style.opacity = tabelaInvalida ? "0.5" : "1";
-        btnSalvar.style.cursor = tabelaInvalida ? "not-allowed" : "pointer";
-    }
-}
+        const ePrimeiraLinha = (index === 0);
+        const primeiroCampoPreenchido = inputs[0].value.trim() !== "";
 
-// CORRIGIDO: Verifica se EXISTE alguma coluna em branco na tabela
-function checarTabelaInvalida() {
-    const rows = document.getElementById('tabelaServicos').rows;
-    if (rows.length <= 1) return true; // Tabela sem linhas de dados é inválida
-
-    for (let i = 1; i < rows.length; i++) {
-        const inputs = rows[i].querySelectorAll('input');
-        for (let input of inputs) {
-            // Se QUALQUER campo estiver vazio, a tabela é considerada inválida para salvar
-            if (input.value.trim() === "") {
-                return true; 
+        // Regra: Valida a linha se for a primeira OU se a linha atual tiver o primeiro campo preenchido
+        if (ePrimeiraLinha || primeiroCampoPreenchido) {
+            for (const input of inputs) {
+                if (!input.value.trim()) {
+                    alert(`Atenção: Preencha todos os campos da linha ${index + 1}!`);
+                    input.focus();
+                    return true; 
+                }
             }
         }
     }
@@ -161,9 +136,16 @@ function verificarEAdicionarLinha(inputData, linhaAtual) {
     }
 }
 
-
-
-
+function validarTabelaEmTempoReal() {
+    const btnSalvar = document.getElementById('btnSalvar');    
+    const tabelaVazia = checarTabelaVazia(); 
+    //não permite salvar caso alguma coluna esteja em branco
+    if (btnSalvar) {
+        btnSalvar.disabled = tabelaVazia;
+        btnSalvar.style.opacity = tabelaVazia ? "0.5" : "1";
+        btnSalvar.style.cursor = tabelaVazia ? "not-allowed" : "pointer";
+    }
+}
 
 // FUNÇÃO PARA SOMAR TODAS AS LINHAS NO TOTAL GERAL
 function atualizarTotalGeral() {
@@ -182,115 +164,27 @@ function atualizarTotalGeral() {
     const vltotPendBaixa = document.getElementById('vlTotPend');
     const vlTotPago = document.getElementById('vlTotFat');
 
-    //aba Baixas
-    const vlPendente = document.getElementById('vlPendente');
-    const vlTotGeralBaixa = document.getElementById('vlTotal');
     
-
     // Captura o valor já faturado/pago (converte para número decimal)
     const valorPago = vlTotPago ? parseFloat(vlTotPago.value.replace(',', '.')) || 0 : 0;
 
     // Calcula o valor pendente 
     const valorPendente = somaGeral - valorPago;
 
-    // Atualiza os campos na tela 
-    //Totais Geral
+    // Atualiza os campos na tela - Totais Geral
     if (vlTotalGeral) {
         vlTotalGeral.value = somaGeral.toFixed(2);
     }
 
     if (vltotPendBaixa) {
         vltotPendBaixa.value = valorPendente.toFixed(2);
-    }
+    }    
     
-    //Totais gerais aba 3-Baixas
-    if (vlTotGeralBaixa) {
-        vlTotGeralBaixa.value = somaGeral.toFixed(2);
-    }
-
-    if (vlPendente) {
-        vlPendente.value = somaGeral.toFixed(2);
-    }
+    
 }
 
 
-//FUNÇÃO PARA SALVAR A ORDEM
-function salvarOrdemServ() {
-    const nmCliente = document.getElementById('nmCliente');
 
-    //Não permite salvar a ordem sem um cliente selecionado
-    if (!nmCliente?.value.trim()) {
-        alert("Informe o Cliente!");
-        return false;
-    }
-
-    //TESTA PARA SABER SE TEM LINHAS NA TABELA 
-    if (controlaservico()) { 
-       return; 
-    }
-
-    try {
-        const ordServ = JSON.parse(localStorage.getItem('ordServ')) || [];
-        const nrServico = document.getElementById('nrServico').value;
-
-        // Captura itens e remove linhas que não tenham descrição OU que o total seja "0.00"
-        const itens = Array.from(document.querySelectorAll('.linha-servico'))
-            .map(linha => ({
-                descricao: linha.querySelector('.descProd').value.trim(),
-                valor: linha.querySelector('.valor').value,
-                qtd: linha.querySelector('.qtd').value,
-                total: linha.querySelector('.total').value,
-                data: linha.querySelector('.data-servico').value
-            }))
-            .filter(item => item.descricao !== "" && item.total !== "0.00" && item.total !== ""); 
-
-        const novaOrdem = {
-            //Dados gerais
-            dataRegistro: new Date().toISOString(), 
-            codigo: nrServico,
-            data: document.getElementById('dataServ').value,
-            condPgto: document.getElementById('condPgto').value,
-            cliente: nmCliente.value,
-
-            //Linhas da ordem de serviço, tabela 
-            itens: itens,
-
-            //Aba3 - Dados do Cliente 
-            endCli: document.getElementById('endCli').value,
-            endNr: document.getElementById('endNr').value,
-            endCidade: document.getElementById('endCidade').value,
-            endUF: document.getElementById('endUf').value,
-            cnpj: document.getElementById('cnpj').value,
-            foneCli: document.getElementById('fone').value,
-
-            //Totais e observação da ordem
-            vlTotGeral: document.getElementById('vlTotGeral').value,
-            obs: document.getElementById('obs').value,
-            vlTotPend: document.getElementById('vlTotPend').value,
-
-            //vlPago:document.getElementById('vlPago').value
-            
-        };
-
-        // Verifica se é uma edição ou nova ordem
-        const index = ordServ.findIndex(os => os.codigo === nrServico);
-        if (index !== -1) {
-            ordServ[index] = novaOrdem; // Atualiza a existente
-        } else {
-            ordServ.push(novaOrdem); // Adiciona nova
-        }
-
-        localStorage.setItem('ordServ', JSON.stringify(ordServ));
-        alert("Ordem de Serviço salva com sucesso!");               
-        limparOrdem();      
-        return true;
-
-    } catch (error) {
-        console.error("Erro ao salvar no localStorage:", error);
-        alert("Erro ao salvar os dados.");
-        return false;
-    }
-}
 
 //FUNÇÃO PARA EXIBIR OS DADOS NA TELA
 let idxOrdServ = 0; 
@@ -311,6 +205,103 @@ function mudarCadastro(direcao) {
 
     exibirDados(); 
 }
+//FUNÇÃO PARA SALVAR A ORDEM
+function salvarOrdemServ() {
+    const nmCliente = document.getElementById('nmCliente');
+
+    //Não permite salvar a ordem sem um cliente selecionado
+    if (!nmCliente?.value.trim()) {
+        alert("Informe o Cliente!");
+        return false;
+    }
+
+    //TESTA PARA SABER SE TEM LINHAS NA TABELA 
+    if (controlaservico()) { 
+       return false; 
+    }
+
+    try {
+        const ordServ = JSON.parse(localStorage.getItem('ordServ')) || [];
+        const nrServico = document.getElementById('nrServico').value;
+
+        // Captura itens e remove linhas que não tenham descrição OU que o total seja "0.00"
+        const itens = Array.from(document.querySelectorAll('.linha-servico'))
+            .map(linha => ({
+                descricao: linha.querySelector('.descProd').value.trim(),
+                valor: linha.querySelector('.valor').value,
+                qtd: bridge = linha.querySelector('.qtd').value,
+                total: linha.querySelector('.total').value,
+                data: linha.querySelector('.data-servico').value
+            }))
+            .filter(item => item.descricao !== "" && item.total !== "0.00" && item.total !== ""); 
+
+        // Busca se já existe essa ordem para preservar dados de baixas/pagamentos
+        const index = ordServ.findIndex(os => os.codigo === nrServico);
+        const ordemExistente = index !== -1 ? ordServ[index] : null;
+
+        const novaOrdem = {
+            //Dados gerais
+            dataRegistro: ordemExistente ? ordemExistente.dataRegistro : new Date().toISOString(), 
+            codigo: nrServico,
+            data: document.getElementById('dataServ').value,
+            condPgto: document.getElementById('condPgto').value,
+            cliente: nmCliente.value,
+
+            //Linhas da ordem de serviço, tabela 
+            itens: itens,
+
+            //Aba3 - Dados do Cliente 
+            endCli: document.getElementById('endCli').value,
+            endNr: document.getElementById('endNr').value,
+            endCidade: document.getElementById('endCidade').value,
+            endUF: document.getElementById('endUf').value,
+            cnpj: document.getElementById('cnpj').value,
+            foneCli: document.getElementById('fone').value,
+
+            //Totais e observação da ordem
+            vlTotGeral: document.getElementById('vlTotGeral').value,
+            vlTotal: document.getElementById('vlTotal').value,
+            obs: document.getElementById('obs').value,
+            vlTotPend: document.getElementById('vlTotPend').value,
+
+            //  PRESERVAÇÃO DE DADOS DA ABA BAIXAS ---
+            status: ordemExistente ? ordemExistente.status : "ABERTO",
+            valorPagoAcumulado: ordemExistente ? ordemExistente.valorPagoAcumulado : 0,
+            historicoPagamentos: ordemExistente ? ordemExistente.historicoPagamentos : []
+        };
+
+        // Se for edição, também recalcula o status baseado no novo valor total geral
+        if (ordemExistente) {
+            const novoTotal = parseFloat(novaOrdem.vlTotGeral) || 0;
+            if (novaOrdem.valorPagoAcumulado >= novoTotal && novoTotal > 0) {
+                novaOrdem.status = "PAGO";
+            } else if (novaOrdem.valorPagoAcumulado > 0) {
+                novaOrdem.status = "PENDENTE";
+            } else {
+                novaOrdem.status = "ABERTO";
+            }
+            // Recalcula o valor pendente no objeto que vai para o LocalStorage
+            novaOrdem.vlTotPend = (novoTotal - novaOrdem.valorPagoAcumulado).toFixed(2);
+        }
+
+        // Salva ou atualiza no array
+        if (index !== -1) {
+            ordServ[index] = novaOrdem; // Atualiza a existente
+        } else {
+            ordServ.push(novaOrdem); // Adiciona nova
+        }
+
+        localStorage.setItem('ordServ', JSON.stringify(ordServ));
+        alert("Ordem de Serviço salva com sucesso!");               
+        limparOrdem();      
+        return true;
+
+    } catch (error) {
+        console.error("Erro ao salvar no localStorage:", error);
+        alert("Erro ao salvar os dados.");
+        return false;
+    }
+}
 
 //Mostra os dados na tela
 function exibirDados() {
@@ -320,6 +311,8 @@ function exibirDados() {
     if (tabela.length === 0) {
         console.log("Nenhum cadastro encontrado.");
         if (contador) contador.innerText = "0 / 0";
+        // Limpa o histórico caso não haja nenhuma ordem
+        if (typeof atualizarTabelaHistorico === 'function') atualizarTabelaHistorico(null);
         return;
     }
 
@@ -330,10 +323,10 @@ function exibirDados() {
 
     // Campos gerais
     document.getElementById('nrServico').value = ordem.codigo || "";
-    document.getElementById('condPgto').value= ordem.condPgto || "";
+    document.getElementById('condPgto').value = ordem.condPgto || "";
     document.getElementById('dataServ').value = ordem.data || "";
 
-    //Aba3 - Dados do Cliente 
+    // Aba3 - Dados do Cliente 
     document.getElementById('nmCliente').value = ordem.cliente || "";
     document.getElementById('endCli').value = ordem.endCli || "";
     document.getElementById('endNr').value = ordem.endNr || "";
@@ -342,19 +335,37 @@ function exibirDados() {
     document.getElementById('cnpj').value = ordem.cnpj || "";
     document.getElementById('fone').value = ordem.foneCli || "";
 
-     //Totais e observação da ordem    
-    document.getElementById('vlTotGeral').value = ordem.vlTotGeral || "";
-    document.getElementById('vlTotPend').value = ordem.vlTotPend || "";
-    document.getElementById('vlPago').value =ordem.vlPago || "";
+    // Totais e observação da ordem    
+    document.getElementById('vlTotGeral').value = ordem.vlTotGeral || "0.00";
+    document.getElementById('vlTotPend').value = ordem.vlTotPend || "0.00";
     document.getElementById('obs').value = ordem.obs || "";
 
-    // ITENS DA TABELA SERVIÇOS
-    renderizarItensOrdem(ordem.itens);vlTotPend
+    // --- SINCRONIZAÇÃO DOS CAMPOS DA ABA DE BAIXAS ---
+    const vlTotPago = document.getElementById('vlTotFat');
+    if (vlTotPago) {
+        vlTotPago.value = (ordem.valorPagoAcumulado || 0).toFixed(2);
+    }
+
+    // Atualiza os saldos calculados das abas na tela
+    if (typeof atualizarTotalGeral === 'function') {
+        atualizarTotalGeral();
+    }
+
+    // ITENS DA TABELA SERVIÇOS (CORREGIDO: Removido o 'vlTotPend' quebrado do final)
+    if (typeof renderizarItensOrdem === 'function') {
+        renderizarItensOrdem(ordem.itens);
+    }
 
     if (contador) {
         contador.innerText = `${idxOrdServ + 1} de ${tabela.length}`;
     }
+
+    // HISTÓRICO DE BAIXAS (CORREGIDO: Passando o objeto 'ordem' completo em vez de apenas o código)
+    if (typeof atualizarTabelaHistorico === 'function') {
+        atualizarTabelaHistorico(ordem);
+    }
 }
+
 
 // Função auxiliar para reconstruir as linhas de produtos/serviços
 function renderizarItensOrdem(itens) {
@@ -382,40 +393,60 @@ function renderizarItensOrdem(itens) {
 }
 
 //FUNÇÃO PARA BAIXAR PARCIALMENTE A ORDEM---ABA BAIXAS
-function baixarOrdem(nrServico, valorPago) {
+function baixarOrdem() {
     try {
+        // CAPTURA OS VALORES DIRETAMENTE DA TELA ---
+        const inputNrServico = document.getElementById('nrServico');
+        const inputValorPago = document.getElementById('vlPago'); 
+
+        if (!inputNrServico || !inputValorPago) {
+            alert("Erro: Elementos da tela não foram encontrados!");
+            return false;
+        }
+
+        const nrServicoDigitado = String(inputNrServico.value).trim();
+        const valorPagoDigitado = inputValorPago.value;
+
+        if (!nrServicoDigitado) {
+            alert("Por favor, informe o número da Ordem de Serviço!");
+            return false;
+        }
+
         let ordServ = JSON.parse(localStorage.getItem('ordServ')) || [];
-        const index = ordServ.findIndex(os => os.codigo === nrServico);
+        
+        // --- CORREÇÃO: GARENTE COMPARAÇÃO EM STRING PARA EVITAR ERRO DE TIPO ---
+        const index = ordServ.findIndex(os => String(os.codigo).trim() === nrServicoDigitado);
+        console.log("Ordens no LocalStorage:", ordServ);
 
         if (index === -1) {
-            alert("Ordem de Serviço não encontrada!");
-            return;
+            alert(`Ordem de Serviço Nº ${nrServicoDigitado} não encontrada!`);
+            return false;
         }
 
         let os = ordServ[index];
 
-        // PEGA VALORES JÁ BAIXADOS PARA ORDEM ATUAL, SE NÃO TIVER NADA FICA 0
+        // Inicializa campos caso não existam
         if (!os.valorPagoAcumulado) os.valorPagoAcumulado = 0;
         if (!os.historicoPagamentos) os.historicoPagamentos = [];
 
-        // CONVERTE PARA VALORES
-        const valorParcela = parseFloat(valorPago);
-        const totalGeral = parseFloat(os.vlTotGeral);
+        // Converte e trata o valor pago que vem do input (aceita vírgula ou ponto)
+        const valorParcela = parseFloat(String(valorPagoDigitado).replace(',', '.')) || 0;
+        const totalGeral = parseFloat(os.vlTotGeral) || 0;
 
-        if (isNaN(valorParcela) || valorParcela <= 0) {
+        if (valorParcela <= 0) {
             alert("Informe um valor de pagamento válido!");
-            return;
+            return false;
         }
 
-        // VERIFICA SE O VALOR INFORMADO PARA BAIXA NÃO É MAIOR QUE O TOTAL DA ORDEM
-        const saldoRestante = totalGeral - os.valorPagoAcumulado;
+        // Calcula saldo restante real considerando precisão decimal do JS
+        const saldoRestante = parseFloat((totalGeral - os.valorPagoAcumulado).toFixed(2));
         if (valorParcela > saldoRestante) {
-            alert(`Valor excede o saldo devedor! Saldo atual: R$ ${saldoRestante.toFixed(2)}`);
-            return;
+            alert(`Valor excede o saldo devedor! Saldo atual: R$ ${saldoRestante.toFixed(2).replace('.', ',')}`);
+            return false;
         }
 
         // ATUALIZA OS DADOS
-        os.valorPagoAcumulado += valorParcela;
+        os.valorPagoAcumulado = parseFloat((os.valorPagoAcumulado + valorParcela).toFixed(2));
         os.historicoPagamentos.push({
             data: new Date().toISOString(),
             valor: valorParcela
@@ -428,15 +459,27 @@ function baixarOrdem(nrServico, valorPago) {
             os.status = "PENDENTE";
         }
 
-        // SALVA DE VOLTA NO  LocalStorage
+        // SALVA DE VOLTA NO LocalStorage
         ordServ[index] = os;
         localStorage.setItem('ordServ', JSON.stringify(ordServ));
 
-        alert(`Baixa de R$ ${valorParcela.toFixed(2)} registrada com sucesso!`);
+        // ATUALIZA A INTERFACE EM TEMPO REAL ---
+        const vlTotPago = document.getElementById('vlTotFat');
+        if (vlTotPago) {
+            vlTotPago.value = os.valorPagoAcumulado.toFixed(2);
+            atualizarTotalGeral(); 
+        }
+
+        // Limpa o campo de valor digitado após o sucesso
+        inputValorPago.value = ""; 
+
+        
+        alert(`Baixa de R$ ${valorParcela.toFixed(2).replace('.', ',')} registrada com sucesso!`);
         return true;
 
     } catch (error) {
         console.error("Erro ao dar baixa:", error);
+        return false;
     }
 }
 
@@ -468,12 +511,17 @@ function limparOrdem() {
         tbody.appendChild(novaLinha);
     }
     
-    // Reset do número da OS e foco no primeiro campo
+
     if (typeof nrOS === "function") nrOS();
     document.getElementById('nmCliente')?.focus();
+
+    // Limpa a tabela de histórico da tela
+    atualizarTabelaHistorico(null);
+
+        // Reset do número da OS e foco no primeiro campo
+        if (typeof nrOS === "function") nrOS();
+        document.getElementById('nmCliente')?.focus();
 }
-
-
 
 // FUNÇÃO PARA EXCLUIR ORDEM
 function excluirOrdemServ() {
@@ -599,7 +647,6 @@ function selecionaCliente(idInput, chaveLocalStorage) {
 
 }
 
-
 // -/-/-/- troca de aba -/-/-/- //
 function trocarAba(index) {
     const abas = document.querySelectorAll(".btn-aba");
@@ -612,3 +659,44 @@ function trocarAba(index) {
     conteudos[index].classList.add("ativa");
 }
 
+function atualizarTabelaHistorico(os) {
+    const tbody = document.querySelector('#tabelaHistoricoBaixas tbody');
+    if (!tbody) return;
+
+    // Limpa o histórico anterior
+    tbody.innerHTML = '';
+
+     console.log(os)
+    // Se a OS não tiver histórico ou ele estiver vazio, mostra uma linha informativa
+    if (!os || !os.historicoPagamentos || os.historicoPagamentos.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="2" style="padding: 8px; text-align: center; color: #888;">
+                    Nenhum pagamento registrado para esta O.S.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    // Percorre o histórico e cria as linhas da tabela
+    os.historicoPagamentos.forEach(pagto => {
+        const linha = document.createElement('tr');
+        
+        // Formata a data do formato ISO para o padrão brasileiro (DD/MM/AAAA HH:MM)
+        const dataFormatada = new Date(pagto.data).toLocaleString('pt-BR');
+        
+        // Formata o valor para moeda brasileira
+        const valorFormatado = parseFloat(pagto.valor).toLocaleString('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+        });
+
+        linha.innerHTML = `
+            <td style="padding: 8px; border-bottom: 1px solid #ddd;">${dataFormatada}</td>
+            <td style="padding: 8px; border-bottom: 1px solid #ddd; font-weight: bold; color: green;">${valorFormatado}</td>
+        `;
+        
+        tbody.appendChild(linha);
+    });
+}
