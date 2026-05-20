@@ -14,10 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const btn = document.getElementById('btnSalvar');
     if (btn) {
         btn.addEventListener('click', (e) => {
-            if (controlaservico()) {
-                e.preventDefault(); 
-            } else {
-                salvarOrdemServ();
+            e.preventDefault(); 
+            
+            if (!controlaservico()) { 
+                salvarOrdemServ(); 
             }
         });
     }
@@ -259,8 +259,7 @@ function salvarOrdemServ() {
             foneCli: document.getElementById('fone').value,
 
             //Totais e observação da ordem
-            vlTotGeral: document.getElementById('vlTotGeral').value,
-            vlTotal: document.getElementById('vlTotal').value,
+            vlTotGeral: document.getElementById('vlTotGeral').value,            
             obs: document.getElementById('obs').value,
             vlTotPend: document.getElementById('vlTotPend').value,
 
@@ -561,6 +560,19 @@ function excluirOrdemServ() {
 }
 
 
+//Função para trocas as abas    
+function trocarAba(index) {
+    const abas = document.querySelectorAll(".btn-aba");
+    const conteudos = document.querySelectorAll(".aba");
+
+    abas.forEach(aba => aba.classList.remove("ativa"));
+    conteudos.forEach(c => c.classList.remove("ativa"));
+
+    abas[index].classList.add("ativa");
+    conteudos[index].classList.add("ativa");
+}
+    
+
 // FUNÇÃO QUE GERA O PRÓXIMO NUMERO DA ORDEM DE SERVIÇO
 function nrOS() {
     const valorBanco = localStorage.getItem('ordServ');
@@ -647,17 +659,6 @@ function selecionaCliente(idInput, chaveLocalStorage) {
 
 }
 
-// -/-/-/- troca de aba -/-/-/- //
-function trocarAba(index) {
-    const abas = document.querySelectorAll(".btn-aba");
-    const conteudos = document.querySelectorAll(".aba");
-
-    abas.forEach(aba => aba.classList.remove("ativa"));
-    conteudos.forEach(c => c.classList.remove("ativa"));
-
-    abas[index].classList.add("ativa");
-    conteudos[index].classList.add("ativa");
-}
 
 function atualizarTabelaHistorico(os) {
     const tbody = document.querySelector('#tabelaHistoricoBaixas tbody');

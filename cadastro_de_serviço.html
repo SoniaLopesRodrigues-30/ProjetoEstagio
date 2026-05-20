@@ -231,28 +231,16 @@
                 <div class="botoes_direita">
                     <button type="button" id="btnSalvar" class="salvar">Salvar</button>
                     <button type="button" id="btnCancelar" class="cancelar">Excluir</button>
+                    <button type="button" id="btnImprimir" class="btn btn-imprimir">Imprimir</button>
                 </div> 
             </div>
 
         </div><!-- //// fim do container //// -->
-    </form> 
-
-    <script>
-    /*funcao teste*/
-    function trocarAba(index) {
-        const abas = document.querySelectorAll(".btn-aba");
-        const conteudos = document.querySelectorAll(".aba");
-
-        abas.forEach(aba => aba.classList.remove("ativa"));
-        conteudos.forEach(c => c.classList.remove("ativa"));
-
-        abas[index].classList.add("ativa");
-        conteudos[index].classList.add("ativa");
-    }
-    </script>
+    </form>    
 
     <script src="./js/ordemServico.js"></script>
     <!-- // js do menu mobile // -->
     <script src="./js/header.js"></script>
+    <script src="./js/impressao_Ordem.js"></script>
 </body>
 </html>
