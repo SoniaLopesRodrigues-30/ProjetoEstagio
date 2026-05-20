@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+   
     inicializarTabelaServicos();
     nrOS(); // Gera ou carrega o número da OS atual
 
@@ -386,9 +387,7 @@ function renderizarItensOrdem(itens) {
             `;
             tbody.appendChild(tr);
         });
-    }
-    
-    
+    }       
 }
 
 //FUNÇÃO PARA BAIXAR PARCIALMENTE A ORDEM---ABA BAIXAS
@@ -658,7 +657,6 @@ function selecionaCliente(idInput, chaveLocalStorage) {
 });
 
 }
-
 
 function atualizarTabelaHistorico(os) {
     const tbody = document.querySelector('#tabelaHistoricoBaixas tbody');

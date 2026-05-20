@@ -41,9 +41,7 @@
 
     <!--fim do modal-->
 
-    <!--botão de pesquisa Cliente-->
-    <button type="button" id="btnConsultar">🔍 Consultar (F2)</button>
-
+   
     <!-- //// cabeça //// -->
     <header class="header">
         <a href="./pgPrincipal.html">
@@ -98,17 +96,21 @@
 
     <form id="formCliente" >
         <div  class="container"> <!-- //// inicio do container //// -->
-
+        
             <h1>Cadastro de Terceiros</h1>
 
             <!-- // primeiro card (1*) // -->
             <div class="card">
+                <!--botão de pesquisa Cliente-->
+            <button type="button" id="btnConsultar">🔍 Consultar (F2)</button>
+            </br>
+            </br>    
                 <div class="linha">
                     <div class="campo">
                     <div class="campo">
 
                         <label>Codigo</label>
-                        <input type='number' id='codigo'>
+                        <input type='number' id='codigo' readonly>
                     </div>
                     <div class="campo">
                         <label>Nome / Razão Social</label>
