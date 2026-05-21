@@ -81,12 +81,12 @@
             <span class="texto-span">Notificação</span>
             
             <!-- Contador de notificações (Aparece apenas se houver aniversariantes) -->
-            <span id="contadorNiver" style="position: absolute; top: -5px; right: 5px; background: #ff4d4d; color: white; border-radius: 50%; padding: 2px 6px; font-size: 10px; font-weight: bold; display: none;">0</span>
+            <span id="contadorNiver" class="badge-notificacao">0</span>
 
             <!-- Menu Dropdown dos aniversariantes -->
-            <div id="listaNiverDropdown" style="display: none; position: absolute; top: 100%; right: 0; background: white; border: 1px solid #ddd; width: 260px; box-shadow: 0px 4px 12px rgba(0,0,0,0.15); border-radius: 4px; z-index: 9999; max-height: 250px; overflow-y: auto; color: #333;">
-                <div style="padding: 10px; border-bottom: 1px solid #eee; font-weight: bold; background: #f8f9fa; font-size: 13px;">🎂 Aniversários Próximos</div>
-                <ul id="itensNotificacao" style="list-style: none; padding: 0; margin: 0;">
+            <div id="listaNiverDropdown" class="dropdown-niver">
+                <div class="dropdown-niver-header">🎂 Aniversários Próximos</div>
+                <ul id="itensNotificacao" class="dropdown-niver-lista">
                     <!-- Injetado via JavaScript -->
                 </ul>
             </div>
@@ -100,13 +100,7 @@
 
     <form id="formCliente" >
         <div  class="container"> <!-- //// inicio do container //// -->
-        
-            <h1>Cadastro de Terceiros</h1>
-
-            <!-- // primeiro card (1*) // -->
-            <div class="card">               
-
-            <!-- // botoes //  -->
+        <!-- // botoes //  -->
             <div class="botoes">
                 <!--botão de pesquisa Cliente-->
                 
@@ -114,33 +108,35 @@
                     <button type="button" id="btnNovo" class="novo">Novo</button>
                 <div class="botoes_direita">
                     <button id="btnSalvar" type="button" class="salvar">Salvar</button>
-                    <button id="btnCancelar"  type="button" class="cancelar">Excluir</button>
-                     <button type="button" id="btnConsultar">🔍 Consultar (F2)</button>
+                    <button id="btnCancelar"  type="button" class="cancelar">Excluir</button>                     
                 </div> 
 
-            </div>            
-            </br>
-            </br>    
+            </div>  
+        </br>
+        </br>          
+            <h1>Cadastro de Terceiros</h1>
+
+            <!-- // primeiro card (1*) // -->
+            <div class="card">  
                 <div class="linha">
-                    <div class="campo">
-                        
-                    <div class="campo">
+                       
+                    
+                    <div class="campo">                                           
                         <label>Codigo</label>
                         <input type='number' id='codigo' readonly>
-                    </div>
-                    
-                    <div class="campo">
-                        <label>Nome / Razão Social</label>                       
-                        <input type="text" id="nomeCliente">
-                    </div>
-                    <div class="campo">
-                        <label>Classificação</label>
-                        <select id="tpTerceiro">
-                            <option id="optCliente">Cliente</option>
-                            <option id="optFornecedor">Fornecedor</option>
-                            <option id="optOutros">Outro</option>
-                        </select>
-                    </div>
+                        <button type="button" id="btnConsultar">🔍 Consultar (F2)</button>                                 
+                        <div class="campo">
+                            <label>Nome / Razão Social</label>                       
+                            <input type="text" id="nomeCliente">
+                        </div>
+                        <div class="campo">
+                            <label>Classificação</label>
+                            <select id="tpTerceiro">
+                                <option id="optCliente">Cliente</option>
+                                <option id="optFornecedor">Fornecedor</option>
+                                <option id="optOutros">Outro</option>
+                            </select>
+                        </div>
                 </div>
             </div> <!--fim card 1-->
 

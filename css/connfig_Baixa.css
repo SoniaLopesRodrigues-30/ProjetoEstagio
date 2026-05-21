@@ -1,0 +1,51 @@
+/* Container principal do histórico */
+.container-historico {
+  margin-top: 20px;
+  background-color: #ffffff;
+}
+
+/* Título da seção */
+.container-historico h3 {
+  font-size: 1.2rem;
+  color: #333333;
+  margin-bottom: 12px;
+}
+
+/* Estrutura da tabela */
+.historico-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+/* Cabeçalho da tabela */
+.historico-table thead tr {
+  background-color: #f2f2f2;
+  text-align: left;
+}
+
+/* Células gerais (títulos e dados) */
+.historico-table th, 
+.historico-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #dddddd;
+  color: #444444;
+}
+
+/* Alinha a segunda coluna (Valores) para a direita */
+.historico-table th:nth-child(2),
+.historico-table td:nth-child(2) {
+  text-align: right;
+}
+
+/* Destaca o valor pago com uma cor verde sutil */
+.historico-table td:nth-child(2) {
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+/* Efeito visual ao passar o mouse nas linhas de dados */
+.historico-table tbody tr:hover {
+  background-color: #f9f9f9;
+}

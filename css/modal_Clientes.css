@@ -19,7 +19,7 @@
   display: flex;
 }
 
-/* 1. Alarga a caixa branca do modal para dar espaço à tabela */
+/*  Alarga a caixa branca do modal para dar espaço à tabela */
 .modal-content {
   background: white; 
   width: 95%;         
@@ -44,4 +44,87 @@
 .modal-table td {
   padding: 16px 12px; 
   border-bottom: 1px solid #ddd;
+}
+
+
+/* Container principal do Dropdown flutuante */
+.dropdown-niver {
+  display: none; 
+  position: absolute; 
+  top: 100%; 
+  right: 0; 
+  background: white; 
+  border: 1px solid #ddd; 
+  width: 260px; 
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15); 
+  border-radius: 4px; 
+  z-index: 9999; 
+  max-height: 250px; 
+  overflow-y: auto; 
+  color: #333;
+  margin-top: 5px; /* Pequeno espaçamento do botão superior */
+}
+
+/* Força a exibição quando ativo via JS */
+.dropdown-niver.active {
+  display: block;
+}
+
+/* Cabeçalho do Dropdown */
+.dropdown-niver-header {
+  padding: 10px; 
+  border-bottom: 1px solid #eee; 
+  font-weight: bold; 
+  background: #f8f9fa; 
+  font-size: 13px;
+  position: sticky; /* Mantém o topo fixo ao rolar a lista */
+  top: 0;
+}
+
+/* Lista de aniversariantes */
+.dropdown-niver-lista {
+  list-style: none; 
+  padding: 0; 
+  margin: 0;
+}
+
+/* Estilo para cada item/linha injetado pelo JavaScript */
+.dropdown-niver-lista li {
+  padding: 10px 12px;
+  font-size: 13px;
+  border-bottom: 1px solid #f5f5f5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Remove a borda da última linha */
+.dropdown-niver-lista li:last-child {
+  border-bottom: none;
+}
+
+/* Efeito visual ao passar o mouse nos itens */
+.dropdown-niver-lista li:hover {
+  background-color: #f1f3f5;
+}
+
+/* Selo de contagem de notificações vermelho */
+.badge-notificacao {
+  display: none; 
+  position: absolute; 
+  top: -5px; 
+  right: 5px; 
+  background: #ff4d4d; 
+  color: white; 
+  border-radius: 50%; 
+  padding: 2px 6px; 
+  font-size: 10px; 
+  font-weight: bold;
+  z-index: 10; 
+  pointer-events: none; /* Evita que o clique no número atrapalhe o clique no botão */
+}
+
+/* Classe utilitária caso queira controlar a exibição via classe no JS */
+.badge-notificacao.visivel {
+  display: inline-block;
 }

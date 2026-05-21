@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- // css // -->
     <link rel="stylesheet" href="./css/formulario.css">
+     <link rel="stylesheet" href="./css/connfig_Baixa.css">
 </head>
 
 <body>
@@ -49,7 +50,19 @@
 
     <form id="formOrdServ">
         <div class="container"> <!-- //// inicio do container //// -->
-
+                <!-- // botoes //  -->
+            <div class="botoes">
+                <div class="botoes_esquerda">
+                    <button type="button" class="novo" id="btnNovo">Novo</button>
+                </div>
+                <div class="botoes_direita">
+                    <button type="button" id="btnSalvar" class="salvar">Salvar</button>
+                    <button type="button" id="btnCancelar" class="cancelar">Excluir</button>
+                    <button type="button" id="btnImprimir" class="btn btn-imprimir">Imprimir</button>
+                </div> 
+            </div>
+            </br>
+            </br>
             <h1>Ordem de Serviço</h1>
 
             <!-- // primeiro card (1*) // -->
@@ -138,13 +151,13 @@
                     </div>
                     
                     <!--mostra as baixas já efetuadas para a ordem -->
-                    <div class="container-historico" style="margin-top: 20px;">
+                    <div class="container-historico">
                         <h3>Histórico de Pagamentos / Baixas</h3>
-                        <table id="tabelaHistoricoBaixas" style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+                        <table id="tabelaHistoricoBaixas" class="historico-table">
                             <thead>
-                                <tr style="background-color: #f2f2f2; text-align: left;">
-                                    <th style="padding: 8px; border-bottom: 1px solid #ddd;">Data / Hora</th>
-                                    <th style="padding: 8px; border-bottom: 1px solid #ddd;">Valor Pago</th>
+                                <tr>
+                                    <th>Data / Hora</th>
+                                    <th>Valor Pago</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -221,19 +234,7 @@
                         <input id="vlTotGeral" type="text">
                     </div>
                 </div>
-            </div>
-
-                            <!-- // botoes //  -->
-            <div class="botoes">
-                <div class="botoes_esquerda">
-                    <button type="button" class="novo" id="btnNovo">Novo</button>
-                </div>
-                <div class="botoes_direita">
-                    <button type="button" id="btnSalvar" class="salvar">Salvar</button>
-                    <button type="button" id="btnCancelar" class="cancelar">Excluir</button>
-                    <button type="button" id="btnImprimir" class="btn btn-imprimir">Imprimir</button>
-                </div> 
-            </div>
+            </div>          
 
         </div><!-- //// fim do container //// -->
     </form>    
