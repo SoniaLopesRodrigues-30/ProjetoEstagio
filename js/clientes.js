@@ -8,7 +8,7 @@ let indiceExistente = -1; // Inicializado em -1 para iniciar em Modo Novo
 let tipoTerceiro = "Cliente";
 let optUf = "RS";
 
-// Elements do DOM carregados globalmente de forma segura
+
 const btnExcluir = document.getElementById('btnCancelar');
 const btnSalvar = document.getElementById('btnSalvar');
 const formCliente = document.getElementById('formCliente');
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ==========================================
-// 🧭 NAVEGAÇÃO ENTRE CADASTROS
+// NAVEGAÇÃO ENTRE CADASTROS
 // ==========================================
 function mudarCadastro(direcao) {
     const tabela = JSON.parse(localStorage.getItem("clientes")) || [];
