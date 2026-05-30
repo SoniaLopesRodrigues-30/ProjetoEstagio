@@ -1,4 +1,5 @@
 
+
 // BOTÃO IMPRIMIR
 const btnImprimir = document.getElementById('btnImprimir');
 if (btnImprimir) {
@@ -15,28 +16,37 @@ function imprimirOrdemServ() {
     const obs = document.getElementById('obs')?.value || "Nenhuma";
     const vlTotGeral = document.getElementById('vlTotGeral')?.value || "0.00";
 
+    // Trata e formata a data de emissão para o padrão brasileiro
+    const dataEmissaoVal = dataServ ? new Date(dataServ + 'T00:00:00') : new Date();
+    const dataFormatada = dataServ ? dataServ.split('-').reverse().join('/') : dataEmissaoVal.toLocaleDateString('pt-BR');
+
     // Captura as linhas da tabela de serviços
     let linhasHtml = "";
     document.querySelectorAll('.linha-servico').forEach(linha => {
+        // CORREÇÃO: Removido o erro de sintaxe 'line =' daqui
         const desc = linha.querySelector('.descProd')?.value.trim() || "";
-        const qtd = linha.querySelector('.qtd')?.value || "0";
-        const valor = linha.querySelector('.valor')?.value || "0.00";
-        const total = linha.querySelector('.total')?.value || "0.00";
+        const qtd = parseFloat(linha.querySelector('.qtd')?.value) || 0;
+        const valor = parseFloat(linha.querySelector('.valor')?.value) || 0;
+        const total = parseFloat(linha.querySelector('.total')?.value) || 0;
 
         if (desc !== "") {
             linhasHtml += `
                 <tr>
                     <td>${desc}</td>
                     <td style="text-align: center;">${qtd}</td>
-                    <td style="text-align: right;">R$ ${valor}</td>
-                    <td style="text-align: right;">R$ ${total}</td>
+                    <td style="text-align: right;">R$ ${valor.toFixed(2)}</td>
+                    <td style="text-align: right;">R$ ${total.toFixed(2)}</td>
                 </tr>
             `;
         }
     });
 
+    if (linhasHtml === "") {
+        linhasHtml = `<tr><td colspan="4" style="text-align: center; color: #777;">Nenhum serviço registrado nesta ordem de serviço.</td></tr>`;
+    }
+
     // Abre a janela de impressão
-    const janelaImpressao = window.open('', '_blank', 'width=800,height=600');
+    const janelaImpressao = window.open('', '_blank', 'width=850,height=900');
     if (!janelaImpressao) {
         alert("O bloqueador de pop-ups impediu a abertura da impressão. Ative-o para este site.");
         return;
@@ -44,101 +54,106 @@ function imprimirOrdemServ() {
 
     janelaImpressao.document.write(`
         <!DOCTYPE html>
-        <html>
+        <html lang="pt-BR">
         <head>
+            <meta charset="UTF-8">
             <title>Ordem de Serviço Nº ${nrServico}</title>
-            <style>
-                body { font-family: Arial, sans-serif; margin: 20px; color: #333; line-height: 1.4; background: #fff; }
-                .header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px; }
-                .header h1 { margin: 0; font-size: 24px; }
-                
-                /* Layout seguro para impressão (Evita bugs do Flexbox) */
-                .info-container { width: 100%; margin-bottom: 20px; table-layout: fixed; border-collapse: separate; border-spacing: 10px 0; }
-                .info-group { width: 50%; border: 1px solid #ccc; padding: 10px; border-radius: 4px; vertical-align: top; box-sizing: border-box; }
-                .info-group h3 { margin-top: 0; border-bottom: 1px solid #ddd; padding-bottom: 5px; font-size: 14px; }
-                
-                table.servicos { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-                table.servicos th { background-color: #f2f2f2; border: 1px solid #ddd; padding: 8px; text-align: left; }
-                table.servicos td { border: 1px solid #ddd; padding: 8px; }
-                
-                .total-box { text-align: right; font-size: 18px; font-weight: bold; margin-top: 20px; padding: 10px; border-top: 2px solid #000; }
-                .obs-box { border: 1px solid #ccc; padding: 10px; margin-top: 15px; border-radius: 4px; background: #fafafa; page-break-inside: avoid; }
-                
-                /* Tabela de assinaturas segura contra quebras de página */
-                .tab-assinaturas { width: 100%; margin-top: 60px; page-break-inside: avoid; }
-                .campo-assinatura { border-top: 1px solid #000; text-align: center; padding-top: 5px; font-size: 12px; width: 40%; }
-                .espaco-assinatura { width: 20%; }
-
-                @media print {
-                    body { margin: 10mm; }
-                    .no-print { display: none; }
-                }
-            </style>
+            
+            <!-- CHAMADA DO SEU ARQUIVO CSS SEPARADO (Mesmo layout do orçamento) -->
+             <link rel="stylesheet" href="./css/impressao_orcamento.css">
         </head>
         <body>
-            <div class="header">
-                <h1>ORDEM DE SERVIÇO</h1>
-                <strong>Número: ${nrServico}</strong> | Data: ${dataServ}
+            
+            <!-- Topo Premium com Logotipo da Empresa -->
+            <div class="header-container">
+                <div class="brand-area">                    
+                    <img src="./img/logo.png" class="logo-real" alt="Logotipo">                    
+                    
+                    <div class="empresa-info">
+                        <!-- CORREÇÃO: Alterado os textos para refletir Ordem de Serviço -->
+                        <h1>Ordem de Serviço</h1>
+                        <p>Documento de execução e controle de serviços</p>
+                    </div>
+                </div>
+                <div class="orcamento-badge">
+                    <h2>Controle de O.S.</h2>
+                    <div class="numero">Nº ${nrServico}</div>
+                    <div class="datas-box">
+                        <div>Abertura: <strong>${dataFormatada}</strong></div>
+                    </div>
+                </div>
             </div>
-
-            <!-- Alterado para tabela invisível para garantir alinhamento perfeito no PDF -->
-            <table class="info-container">
-                <tr>
-                    <td class="info-group">
-                        <h3>Dados do Cliente</h3>
-                        <strong>Nome:</strong> ${nmCliente}<br>
-                        <strong>CNPJ/CPF:</strong> ${cnpj}<br>
-                        <strong>Telefone:</strong> ${fone}
-                    </td>
-                    <td class="info-group">
-                        <h3>VSR SISTEMAS</h3>
-                        <strong>SISTEMAS DE GESTÃO LTDA</strong><br>
+            
+            <!-- Divisão moderna em blocs (Cards) para Cliente e Prestador -->
+            <div class="grid-info">
+                <div class="card">
+                    <div class="card-title">Dados do Cliente</div>
+                    <div class="info-item"><strong>Cliente:</strong> ${nmCliente}</div>
+                    ${cnpj ? `<div class="info-item"><strong>CNPJ/CPF:</strong> ${cnpj}</div>` : ''}
+                    ${fone ? `<div class="info-item"><strong>Telefone:</strong> ${fone}</div>` : ''}
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">Prestador do Serviço</div>
+                    <div class="info-item" style="color: #1a365d; font-weight: 700; text-transform: uppercase; font-size: 13px;">VSR SISTEMAS</div>
+                    <div class="info-item" style="font-size: 12px; color: #4a5568; line-height: 1.4;">
+                        SISTEMAS DE GESTÃO LTDA<br>
                         <strong>Contato:</strong> (54) 8145-4849<br>
                         <strong>E-mail:</strong> contato@empresa.com
-                    </td>
-                </tr>
-            </table>
+                    </div>
+                </div>
+            </div>
 
-            <h3>Serviços / Produtos</h3>
-            <table class="servicos">
+            <!-- Tabela Modificada com Visual do Orçamento -->
+            <table>
                 <thead>
                     <tr>
-                        <th>Descrição</th>
-                        <th style="text-align: center; width: 10%;">Qtd</th>
-                        <th style="text-align: right; width: 20%;">Val. Unitário</th>
-                        <th style="text-align: right; width: 20%;">Total</th>
+                        <th style="text-align: left;">Descrição do Serviço / Produto</th>
+                        <th style="width: 80px; text-align: center;">Qtd</th>
+                        <th style="width: 130px; text-align: right;">Val. Unitário</th>
+                        <th style="width: 130px; text-align: right;">Total</th>
                     </tr>
                 </thead>
                 <tbody>
-                    ${linhasHtml || '<tr><td colspan="4" style="text-align:center;">Nenhum serviço registrado.</td></tr>'}
+                    ${linhasHtml}
                 </tbody>
             </table>
 
-            <div class="obs-box">
-                <strong>Observações:</strong><br>
-                <p style="margin: 5px 0 0 0; white-space: pre-wrap;">${obs}</p>
+            <!-- Blocos Finais de Valores e Observação -->
+            <div class="resumo-container">
+                <div class="observacoes">
+                    <strong>Observações / Diagnóstico Técnico:</strong>
+                    <div style="white-space: pre-wrap; margin-top: 5px;">${obs}</div>
+                </div>
+                
+                <div class="valores-finais">
+                    <div class="total-row">
+                        <span class="label">Subtotal dos Serviços</span>
+                        <span>R$ ${vlTotGeral}</span>
+                    </div>
+                    <div class="total-row principal">
+                        <span class="label">VALOR TOTAL</span>
+                        <span class="valor-total">R$ ${vlTotGeral}</span>
+                    </div>
+                </div>
             </div>
 
-            <div class="total-box">
-                VALOR TOTAL: R$ ${vlTotGeral}
+            <!-- Área Alinhada para Assinaturas contra quebra de folha -->
+            <div class="assinatura-box">
+                <div class="linha-assinatura">Responsável pela Empresa</div>
+                <div class="linha-assinatura">Assinatura do Cliente (Aceite)</div>
             </div>
 
-            <table class="tab-assinaturas">
-                <tr>
-                    <td class="campo-assinatura">Responsável pela Empresa</td>
-                    <td class="espaco-assinatura"></td>
-                    <td class="campo-assinatura">Assinatura do Cliente</td>
-                </tr>
-            </table>
+            <script>
+                // Dispara o painel de impressão nativo assim que carregar o HTML estruturado
+                window.onload = function() {
+                    window.print();
+                    setTimeout(function() { window.close(); }, 200);
+                };
+            <\/script>
         </body>
         </html>
     `);
 
     janelaImpressao.document.close();
-    
-    // CORREÇÃO: Executa a impressão direto após fechar o fluxo de escrita do documento
-    setTimeout(() => {
-        janelaImpressao.print();
-        janelaImpressao.close();
-    }, 250); 
-}
+} 
