@@ -6,44 +6,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- // css // -->
     <link rel="stylesheet" href="./css/formulario.css">
+    <link rel="stylesheet" href="./css/modal_Clientes.css">
 </head>
 
 <body>
 
     <!-- Estrutura do Modal -->
-    <div id="modalConsulta" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999;">
-    <div style="background:white; margin:5% auto; width:90%; max-height:90%; padding:20px; border-radius:8px; overflow-y:auto;">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h3>Consulta de Clientes</h3>
-            <button type="button" onclick="fecharModal()">Selecionar</button>
-        </div>
-        
-        <input type="text" id="filtroTabela" placeholder="Digite para filtrar por nome..." style="width:100%; padding:10px; margin:15px 0;">
-        
-        <table border="1" style="width:100%; border-collapse: collapse;" id="tabelaConsulta">
-            <thead style="background:#eee;">
+<div id="modalConsulta" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+        <h3>Consulta de Clientes</h3>        
+    </div>    
+    <input type="text" id="filtroTabela" placeholder="Digite o nome do cliente aqui..." class="modal-input">
+    <button type="button" onclick="fecharModal()" class="btn-fechar">&times;</button>
+    <div class="tabela-container">
+        <table id="tabelaConsulta" class="modal-table">
+            <thead>
                 <tr>
                     <th>Código</th>
                     <th>Nome/Razão Social</th>
                     <th>Cidade/UF</th>
                     <th>CPF/CNPJ</th>
-                    <th>Aniversario</th>
-                    <th>x</th>
+                    <th>Aniversário</th>
+                    <th>X</th>
                 </tr>
             </thead>
             <tbody>
                 <!-- Preenchido via JS -->
             </tbody>
         </table>
-        <button type="button" id="btnImprimir">🖨️ Imprimir</button>
     </div>
+    
+    <div class="modal-footer">
+        <button type="button" id="btnImprimir" class="btn-imprimir">🖨️ Imprimir</button>
     </div>
+  </div>
+</div>
+
 
     <!--fim do modal-->
 
-    <!--botão de pesquisa Cliente-->
-    <button type="button" id="btnConsultar">🔍 Consultar (F2)</button>
-
+   
     <!-- //// cabeça //// -->
     <header class="header">
         <a href="./pgPrincipal.html">
@@ -54,6 +57,8 @@
             <a href="./cadastro_de_clientes.html">Clientes</a>
             <span class="texto-span">Notificação</span>
             <a href="./cadastro_de_serviço.html">Serviço</a>
+            <span class="texto-span">Notiuyfyigig</span>
+            <a href="./cadastro_de_orcamentos.html">Orçamentos</a>
             <span class="texto-span">Notiuyfyigig</span>
         </nav>
         <!-- // notificaçao // -->
@@ -70,20 +75,20 @@
                     <button type="button" id ='btnProximo' class="seta direita">&#187;</button>
                     <span class="texto-span">proximo</span>
                 </div>
-            </div>
-           
+            </div> 
+            
         <!-- / sino / -->
         <div class="notificacao" id="btnSino" style="position: relative; cursor: pointer;">
             🔔 
             <span class="texto-span">Notificação</span>
             
             <!-- Contador de notificações (Aparece apenas se houver aniversariantes) -->
-            <span id="contadorNiver" style="position: absolute; top: -5px; right: 5px; background: #ff4d4d; color: white; border-radius: 50%; padding: 2px 6px; font-size: 10px; font-weight: bold; display: none;">0</span>
+            <span id="contadorNiver" class="badge-notificacao">0</span>
 
             <!-- Menu Dropdown dos aniversariantes -->
-            <div id="listaNiverDropdown" style="display: none; position: absolute; top: 100%; right: 0; background: white; border: 1px solid #ddd; width: 260px; box-shadow: 0px 4px 12px rgba(0,0,0,0.15); border-radius: 4px; z-index: 9999; max-height: 250px; overflow-y: auto; color: #333;">
-                <div style="padding: 10px; border-bottom: 1px solid #eee; font-weight: bold; background: #f8f9fa; font-size: 13px;">🎂 Aniversários Próximos</div>
-                <ul id="itensNotificacao" style="list-style: none; padding: 0; margin: 0;">
+            <div id="listaNiverDropdown" class="dropdown-niver">
+                <div class="dropdown-niver-header">🎂 Aniversários Próximos</div>
+                <ul id="itensNotificacao" class="dropdown-niver-lista">
                     <!-- Injetado via JavaScript -->
                 </ul>
             </div>
@@ -91,37 +96,35 @@
 
         <!-- / btn mobile / -->
         <div class="btn-menu" id="id-btn-menu">
-            ☰          
-        </div>
-
-
+            ☰                  
         </div>
     </header> <!-- //// fim cabeça //// -->
 
     <form id="formCliente" >
-        <div  class="container"> <!-- //// inicio do container //// -->
-
+        <div  class="container"> <!-- //// inicio do container //// -->            
             <h1>Cadastro de Terceiros</h1>
 
             <!-- // primeiro card (1*) // -->
-            <div class="card">
+            <div class="card">  
                 <div class="linha">
-                    <div class="campo">
+                       
+                    
+                    <div class="campo">                                           
                         <label>Codigo</label>
-                        <input type='number' id='codigo'>
-                    </div>
-                    <div class="campo">
-                        <label>Nome / Razão Social</label>
-                        <input type="text" id="nomeCliente">
-                    </div>
-                    <div class="campo">
-                        <label>Classificação</label>
-                        <select id="tpTerceiro">
-                            <option id="optCliente">Cliente</option>
-                            <option id="optFornecedor">Fornecedor</option>
-                            <option id="optOutros">Outro</option>
-                        </select>
-                    </div>
+                        <input type='number' id='codigo' readonly>
+                        <button type="button" id="btnConsultar">🔍 Consultar (F2)</button>                                 
+                        <div class="campo">
+                            <label>Nome / Razão Social</label>                       
+                            <input type="text" id="nomeCliente">
+                        </div>
+                        <div class="campo">
+                            <label>Classificação</label>
+                            <select id="tpTerceiro">
+                                <option id="optCliente">Cliente</option>
+                                <option id="optFornecedor">Fornecedor</option>
+                                <option id="optOutros">Outro</option>
+                            </select>
+                        </div>
                 </div>
             </div> <!--fim card 1-->
 
@@ -251,18 +254,19 @@
                 </div>
             </div> <!-- // fim card 5 // -->
 
-        <!--///// pausa /////-->
-
-            <!-- // botoes //  -->
+        <!--///// pausa /////-->           
+        <!-- // botoes //  -->
             <div class="botoes">
+                <!--botão de pesquisa Cliente-->
+                
                 <div class="botoes_esquerda"></div>
                     <button type="button" id="btnNovo" class="novo">Novo</button>
                 <div class="botoes_direita">
                     <button id="btnSalvar" type="button" class="salvar">Salvar</button>
-                    <button id="btnCancelar"  type="button" class="cancelar">Excluir</button>
+                    <button id="btnCancelar"  type="button" class="cancelar">Excluir</button>                     
                 </div> 
-            </div>
 
+            </div>  
         </div> <!-- //// fim do container //// -->
     </form> 
     <!-- CHAMA O JS PARA EXECUTAR AS FUNÇÕES -->
@@ -271,31 +275,5 @@
     <script src="./js/header.js"></script>
     <!-- // js Consulta Clientes // -->
     <script src="./js/Consulta.js"></script>
-
-    <!-- // js teste // -->
-    <script>
-        // --- (DOMContentLoaded) evita os outros js --- //
-        document.addEventListener('DOMContentLoaded', () => {
-
-            const btnAnterior = document.getElementById('btnAnterior');
-            const btnProximo = document.getElementById('btnProximo');
-            const btnNovo = document.getElementById('btnNovo');
-            const btnSalvar = document.getElementById('btnSalvar');
-            const btnCancelar= document.getElementById('btnCancelar');
-            function irParaTopo() {
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                }
-            );
-            }
-            // aplicaçao da func //
-            btnAnterior?.addEventListener('click', irParaTopo);
-            btnProximo?.addEventListener('click', irParaTopo);
-            btnNovo?.addEventListener('click', irParaTopo);
-            btnSalvar?.addEventListener('click', irParaTopo);
-            btnCancelar?.addEventListener('click', irParaTopo);
-            }
-        );
-    </script>
+   
 </body>

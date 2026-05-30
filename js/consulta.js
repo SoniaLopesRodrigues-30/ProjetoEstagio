@@ -9,49 +9,74 @@ document.addEventListener('keydown', (e) => {
     if (e.key === "F2") abrirModalConsulta();
 });
 
+
+// Abre o modal e renderiza os dados atuais
 function abrirModalConsulta() {
     const modal = document.getElementById('modalConsulta');
-    modal.style.display = 'block';
-    renderizarTabelaConsulta();
-    document.getElementById('filtroTabela').focus();
+    modal.classList.add('active');
+    renderizarTabelaConsulta(); // Atualiza a lista sempre que abrir
 }
 
+// Fecha o modal limpando o filtro
 function fecharModal() {
-    document.getElementById('modalConsulta').style.display = 'none';
+    const modal = document.getElementById('modalConsulta');
+    modal.classList.remove('active');
+    document.getElementById('filtroTabela').value = ""; // Limpa a busca anterior
 }
 
-
-//organiza os dados na tabela
 function renderizarTabelaConsulta() {
-    const tabelaLocal = JSON.parse(localStorage.getItem("clientes")) || [];
+    // 1. Testa se o localStorage está trazendo dados
+    const dadosRaw = localStorage.getItem("clientes");
+    console.log("Conteúdo bruto do localStorage:", dadosRaw);
+
+    const tabelaLocal = JSON.parse(dadosRaw) || [];
+    console.log("Total de clientes carregados:", tabelaLocal.length);
+
+    // 2. Testa se o JavaScript encontrou a tabela no HTML
     const tbody = document.querySelector('#tabelaConsulta tbody');
+    console.log("Elemento tbody encontrado?", tbody);
+
+    if (!tbody) {
+        console.error("ERRO: O elemento '#tabelaConsulta tbody' não existe no HTML. Verifique o ID da sua tabela.");
+        return; 
+    }
+
     const filtro = document.getElementById('filtroTabela').value.toLowerCase();
-    
     tbody.innerHTML = "";
 
     tabelaLocal.forEach((cliente, index) => {
-        // Aplica o filtro por nome ou código
-        if (cliente.nome.toLowerCase().includes(filtro) || String(cliente.codigo).includes(filtro)) {
+        // 3. Testa a estrutura das propriedades do primeiro cliente
+        if (index === 0) {
+            console.log("Estrutura do primeiro cliente encontrado:", cliente);
+        }
+
+        const nomeCliente = cliente.nome ? String(cliente.nome).toLowerCase() : '';
+        const codigoCliente = String(cliente.codigo || '');
+
+        if (nomeCliente.includes(filtro) || codigoCliente.includes(filtro)) {
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td style="padding:8px; text-align:center;">${cliente.codigo}</td>
-                <td style="padding:8px;">${cliente.nome}</td>
-                <td style="padding:8px;">${cliente.cidade || ''} - ${cliente.uf || ''}</td>
-                <td style="padding:8px;">${cliente.cpf || cliente.cnpj || ''}</td>
-                 <td style="padding:8px;">${cliente.cpf || cliente.aniver || ''}</td>
-                <td style="padding:8px; text-align:center;">
-                    <button onclick="selecionarClienteDaTabela(${index})">Selecionar</button>
+                <td>${cliente.codigo || ''}</td>
+                <td>${cliente.nome || ''}</td>
+                <td>${cliente.cidade || ''} - ${cliente.uf || ''}</td>
+                <td>${cliente.cpf || cliente.cnpj || ''}</td>
+                <td>${cliente.aniver || ''}</td>
+                <td>
+                    <button type="button" onclick="selecionarClienteDaTabela(${index})">Selecionar</button>
                 </td>
             `;
-            // Permite selecionar clicando na linha inteira também
-            tr.style.cursor = 'pointer';
+            
             tr.onclick = (e) => {
-                if(e.target.tagName !== 'BUTTON') selecionarClienteDaTabela(index);
+                if (e.target.tagName !== 'BUTTON') selecionarClienteDaTabela(index);
             };
             tbody.appendChild(tr);
         }
     });
 }
+
+
+// Vincula o evento de digitação do filtro para atualizar a tabela em tempo real
+document.getElementById('filtroTabela').addEventListener('input', renderizarTabelaConsulta);
 
 // Filtro "ao digitar" na tabela
 document.getElementById('filtroTabela')?.addEventListener('input', renderizarTabelaConsulta);
