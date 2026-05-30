@@ -175,8 +175,6 @@ if (tabelaServicos) {
 }
 
 
-
-
 // FUNÇÕES GERAIS DO ORÇAMENTO
 
 function inicializarTabelaServicos() {
@@ -245,17 +243,6 @@ function calcularTotalLinha(linha) {
 }
 
 
-//Função para trocas as abas    
-function trocarAba(index) {
-    const abas = document.querySelectorAll(".btn-aba");
-    const conteudos = document.querySelectorAll(".aba");
-
-    abas.forEach(aba => aba.classList.remove("ativa"));
-    conteudos.forEach(c => c.classList.remove("ativa"));
-
-    abas[index].classList.add("ativa");
-    conteudos[index].classList.add("ativa");
-}
 
 
 //FUNÇÃO VALIDA LINHAS DA TABELA
@@ -280,8 +267,6 @@ function inicializarTabelaServicos() {
     });
 }
 
-
-//FUNÇÕES DA TABELA
 // CALCULA O TOTAL DA LINHA
 function calcularTotalLinha(linha) {
     const v = parseFloat(linha.querySelector('.valor').value.replace(',', '.')) || 0;
@@ -344,6 +329,17 @@ function verificarEAdicionarLinha(inputData, linhaAtual) {
     }
 }
 
+//Função para trocas as abas    
+function trocarAba(index) {
+    const abas = document.querySelectorAll(".btn-aba");
+    const conteudos = document.querySelectorAll(".aba");
+
+    abas.forEach(aba => aba.classList.remove("ativa"));
+    conteudos.forEach(c => c.classList.remove("ativa"));
+
+    abas[index].classList.add("ativa");
+    conteudos[index].classList.add("ativa");
+}
 
 
 // FUNÇÃO PARA SALVAR ORÇAMENTO
@@ -578,7 +574,7 @@ function excluirOrc() {
 }
 
 
-// FUNÇÃO QUE GERA O PRÓXIMO NUMERO DA ORDEM DE SERVIÇO
+// FUNÇÃO QUE GERA O PRÓXIMO NUMERO DO ORÇAMENTO
 function nrOS() {
     const valorBanco = localStorage.getItem('orcamentos');
     let proximoNumero = 1;
@@ -664,4 +660,104 @@ function selecionaCliente(idInput, chaveLocalStorage) {
 
 }
 
+//  FUNÇÃO PARA CONVERTER ORÇAMENTO EM O.S.
 
+const btnGerarOS = document.getElementById('btnGerarOS');
+if (btnGerarOS) {
+    btnGerarOS.addEventListener('click', converterOrcamentoEmOrdemServico);
+}
+
+// 2. FUNÇÃO PARA CONVERTER E SALVAR COM O ÚLTIMO NÚMERO SEQUENCIAL + 1
+function converterOrcamentoEmOrdemServico() {
+    const nrOrcInput = document.getElementById('nrOrc');
+    const nrOrc = nrOrcInput?.value.trim() || "";
+
+    if (nrOrc === "") {
+        alert("Por favor, selecione ou salve um orçamento antes de transformá-lo em O.S.");
+        return;
+    }
+
+    // Busca a lista de ORÇAMENTOS para encontrar os dados originais
+    const bancoOrcamentos = localStorage.getItem('orcamentos');
+    if (!bancoOrcamentos) {
+        alert("Nenhum orçamento encontrado no sistema.");
+        return;
+    }
+
+    const listaOrcamentos = JSON.parse(bancoOrcamentos);
+    const orcamento = listaOrcamentos.find(os => os.codigo === nrOrc);
+
+    if (!orcamento) {
+        alert(`O orçamento nº ${nrOrc} precisa estar salvo para ser convertido.`);
+        return;
+    }
+
+    const confirmar = confirm(`Deseja converter o Orçamento nº ${nrOrc} em uma Ordem de Serviço definitiva?`);
+    if (!confirmar) return;
+
+    try {
+        //  BUSCA O BANCO DE ORDENS DE SERVIÇO E CALCULA O PRÓXIMO NÚMERO
+        const bancoOS = localStorage.getItem('ordServ') || "[]";
+        const listaOS = JSON.parse(bancoOS);
+
+        let proximoNumeroOS = 1; // Número padrão caso seja a primeira O.S. do sistema
+
+        if (listaOS.length > 0) {
+            // Mapeia todos os códigos existentes, transformando em números reais
+            const codigosNumericos = listaOS.map(os => parseInt(os.codigo) || 0);
+            
+            // Encontra o maior número da lista e soma 1
+            const maiorNumero = Math.max(...codigosNumericos);
+            proximoNumeroOS = maiorNumero + 1;
+        }
+
+        // Converte para String 
+        const novoCodigoOS = String(proximoNumeroOS);
+
+        // Clona os dados do orçamento estruturando para o formato de O.S. com o novo número
+
+        const novaOrdemServico = {
+            dataRegistro: new Date().toISOString(), 
+            codigo: nrOrc,
+            data: document.getElementById('dataOrc').value,
+            condPgto: document.getElementById('condPgto').value,
+            cliente: nmCliente.value,            
+
+            endCli: document.getElementById('endCli').value,
+            endNr: document.getElementById('endNr').value,
+            endCidade: document.getElementById('endCidade').value,
+            endUF: document.getElementById('endUf').value,
+            cnpj: document.getElementById('cnpj').value,
+            foneCli: document.getElementById('fone').value,
+                     
+            obs: document.getElementById('obs').value,            
+            vlTotGeral: document.getElementById('vlTotGeral').value,  
+            vlTotPend: "0,00", 
+            status: "PENDENTE",
+            origemOrcamento: nrOrc,
+            historicoPagamentos: []
+
+        }
+        // Adiciona a nova O.S. no Array de Ordens de Serviço
+        listaOS.push(novaOrdemServico);
+
+        // SALVA DEFINITIVAMENTE NO LOCALSTORAGE DE ORDENS DE SERVIÇO
+        localStorage.setItem('ordServ', JSON.stringify(listaOS));
+
+        alert(`Orçamento convertido com sucesso!\nGerada a Ordem de Serviço Nº: ${novoCodigoOS}`);
+
+        // Opcional: Se estiver na mesma tela, atualiza o campo de número para o usuário ver o novo ID
+        if (nrOrcInput) {
+            nrOrcInput.value = novoCodigoOS;
+        }
+
+        // Opcional: Limpa a tela ou reseta o formulário após a conversão
+        if (typeof limparOrc === "function") {
+            limparOrc();
+        }
+
+    } catch (error) {
+        console.error("Erro ao gerar número sequencial da O.S.:", error);
+        alert("Erro técnico ao salvar a Ordem de Serviço.");
+    }
+}
