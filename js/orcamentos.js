@@ -1,16 +1,17 @@
 
-
+// Inicializações padrão
 document.addEventListener('DOMContentLoaded', () => {
     
-    // Inicializações padrão
     inicializarTabelaServicos();
     nrOrc();
-    
+    validarTabelaEmTempoReal();
     const tabelaServicos = document.getElementById('tabelaServicos');
     if (tabelaServicos) {
         tabelaServicos.addEventListener('input', function(event) {
             if (event.target.tagName === 'INPUT') {
-                validarTabelaEmTempoReal();
+                const tabelaServicos = document.getElementById('tabelaServicos');
+                tabelaServicos.addEventListener('input', tratarMudanca);
+                tabelaServicos.addEventListener('change', tratarMudanca);
             }
         }); 
     }
@@ -71,6 +72,110 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+//FUNÇÕES DA TABELA
+// CHECA SE A TABELA POSSUI DADOS VÁLIDOS
+function checarTabelaVazia() {
+    const linhas = Array.from(document.querySelectorAll('#tabelaServicos .linha-servico'));
+    
+    if (linhas.length === 0) return true;
+
+    // Se houver apenas uma linha, verifica se ela está limpa
+    if (linhas.length === 1) {
+        const inputs = linhas[0].querySelectorAll('input:not(.total)');
+        return Array.from(inputs).every(input => input.value.trim() === "");
+    }
+
+    // Se houver mais de uma linha, significa que o usuário já preencheu dados nas anteriores
+    return false;
+}
+
+// ATIVA OU DESATIVA O BOTÃO SALVAR EM TEMPO REAL
+function validarTabelaEmTempoReal() {
+    const btnSalvar = document.getElementById('btnSalvar');    
+    const tabelaVazia = checarTabelaVazia(); 
+    
+    if (btnSalvar) {
+        btnSalvar.disabled = tabelaVazia;
+        btnSalvar.style.opacity = tabelaVazia ? "0.5" : "1";
+        btnSalvar.style.cursor = tabelaVazia ? "not-allowed" : "pointer";
+    }
+}
+
+// SOMA A COLUNA "TOTAL" E ATUALIZA O CAMPO EXTERNO
+function atualizarTotalGeral() {
+    const totaisColunas = document.querySelectorAll('#tabelaServicos tbody .total');
+    let somaGeral = 0;    
+    
+    totaisColunas.forEach(campo => {
+        somaGeral += parseFloat(campo.value) || 0;       
+    });
+
+    const vlTotalGeral = document.getElementById('vlTotGeral');
+    if (vlTotalGeral) {
+        vlTotalGeral.value = somaGeral.toFixed(2);
+    }
+}
+
+// ADICIONA UMA NOVA LINHA SE A ÚLTIMA ESTIVER TOTALMENTE PREENCHIDA
+function verificarEAdicionarLinha(linhaAtual) {
+    const tbody = linhaAtual.closest('tbody');
+    const linhas = tbody.getElementsByClassName('linha-servico');
+    const ultimaLinha = linhas[linhas.length - 1];
+
+    if (linhaAtual !== ultimaLinha) return;
+
+    const inputsParaPreencher = linhaAtual.querySelectorAll('input:not(.total)');
+    const todosPreenchidos = Array.from(inputsParaPreencher).every(input => input.value.trim() !== "");
+
+    if (todosPreenchidos) {
+        const novaLinha = ultimaLinha.cloneNode(true);
+        
+        novaLinha.querySelectorAll('input').forEach(input => {
+            input.value = "";
+        });
+
+        tbody.appendChild(novaLinha);
+    }
+}
+
+// GERENCIADOR DE MUDANÇAS NA TABELA
+const tratarMudanca = (event) => {
+    const inputModificado = event.target;
+    const linha = inputModificado.closest('.linha-servico');
+    
+    if (!linha) return;
+
+    // Se alterou Valor ou Qtd, faz a multiplicação da linha
+    if (inputModificado.classList.contains('valor') || inputModificado.classList.contains('qtd')) {
+        const campoValor = linha.querySelector('.valor');
+        const campoQtd = linha.querySelector('.qtd');
+        const campoTotal = linha.querySelector('.total');
+
+        const valor = parseFloat(campoValor.value) || 0;
+        const qtd = parseFloat(campoQtd.value) || 0;
+
+        campoTotal.value = (valor * qtd).toFixed(2);
+        
+        // Atualiza o total geral externo
+        atualizarTotalGeral();
+    }
+
+    // Verifica a criação de nova linha
+    verificarEAdicionarLinha(linha);
+
+    // Executa a sua validação do botão salvar
+    validarTabelaEmTempoReal();
+};
+
+//  VINCULA OS EVENTOS NA TABELA (RODA APÓS TODAS AS FUNÇÕES EXISTIREM)
+const tabelaServicos = document.getElementById('tabelaServicos');
+if (tabelaServicos) {
+    tabelaServicos.addEventListener('input', tratarMudanca);
+    tabelaServicos.addEventListener('change', tratarMudanca);
+}
+
+
+
 
 // FUNÇÕES GERAIS DO ORÇAMENTO
 
@@ -89,7 +194,7 @@ function inicializarTabelaServicos() {
         }
 
         // Adicionar Nova Linha
-        if (target.classList.contains('data-servico')) {
+        if (target.classList.contains('total')) {
             verificarEAdicionarLinha(target, linha);
         }
     });
@@ -125,6 +230,7 @@ function nrOrc() {
     }
 }
 
+//*********FUNÇÕES DA TABELA********
 
 //  Função que calcula o total de uma linha
 function calcularTotalLinha(linha) {
@@ -153,65 +259,72 @@ function trocarAba(index) {
 
 
 //FUNÇÃO VALIDA LINHAS DA TABELA
-function controlaservico() {
-    const nrLinhasServico = document.getElementById('tabelaServicos').rows;
+function inicializarTabelaServicos() {
+    const tabela = document.querySelector('#tabelaServicos');
+    if (!tabela) return;
 
-    // Verifica se a tabela tem linhas de dados
-    if (nrLinhasServico.length <= 1) {
-        alert("Informe pelo menos um serviço!");
+    tabela.addEventListener('input', function(e) {
+        const target = e.target;
+        const linha = target.closest('tr');
+
+        // Calcula o total da linha
+        if (target.classList.contains('valor') || target.classList.contains('qtd')) {
+            calcularTotalLinha(linha);
+            if (typeof atualizarTotalGeral === 'function') atualizarTotalGeral();
+        }
+
+        // Adicionar Nova Linha
+        if (target.classList.contains('qtd')) {
+            verificarEAdicionarLinha(target, linha);
+        }
+    });
+}
+
+
+//FUNÇÕES DA TABELA
+// CALCULA O TOTAL DA LINHA
+function calcularTotalLinha(linha) {
+    const v = parseFloat(linha.querySelector('.valor').value.replace(',', '.')) || 0;
+    const q = parseFloat(linha.querySelector('.qtd').value) || 0;
+    const campoTotal = linha.querySelector('.total');
+    
+    if (campoTotal) {
+        campoTotal.value = (v * q).toFixed(2);
+    }
+}
+
+// CONFERE SE EXITEM LINHAS A SEREM GRAVADAS NA TABELA
+function controlaservico() {
+    const tabela = document.getElementById('tabelaServicos');
+    const linhas = tabela.querySelectorAll('tbody tr');
+
+    if (linhas.length === 0) {
+        alert("Informe pelo menos um serviço ou produto!");
         return true;
     }
 
-    // Percorre cada LINHA
-    for (let i = 1; i < nrLinhasServico.length; i++) {
-        const inputs = nrLinhasServico[i].querySelectorAll('input');
+    for (const [index, linha] of linhas.entries()) {
+        const inputs = linha.querySelectorAll('input:not([type="hidden"]):not([disabled])');
+        if (inputs.length === 0) continue; // Pula a linha se não houver inputs válidos
 
-        // Percorre cada coluna da linha atual
-        for (let input of inputs) {
-            // Se encontrar QUALQUER coluna vazia, barra o salvamento
-            if (input.value.trim() === "") {
-                alert("Atenção: Existem colunas não preenchidas na linha " + i + "!");
-                input.focus(); // Coloca o cursor no campo vazio para ajudar o usuário
-                return true; 
+        const ePrimeiraLinha = (index === 0);
+        const primeiroCampoPreenchido = inputs[0].value.trim() !== "";
+
+        // Regra: Valida a linha se for a primeira OU se a linha atual tiver o primeiro campo preenchido
+        if (ePrimeiraLinha || primeiroCampoPreenchido) {
+            for (const input of inputs) {
+                if (!input.value.trim()) {
+                    alert(`Atenção: Preencha todos os campos da linha ${index + 1}!`);
+                    input.focus();
+                    return true; 
+                }
             }
         }
     }
-
     return false; 
 }
 
-
-function validarTabelaEmTempoReal() {
-    const btnSalvar = document.getElementById('btnSalvar');    
-    const tabelaVazia = checarTabelaVazia(); 
-    //não permite salvar caso alguma coluna esteja em branco
-    if (btnSalvar) {
-        btnSalvar.disabled = tabelaVazia;
-        btnSalvar.style.opacity = tabelaVazia ? "0.5" : "1";
-        btnSalvar.style.cursor = tabelaVazia ? "not-allowed" : "pointer";
-    }
-}
-
-//VERIFICA SE TODAS AS COLUNAS ESTÃO PREENCHIDAS
-function checarTabelaVazia() {
-    const rows = document.getElementById('tabelaServicos').rows;
-    if (rows.length <= 1) return true;
-
-    for (let i = 1; i < rows.length; i++) {
-        // Pega todos os inputs da linha atual
-        const inputs = rows[i].querySelectorAll('input');
-        for (let input of inputs) {
-            if (input.value.trim() !== "") {
-                return false; 
-            }
-        }
-    }
-    return true; //CASO CHEGUE AQUI A TABELA ESTÁ VAZIA NÃO DEIXARA SALVAR
-}
-
-
-
-// Função para adicionar linha automaticamente
+// ADICIONA LINHA NA TABELA
 function verificarEAdicionarLinha(inputData, linhaAtual) {
     const tbody = inputData.closest('tbody');
     const linhas = tbody.getElementsByClassName('linha-servico');
@@ -219,27 +332,18 @@ function verificarEAdicionarLinha(inputData, linhaAtual) {
 
     if (linhaAtual === ultimaLinha && inputData.value !== "") {
         const novaLinha = ultimaLinha.cloneNode(true);
-        // Limpa os valores dos inputs da nova linha
-        novaLinha.querySelectorAll('input').forEach(input => input.value = "");
+        
+        // Limpa os valores e remove IDs duplicados para evitar bugs de seleção
+        novaLinha.querySelectorAll('input').forEach(input => {
+            input.value = "";
+            if(input.id) input.removeAttribute('id'); 
+        });
+
         tbody.appendChild(novaLinha);
+       
     }
 }
 
-
-
-// FUNÇÃO PARA SOMAR TODAS AS LINHAS NO TOTAL GERAL
-function atualizarTotalGeral() {
-    
-    const todosTotais = document.querySelectorAll('.resumo');
-    let somaGeral = 0;    
-    todosTotais.forEach(campo => {
-        somaGeral += parseFloat(campo.value) || 0;       
-    });
-
-    // Total geral fora da aba
-    const vlTotalGeral = document.getElementById('vlTotGeral');
-    
-}
 
 
 // FUNÇÃO PARA SALVAR ORÇAMENTO
@@ -274,9 +378,12 @@ function salvarOrcamento() {
 
         // Monta o objeto com os dados da tela
         const novaOrdem = {
+            //DADOS GERAIS
             codigo: nrOrc,
             data: document.getElementById('dataOrc')?.value || "",
             condPgto: document.getElementById('condPgto')?.value || "",
+
+            //DADOS DO CLIENTE
             cliente: nmCliente.value,
             endCli: document.getElementById('endCli')?.value || "",
             endNr: document.getElementById('endNr')?.value || "",
@@ -284,7 +391,10 @@ function salvarOrcamento() {
             endUF: document.getElementById('endUf')?.value || "",
             cnpj: document.getElementById('cnpj')?.value || "",
             foneCli: document.getElementById('fone')?.value || "",
+            //ITENS DO ORÇAMENTO
             itens: itens,
+
+            //DEMAIS INFORMAÇÕES
             vlTotGeral: document.getElementById('vlTotGeral')?.value || "0.00",
             obs: document.getElementById('obs')?.value || "",
             dataRegistro: new Date().toISOString() 
@@ -313,8 +423,6 @@ function salvarOrcamento() {
         return false;
     }
 }
-
-
 
 //FUNÇÃO PARA EXIBIR OS DADOS NA TELA
 let idxOrc = 0; 
@@ -350,10 +458,12 @@ function exibirDados() {
 
     const ordem = tabela[idxOrc];
 
-    // PREENCHE OS CAMPOS PRINCIPAIS
+    // PREENCHE OS DADOS GERAIS DO ORÇAMENTO
     document.getElementById('nrOrc').value = ordem.codigo || "";
     document.getElementById('condPgto').value= ordem.condPgto || "";
     document.getElementById('dataOrc').value = ordem.data || "";
+
+    //PREENCHE OS DADOS DO CLIENTE
     document.getElementById('nmCliente').value = ordem.cliente || "";
     document.getElementById('endCli').value = ordem.endCli || "";
     document.getElementById('endNr').value = ordem.endNr || "";
@@ -361,6 +471,8 @@ function exibirDados() {
     document.getElementById('endUf').value = ordem.endUF || "";
     document.getElementById('cnpj').value = ordem.cnpj || "";
     document.getElementById('fone').value = ordem.foneCli || "";
+
+    //PREENCHE DOS DEMAIS DADOS
     document.getElementById('vlTotGeral').value = ordem.vlTotGeral || "";
     document.getElementById('obs').value = ordem.obs || "";
 

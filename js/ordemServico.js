@@ -123,6 +123,104 @@ function controlaservico() {
     return false; 
 }
 
+//VERIFICA SE EXISTEM LINHAS PARCIALMENTE PREENCHIDAS 
+
+function checarTabelaVazia() {
+    const linhas = Array.from(document.querySelectorAll('#tabelaServicos .linha-servico'));
+    
+    if (linhas.length === 0) return true;
+
+    // Se houver apenas uma linha, verifica se ela está limpa
+    if (linhas.length === 1) {
+        const inputs = linhas[0].querySelectorAll('input:not(.total)');
+        return Array.from(inputs).every(input => input.value.trim() === "");
+    }
+
+    // Se houver mais de uma linha, significa que o usuário já preencheu dados nas anteriores
+    return false;
+}
+
+//  ATIVA OU DESATIVA O BOTÃO SALVAR EM TEMPO REAL
+function validarTabelaEmTempoReal() {
+    const btnSalvar = document.getElementById('btnSalvar');    
+    const tabelaVazia = checarTabelaVazia(); 
+    
+    if (btnSalvar) {
+        btnSalvar.disabled = tabelaVazia;
+        btnSalvar.style.opacity = tabelaVazia ? "0.5" : "1";
+        btnSalvar.style.cursor = tabelaVazia ? "not-allowed" : "pointer";
+    }
+}
+
+// SOMA A COLUNA "TOTAL" E ATUALIZA O CAMPO EXTERNO
+function atualizarTotalGeral() {
+    const totaisColunas = document.querySelectorAll('#tabelaServicos tbody .total');
+    let somaGeral = 0;    
+    
+    totaisColunas.forEach(campo => {
+        somaGeral += parseFloat(campo.value) || 0;       
+    });
+
+    const vlTotalGeral = document.getElementById('vlTotGeral');
+    if (vlTotalGeral) {
+        vlTotalGeral.value = somaGeral.toFixed(2);
+    }
+}
+
+// ADICIONA UMA NOVA LINHA SE A ÚLTIMA ESTIVER TOTALMENTE PREENCHIDA
+function verificarEAdicionarLinha(linhaAtual) {
+    const tbody = linhaAtual.closest('tbody');
+    const linhas = tbody.getElementsByClassName('linha-servico');
+    const ultimaLinha = linhas[linhas.length - 1];
+
+    if (linhaAtual !== ultimaLinha) return;
+
+    const inputsParaPreencher = linhaAtual.querySelectorAll('input:not(.total)');
+    const todosPreenchidos = Array.from(inputsParaPreencher).every(input => input.value.trim() !== "");
+
+    if (todosPreenchidos) {
+        const novaLinha = ultimaLinha.cloneNode(true);
+        
+        novaLinha.querySelectorAll('input').forEach(input => {
+            input.value = "";
+        });
+
+        tbody.appendChild(novaLinha);
+    }
+}
+
+// 5. GERENCIADOR ÚNICO DE MUDANÇAS NA TABELA
+const tratarMudanca = (event) => {
+    const inputModificado = event.target;
+    const linha = inputModificado.closest('.linha-servico');
+    
+    if (!linha) return;
+
+    // Se alterou Valor ou Qtd, faz a multiplicação da linha
+    if (inputModificado.classList.contains('valor') || inputModificado.classList.contains('qtd')) {
+        const campoValor = linha.querySelector('.valor');
+        const campoQtd = linha.querySelector('.qtd');
+        const campoTotal = linha.querySelector('.total');
+
+        const valor = parseFloat(campoValor.value) || 0;
+        const qtd = parseFloat(campoQtd.value) || 0;
+
+        campoTotal.value = (valor * qtd).toFixed(2);
+        
+        // Atualiza o total geral externo
+        atualizarTotalGeral();
+    }
+
+    // Verifica a criação de nova linha
+    verificarEAdicionarLinha(linha);
+
+    // Executa a sua validação do botão salvar
+    validarTabelaEmTempoReal();
+};
+
+
+
+
 // ADICIONA LINHA NA TABELA
 function verificarEAdicionarLinha(inputData, linhaAtual) {
     const tbody = inputData.closest('tbody');
@@ -143,17 +241,6 @@ function verificarEAdicionarLinha(inputData, linhaAtual) {
     }
 }
 
-// VERIFICA SE NÃO EXITEM INFORMAÇÕES INCORRETAS NA LINHA 
-function validarTabelaEmTempoReal() {
-    const btnSalvar = document.getElementById('btnSalvar');    
-    const tabelaVazia = checarTabelaVazia(); 
-    //não permite salvar caso alguma coluna esteja em branco
-    if (btnSalvar) {
-        btnSalvar.disabled = tabelaVazia;
-        btnSalvar.style.opacity = tabelaVazia ? "0.5" : "1";
-        btnSalvar.style.cursor = tabelaVazia ? "not-allowed" : "pointer";
-    }
-}
 
 // SOMA OS TOTAIS
 function atualizarTotalGeral(nrServico) {
