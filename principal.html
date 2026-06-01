@@ -4,13 +4,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>pagina pricipal</title>
+    <title>VSR SISTEMAS</title>
     <!-- // css // -->
-    <link rel="stylesheet" href="./css/pricipal.css">
-    <link rel="stylesheet" href="./pricipal.css">
-    <link rel="stylesheet" href="./pricipal.css">
+    <link rel="stylesheet" href="./css/formulario.css">
+    <link rel="stylesheet" href="./css/principal.css">        
+   
 </head>
 <body>
+    <!-- //// cabeça //// -->
+    <header class="header">
+        <a href="./principal.html">
+            <img src="./img/logo.png" alt="Logo da Empresa" class="logo">
+        </a>
+        <!-- // troca de paginas // -->
+        <nav class="nav" id="nav">
+            <a href="./cadastro_de_clientes.html">Clientes</a>
+            <a href="./cadastro_de_serviço.html">Serviço</a>
+            <a href="./cadastro_de_orcamentos.html">Orçamentos</a>
+        </nav>
+        <!-- // notificaçao // -->
+        <div class="acoes">
+            
+            <!-- / sino / -->
+            <div class="notificacao">
+                &#128276; 
+            <span class="texto-span">Notificação</span>
+            </div>
+            <!-- / btn mobile / -->
+            <div class="btn-menu" id="id-btn-menu">
+                &#9776;          
+            </div>
+        </div>
+    </header> <!-- //// fim cabeça //// -->
+    
+    
+
     <div class="container">
         <!-- /// primeira div /// -->
         <section class="secao secao1" id="secao1">
@@ -71,7 +99,7 @@
                 <div class="texto">
                     <h1>Por que usar nossos serviços?</h1>
                     <p>
-                        Com o nosso sistema de emissão de notas fiscais,
+                        Com o nosso sistema,
                         sua empresa ganha mais agilidade, segurança e praticidade no dia a dia.
                         Nossa plataforma é 100% online, permitindo que você emita notas fiscais de qualquer lugar,
                         sem precisar instalar programas ou se preocupar com backups locais.
@@ -90,5 +118,6 @@
             </div>
         </section>  <!-- /// fim terceira div /// -->
     </div> <!-- //// fim container //// -->
+<script src="./js/header.js"></script>    
 </body>
 </html>

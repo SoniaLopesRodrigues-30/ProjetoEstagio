@@ -4,7 +4,7 @@
 document.addEventListener('DOMContentLoaded', () => {
    
     inicializarTabelaServicos();
-    nrOS(); // Gera ou carrega o número da OS atual
+    nrOS(); // Gera ou carrega o número da OS atual no formato "001"
 
     selecionaCliente('nmCliente', 'clientes');
 
@@ -14,15 +14,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }); 
 
-    // BOTÃO SALVAR
+    // BOTÃO SALVAR (Ajustado para evitar dupla validação)
     const btn = document.getElementById('btnSalvar');
     if (btn) {
         btn.addEventListener('click', (e) => {
             e.preventDefault(); 
-            
-            if (!controlaservico()) { 
-                salvarOrdemServ(); 
-            }
+            salvarOrdemServ(); // A validação de linhas internas da tabela já ocorre aqui dentro
         });
     }
 
@@ -55,6 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
         excluir.addEventListener('click', excluirOrdemServ);
     } 
 });
+
 
 
 // FUNÇÕES GERAIS DA ORDEM DE SERVIÇO

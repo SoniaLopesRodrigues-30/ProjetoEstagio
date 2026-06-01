@@ -97,22 +97,43 @@
             background: #27904d;
             color: white;
         }
-        @media (max-width: 755px) {
-            .conteudo {
-                flex-direction: column;
-                text-align: center;
-            }
-            .texto,
-            .imagem {
-                width: 100%;
-            }
-            .texto h1 {
-                font-size: 40px;
-            }
-            .imagem {
-                height: 300px;
-            }
-            .botoes {
-                right: 50%;
-                transform: translateX(50%);
-            }}
+   @media (max-width: 755px) {
+
+    .secao {
+        min-height: 100vh;
+        height: auto;
+        padding: 80px 20px;
+    }
+    .conteudo {
+        flex-direction: column;
+        text-align: center;
+        gap: 30px;
+    }
+    .texto,
+    .imagem {
+        width: 100%;
+    }
+    .texto h1 {
+        font-size: 32px;
+        margin-bottom: 15px;
+    }
+    .texto p {
+        font-size: 16px;
+        line-height: 1.7;
+    }
+    .imagem {
+        height: 220px;
+        order: -1;
+    }
+    .botoes {
+        position: static;
+        margin-top: 30px;
+        justify-content: center;
+        transform: none;
+    }
+    .botoes a {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+}

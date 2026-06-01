@@ -8,7 +8,7 @@ function login() {
     if (usuario === "magalhaes" && senha === "123") {
         // -- sessionStorage -- //
         sessionStorage.setItem("logado", "true");
-        window.location.href = "./pgPrincipal.html";
+        window.location.href = "./principal.html";
     } else {
         document.getElementById("erro").style.display = "block";        
     }
