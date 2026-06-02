@@ -7,11 +7,52 @@
     <title>pagina pricipal</title>
     <!-- // css // -->
     <link rel="stylesheet" href="./css/pricipal.css">
-    <link rel="stylesheet" href="./pricipal.css">
-    <link rel="stylesheet" href="./pricipal.css">
+    <link rel="stylesheet" href="./css/modal_Clientes.css">
+    <link rel="stylesheet" href="./css/formulario.css">
 </head>
 <body>
-    <div class="container">
+
+    
+    <!-- //// cabeça //// -->
+    <header class="header">
+        <a href="./primcipal.html">
+            <img src="./img/logo.png" alt="Logo da Empresa" class="logo">
+        </a>
+        <!-- // troca de paginas // -->
+        <nav class="nav" id="nav">
+            <a href="./cadastro_de_clientes.html">Clientes</a>
+            <span class="texto-span">Notificação</span>
+            <a href="./cadastro_de_serviço.html">Serviço</a>
+            <span class="texto-span">Notiuyfyigig</span>
+            <a href="./cadastro_de_orcamentos.html">Orçamentos</a>
+            <span class="texto-span">Notiuyfyigig</span>
+        </nav>
+        <!-- // notificaçao // -->
+        <div class="acoes">
+            
+        <!-- / sino / -->
+        <div class="notificacao" id="btnSino" style="position: relative; cursor: pointer;">
+            🔔 
+            <span class="texto-span">Notificação</span>
+            
+            <!-- Contador de notificações (Aparece apenas se houver aniversariantes) -->
+            <span id="contadorNiver" class="badge-notificacao">0</span>
+
+            <!-- Menu Dropdown dos aniversariantes -->
+            <div id="listaNiverDropdown" class="dropdown-niver">
+                <div class="dropdown-niver-header">🎂 Aniversários Próximos</div>
+                <ul id="itensNotificacao" class="dropdown-niver-lista">
+                    <!-- Injetado via JavaScript -->
+                </ul>
+            </div>
+        </div>
+
+        <!-- / btn mobile / -->
+        <div class="btn-menu" id="id-btn-menu">
+            ☰                  
+        </div>
+    </header> <!-- //// fim cabeça //// -->
+    <div class="container" style="max-width: 100%;">
         <!-- /// primeira div /// -->
         <section class="secao secao1" id="secao1">
             <!-- / oq esta dentro da primeira div / -->
@@ -71,7 +112,7 @@
                 <div class="texto">
                     <h1>Por que usar nossos serviços?</h1>
                     <p>
-                        Com o nosso sistema de emissão de notas fiscais,
+                        Com o nosso sistema,
                         sua empresa ganha mais agilidade, segurança e praticidade no dia a dia.
                         Nossa plataforma é 100% online, permitindo que você emita notas fiscais de qualquer lugar,
                         sem precisar instalar programas ou se preocupar com backups locais.
@@ -91,4 +132,5 @@
         </section>  <!-- /// fim terceira div /// -->
     </div> <!-- //// fim container //// -->
 </body>
+<script src="./js/header.js"></script>
 </html>

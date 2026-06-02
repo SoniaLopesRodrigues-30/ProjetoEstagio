@@ -12,44 +12,44 @@
 <body>
 
     <!-- Estrutura do Modal -->
-<div id="modalConsulta" class="modal-overlay">
-  <div class="modal-content">
-    <div class="modal-header">
-        <h3>Consulta de Clientes</h3>        
-    </div>    
-    <input type="text" id="filtroTabela" placeholder="Digite o nome do cliente aqui..." class="modal-input">
-    <button type="button" onclick="fecharModal()" class="btn-fechar">&times;</button>
-    <div class="tabela-container">
-        <table id="tabelaConsulta" class="modal-table">
-            <thead>
-                <tr>
-                    <th>Código</th>
-                    <th>Nome/Razão Social</th>
-                    <th>Cidade/UF</th>
-                    <th>CPF/CNPJ</th>
-                    <th>Aniversário</th>
-                    <th>X</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Preenchido via JS -->
-            </tbody>
-        </table>
+    <div id="modalConsulta" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Consulta de Clientes</h3>
+            </div>
+            <input type="text" id="filtroTabela" placeholder="Digite o nome do cliente aqui..." class="modal-input">
+            <button type="button" onclick="fecharModal()" class="btn-fechar">&times;</button>
+            <div class="tabela-container">
+                <table id="tabelaConsulta" class="modal-table">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Nome/Razão Social</th>
+                            <th>Cidade/UF</th>
+                            <th>CPF/CNPJ</th>
+                            <th>Aniversário</th>
+                            <th>X</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Preenchido via JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" id="btnImprimir" class="btn-imprimir">🖨️ Imprimir</button>
+            </div>
+        </div>
     </div>
-    
-    <div class="modal-footer">
-        <button type="button" id="btnImprimir" class="btn-imprimir">🖨️ Imprimir</button>
-    </div>
-  </div>
-</div>
 
 
     <!--fim do modal-->
 
-   
+
     <!-- //// cabeça //// -->
     <header class="header">
-        <a href="./pgPrincipal.html">
+        <a href="./primcipal.html">
             <img src="./img/logo.png" alt="Logo da Empresa" class="logo">
         </a>
         <!-- // troca de paginas // -->
@@ -67,64 +67,67 @@
             <div class="nav-setas">
                 <!-- btn aterior -->
                 <div class="seta-box">
-                    <button type="button" id ='btnAnterior' class="seta esquerda">&#171;</button>
+                    <button type="button" id='btnAnterior' class="seta esquerda">&#171;</button>
                     <span class="texto-span">anterior</span>
                 </div>
                 <!-- btn proximo -->
                 <div class="seta-box">
-                    <button type="button" id ='btnProximo' class="seta direita">&#187;</button>
+                    <button type="button" id='btnProximo' class="seta direita">&#187;</button>
                     <span class="texto-span">proximo</span>
                 </div>
-            </div> 
-            
-        <!-- / sino / -->
-        <div class="notificacao" id="btnSino" style="position: relative; cursor: pointer;">
-            🔔 
-            <span class="texto-span">Notificação</span>
-            
-            <!-- Contador de notificações (Aparece apenas se houver aniversariantes) -->
-            <span id="contadorNiver" class="badge-notificacao">0</span>
-
-            <!-- Menu Dropdown dos aniversariantes -->
-            <div id="listaNiverDropdown" class="dropdown-niver">
-                <div class="dropdown-niver-header">🎂 Aniversários Próximos</div>
-                <ul id="itensNotificacao" class="dropdown-niver-lista">
-                    <!-- Injetado via JavaScript -->
-                </ul>
             </div>
-        </div>
 
-        <!-- / btn mobile / -->
-        <div class="btn-menu" id="id-btn-menu">
-            ☰                  
-        </div>
+            <!-- / sino / -->
+            <div class="notificacao" id="btnSino" style="position: relative; cursor: pointer;">
+                🔔
+                <span class="texto-span">Notificação</span>
+
+                <!-- Contador de notificações (Aparece apenas se houver aniversariantes) -->
+                <span id="contadorNiver" class="badge-notificacao">0</span>
+
+                <!-- Menu Dropdown dos aniversariantes -->
+                <div id="listaNiverDropdown" class="dropdown-niver">
+                    <div class="dropdown-niver-header">🎂 Aniversários Próximos</div>
+                    <ul id="itensNotificacao" class="dropdown-niver-lista">
+                        <!-- Injetado via JavaScript -->
+                    </ul>
+                </div>
+            </div>
+
+            <!-- / btn mobile / -->
+            <div class="btn-menu" id="id-btn-menu">
+                ☰
+            </div>
     </header> <!-- //// fim cabeça //// -->
 
-    <form id="formCliente" >
-        <div  class="container"> <!-- //// inicio do container //// -->            
+    <form id="formCliente">
+        <div class="container"> <!-- //// inicio do container //// -->
             <h1>Cadastro de Terceiros</h1>
 
             <!-- // primeiro card (1*) // -->
-            <div class="card">  
+            <div class="card">
                 <div class="linha">
-                       
-                    
-                    <div class="campo">                                           
-                        <label>Codigo</label>
-                        <input type='number' id='codigo' readonly>
-                        <button type="button" id="btnConsultar">🔍 Consultar (F2)</button>                                 
-                        <div class="campo">
-                            <label>Nome / Razão Social</label>                       
-                            <input type="text" id="nomeCliente">
-                        </div>
-                        <div class="campo">
-                            <label>Classificação</label>
-                            <select id="tpTerceiro">
-                                <option id="optCliente">Cliente</option>
-                                <option id="optFornecedor">Fornecedor</option>
-                                <option id="optOutros">Outro</option>
-                            </select>
-                        </div>
+                    <div class="campo btn-campo">
+                        <label>&nbsp;</label>
+                        <button type="button" id="btnConsultar">🔍 Consultar (F2)</button>
+                    </div>
+                    <div class="campo">
+                        <label>Código</label>
+                        <input type="number" id="codigo" readonly>
+                    </div>
+                    <div class="campo">
+                        <label>Nome / Razão Social</label>
+                        <input type="text" id="nomeCliente">
+                    </div>
+                    <div class="campo">
+                        <label>Classificação</label>
+                        <select id="tpTerceiro">
+                            <option id="optCliente">Cliente</option>
+                            <option id="optFornecedor">Fornecedor</option>
+                            <option id="optOutros">Outro</option>
+                        </select>
+                    </div>
+
                 </div>
             </div> <!--fim card 1-->
 
@@ -177,10 +180,10 @@
                         <input id="bairro" type="text">
                     </div>
                 </div>
-            </div>  <!--fim card 2-->
+            </div> <!--fim card 2-->
 
             <!-- // terceiro card (3*) // -->
-             <div class="card">
+            <div class="card">
                 <h2>Documentos</h2>
                 <!--/linha/-->
                 <div class="linha">
@@ -195,7 +198,7 @@
                         <input id="cnpj" type="text">
                     </div>
                 </div>
-                 <!--/linha/-->
+                <!--/linha/-->
                 <div class="linha">
                     <!--inscricao-->
                     <div class="campo">
@@ -254,26 +257,26 @@
                 </div>
             </div> <!-- // fim card 5 // -->
 
-        <!--///// pausa /////-->           
-        <!-- // botoes //  -->
+            <!--///// pausa /////-->
+            <!-- // botoes //  -->
             <div class="botoes">
                 <!--botão de pesquisa Cliente-->
-                
+
                 <div class="botoes_esquerda"></div>
-                    <button type="button" id="btnNovo" class="novo">Novo</button>
+                <button type="button" id="btnNovo" class="novo">Novo</button>
                 <div class="botoes_direita">
                     <button id="btnSalvar" type="button" class="salvar">Salvar</button>
-                    <button id="btnCancelar"  type="button" class="cancelar">Excluir</button>                     
-                </div> 
+                    <button id="btnCancelar" type="button" class="cancelar">Excluir</button>
+                </div>
 
-            </div>  
+            </div>
         </div> <!-- //// fim do container //// -->
-    </form> 
+    </form>
     <!-- CHAMA O JS PARA EXECUTAR AS FUNÇÕES -->
     <script type="text/javascript" src="./js/Clientes.js"> </script>
     <!-- // js do menu mobile // -->
     <script src="./js/header.js"></script>
     <!-- // js Consulta Clientes // -->
     <script src="./js/Consulta.js"></script>
-   
+
 </body>
