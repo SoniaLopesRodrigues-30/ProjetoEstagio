@@ -20,6 +20,13 @@ const razao = document.getElementById('nomeCliente');
 // INICIALIZAÇÃO DA TABELA
 // ==========================================
 document.addEventListener('DOMContentLoaded', function() {
+    const formClienteElement = document.getElementById('formCliente');
+    if (formClienteElement) {
+        formClienteElement.addEventListener('submit', (e) => {
+            e.preventDefault(); 
+        });
+    }
+    
     limparCliente(); 
     
     tpTerceiro?.addEventListener('change', (e) => tipoTerceiro = e.target.value);
