@@ -237,68 +237,33 @@ table td {
    height: auto;
    margin-left: 20%;
 }
-
-/* Container do Menu */
+/* menu */
 .nav {
     display: flex;
     height: 100%;
-    gap: 0;
+    gap: 0; /* remove espaço entre os itens */
     background: var(--cor-btn-padrao);
-    flex-wrap: nowrap; /* Impede que os itens quebrem linha */
-    overflow-x: auto;  /* Permite scroll horizontal em telas muito pequenas */
-    -webkit-overflow-scrolling: touch; /* Scroll suave no mobile */
 }
-
-/* Itens do Menu (Base Mobile e Telas Pequenas) */
 .nav a {
     display: flex;
     align-items: center;
-    justify-content: center;
     height: 50px;
-    padding: 0 15px; /* Padding menor no mobile para economizar espaço */
+    padding: 0 20px;
     text-decoration: none;
     color: var(--cor-texto);
     font-weight: 500;
     background: var(--cor-primaria);
-    white-space: nowrap; /* Impede o texto de quebrar em duas linhas */
-    flex-grow: 1;        /* Faz os botões distribuírem o espaço igualmente */
-    
-    /* No mobile, removemos o clip-path para priorizar a leitura do texto */
-    clip-path: none; 
-    margin-right: 0;
-    transition: background 0.2s, color 0.2s;
+    clip-path: polygon(5% 0, 100% 0, 95% 100%, 0% 100%);
 }
-
 .nav a:hover {
     color: var(--cor-texto-btn);
     background: var(--cor-btn-padrao);
 }
-
-
-@media (min-width: 768px) {
-    .nav a {
-        padding: 0 25px; /* Mais espaço para o texto */
-        flex-grow: 0;    /* Botões assumem o tamanho natural do texto */
-        
-        /* Ativa o design de paralelogramo apenas onde há espaço */
-        clip-path: polygon(15px 0%, 100% 0%, calc(100% - 15px) 100%, 0% 100%);
-        margin-right: -15px; 
-    }
-
-    .nav a:last-child {
-        margin-right: 0;
-    }
-}
-
-/* Container de ações adicionais */
 .acoes {
     display: flex;
     align-items: center;
     gap: 15px;
 }
-
-
-
 /* sino */
 .notificacao {
     position: relative;

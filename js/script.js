@@ -1,15 +1,7 @@
 // Aguarda a página carregar completamente
 document.addEventListener("DOMContentLoaded", () => {    
     
-    // Configuração para disparar o Login ao apertar ENTER nos campos
-    // Substitua o bloco dos camposTexto por este:
-    const formulario = document.querySelector("form"); // Garanta que tem <form> no seu HTML
-    if (formulario) {
-        formulario.addEventListener("submit", (evento) => {
-            evento.preventDefault(); // Impede o recarregamento padrão
-            login();
-        });
-    }
+    
 
     // Seleciona o seu botão de cadastro pelo ID
     const btnCadastrar = document.getElementById("btnUsuario");

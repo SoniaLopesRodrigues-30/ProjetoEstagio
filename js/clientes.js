@@ -25,7 +25,23 @@ document.addEventListener('DOMContentLoaded', function() {
     
     tpTerceiro?.addEventListener('change', (e) => tipoTerceiro = e.target.value);
     uf?.addEventListener('change', (e) => optUf = e.target.value);
-    btnSalvar?.addEventListener('click', salvarCliente);
+    
+    // CORREÇÃO: Escuta o envio do formulário em vez do clique do botão
+    const formElement = document.getElementById('formCliente');
+    if (formElement) {
+        formElement.addEventListener('submit', function(e) {
+            e.preventDefault(); // Impede a página de recarregar no celular
+            salvarCliente();
+        });
+    } else {
+        // Fallback caso não use a tag <form>: escuta tanto clique quanto toque
+        btnSalvar?.addEventListener('click', salvarCliente);
+        btnSalvar?.addEventListener('touchend', function(e) {
+            e.preventDefault(); // Evita clique duplo no celular
+            salvarCliente();
+        });
+    }
+
     document.getElementById('btnNovo')?.addEventListener('click', limparCliente);
     btnExcluir?.addEventListener('click', excluirCliente);
 
@@ -46,10 +62,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Dispara a leitura inicial ao carregar a página
     verificarNotificacoesSino(5);
 });
-
 // ==========================================
 // NAVEGAÇÃO ENTRE CADASTROS
 // ==========================================
