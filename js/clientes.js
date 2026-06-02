@@ -2,48 +2,36 @@
 //  VARIÁVEIS GLOBAIS
 // ==========================================
 let idCliente = 0;
-let codigoBusca = 0; // Ajustado para 0 para alinhar com o Modo Novo
-let indiceExistente = -1; 
+let codigoBusca = 1;
+let indiceExistente = -1; // Inicializado em -1 para iniciar em Modo Novo
 
 let tipoTerceiro = "Cliente";
 let optUf = "RS";
 
+
 const btnExcluir = document.getElementById('btnCancelar');
 const btnSalvar = document.getElementById('btnSalvar');
 const formCliente = document.getElementById('formCliente');
+const formOrdServ = document.getElementById('formOrdServ');
 const tpTerceiro = document.getElementById('tpTerceiro');
 const uf = document.getElementById('uf');
+const razao = document.getElementById('nomeCliente');
 
 // ==========================================
 // INICIALIZAÇÃO DA TABELA
 // ==========================================
 document.addEventListener('DOMContentLoaded', function() {
-    // Força a limpeza e geração do ID inicial com segurança
     limparCliente(); 
     
     tpTerceiro?.addEventListener('change', (e) => tipoTerceiro = e.target.value);
     uf?.addEventListener('change', (e) => optUf = e.target.value);
-    
-    // Configuração do formulário focada em performance mobile
-    if (formCliente) {
-        formCliente.addEventListener('submit', function(e) {
-            e.preventDefault(); 
-            salvarCliente();
-        });
-    } else {
-        btnSalvar?.addEventListener('click', salvarCliente);
-        btnSalvar?.addEventListener('touchend', function(e) {
-            e.preventDefault(); 
-            salvarCliente();
-        });
-    }
-
+    btnSalvar?.addEventListener('click', salvarCliente);
     document.getElementById('btnNovo')?.addEventListener('click', limparCliente);
     btnExcluir?.addEventListener('click', excluirCliente);
+
     document.getElementById('btnAnterior')?.addEventListener('click', () => mudarCadastro(-1));
     document.getElementById('btnProximo')?.addEventListener('click', () => mudarCadastro(1));  
 
-    // Dropdown do Sino de Notificações
     const btnSino = document.getElementById('btnSino');
     const dropdown = document.getElementById('listaNiverDropdown');
     
@@ -58,9 +46,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    if (typeof verificarNotificacoesSino === 'function') {
-        verificarNotificacoesSino(5);
-    }
+    // Dispara a leitura inicial ao carregar a página
+    verificarNotificacoesSino(5);
 });
 
 // ==========================================
