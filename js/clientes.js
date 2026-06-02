@@ -2,52 +2,48 @@
 //  VARIÁVEIS GLOBAIS
 // ==========================================
 let idCliente = 0;
-let codigoBusca = 1;
-let indiceExistente = -1; // Inicializado em -1 para iniciar em Modo Novo
+let codigoBusca = 0; // Ajustado para 0 para alinhar com o Modo Novo
+let indiceExistente = -1; 
 
 let tipoTerceiro = "Cliente";
 let optUf = "RS";
 
-
 const btnExcluir = document.getElementById('btnCancelar');
 const btnSalvar = document.getElementById('btnSalvar');
 const formCliente = document.getElementById('formCliente');
-const formOrdServ = document.getElementById('formOrdServ');
 const tpTerceiro = document.getElementById('tpTerceiro');
 const uf = document.getElementById('uf');
-const razao = document.getElementById('nomeCliente');
 
 // ==========================================
 // INICIALIZAÇÃO DA TABELA
 // ==========================================
 document.addEventListener('DOMContentLoaded', function() {
+    // Força a limpeza e geração do ID inicial com segurança
     limparCliente(); 
     
     tpTerceiro?.addEventListener('change', (e) => tipoTerceiro = e.target.value);
     uf?.addEventListener('change', (e) => optUf = e.target.value);
     
-    // CORREÇÃO: Escuta o envio do formulário em vez do clique do botão
-    const formElement = document.getElementById('formCliente');
-    if (formElement) {
-        formElement.addEventListener('submit', function(e) {
-            e.preventDefault(); // Impede a página de recarregar no celular
+    // Configuração do formulário focada em performance mobile
+    if (formCliente) {
+        formCliente.addEventListener('submit', function(e) {
+            e.preventDefault(); 
             salvarCliente();
         });
     } else {
-        // Fallback caso não use a tag <form>: escuta tanto clique quanto toque
         btnSalvar?.addEventListener('click', salvarCliente);
         btnSalvar?.addEventListener('touchend', function(e) {
-            e.preventDefault(); // Evita clique duplo no celular
+            e.preventDefault(); 
             salvarCliente();
         });
     }
 
     document.getElementById('btnNovo')?.addEventListener('click', limparCliente);
     btnExcluir?.addEventListener('click', excluirCliente);
-
     document.getElementById('btnAnterior')?.addEventListener('click', () => mudarCadastro(-1));
     document.getElementById('btnProximo')?.addEventListener('click', () => mudarCadastro(1));  
 
+    // Dropdown do Sino de Notificações
     const btnSino = document.getElementById('btnSino');
     const dropdown = document.getElementById('listaNiverDropdown');
     
@@ -62,8 +58,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    verificarNotificacoesSino(5);
+    if (typeof verificarNotificacoesSino === 'function') {
+        verificarNotificacoesSino(5);
+    }
 });
+
 // ==========================================
 // NAVEGAÇÃO ENTRE CADASTROS
 // ==========================================
