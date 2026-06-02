@@ -2,15 +2,14 @@
 document.addEventListener("DOMContentLoaded", () => {    
     
     // Configuração para disparar o Login ao apertar ENTER nos campos
-    const camposTexto = document.querySelectorAll("#usuario, #senha");
-    camposTexto.forEach(campo => {
-        campo.addEventListener("keydown", (evento) => {
-            if (evento.key === "Enter") {
-                evento.preventDefault(); // Evita comportamentos estranhos do formulário
-                login();
-            }
+    // Substitua o bloco dos camposTexto por este:
+    const formulario = document.querySelector("form"); // Garanta que tem <form> no seu HTML
+    if (formulario) {
+        formulario.addEventListener("submit", (evento) => {
+            evento.preventDefault(); // Impede o recarregamento padrão
+            login();
         });
-    });
+    }
 
     // Seleciona o seu botão de cadastro pelo ID
     const btnCadastrar = document.getElementById("btnUsuario");
