@@ -8,7 +8,6 @@ let indiceExistente = -1; // Inicializado em -1 para iniciar em Modo Novo
 let tipoTerceiro = "Cliente";
 let optUf = "RS";
 
-
 const btnExcluir = document.getElementById('btnCancelar');
 const btnSalvar = document.getElementById('btnSalvar');
 const formCliente = document.getElementById('formCliente');
@@ -36,19 +35,36 @@ document.addEventListener('DOMContentLoaded', function() {
     const dropdown = document.getElementById('listaNiverDropdown');
     
     if (btnSino && dropdown) {
-        btnSino.addEventListener('click', (e) => {
+        // Função única para alternar o menu
+        const alternarDropdown = (e) => {
+            e.preventDefault(); // Evita clique duplo no mobile
             e.stopPropagation(); 
-            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
-        });
+            
+            const estiloAtual = window.getComputedStyle(dropdown).display;
+            dropdown.style.display = estiloAtual === 'none' ? 'block' : 'none';
+        };
 
+        // Escuta clique e toque no botão do sino
+        btnSino.addEventListener('click', alternarDropdown);
+        btnSino.addEventListener('touchstart', alternarDropdown, { passive: false });
+
+        // Fecha o dropdown ao clicar fora (computadores)
         document.addEventListener('click', () => {
             dropdown.style.display = 'none';
         });
-    }
+
+        // Fecha o dropdown ao tocar fora (celulares) sem quebrar a rolagem da tela
+        document.addEventListener('touchend', (e) => {
+            if (!btnSino.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+    } // <-- ESSA CHAVE ESTAVA FALTANDO E QUEBRAVA O CÓDIGO
 
     // Dispara a leitura inicial ao carregar a página
     verificarNotificacoesSino(5);
 });
+
 
 // ==========================================
 // NAVEGAÇÃO ENTRE CADASTROS
@@ -301,27 +317,45 @@ function verificarNotificacoesSino(diasDeAntecedencia = 5) {
 
 
 function limparCliente() {
-    // Limpa todos os inputs e selects
-    document.querySelectorAll('input, textarea').forEach(el => el.value = "");
+    // Limpa os campos do formulário de clientes 
+    const form = document.getElementById('formCliente');
+    if (form) {
+        form.reset(); 
+    } else {
+        // Alternativa caso não use a tag <form>: limpa apenas inputs que NÃO sejam botões
+        document.querySelectorAll('#formCliente input:not([type="button"]):not([type="submit"]), #formCliente textarea').forEach(el => el.value = "");
+    }
     
-    const tabela = JSON.parse(localStorage.getItem('clientes')) || [];
+    // Busca  os dados do localStorage
+    let tabela = [];
+    try {
+        tabela = JSON.parse(localStorage.getItem('clientes')) || [];
+    } catch (e) {
+        console.error("Erro ao ler localStorage:", e);
+        tabela = [];
+    }
     
-    // Define o próximo ID automático
+    //Define o próximo ID automático
     const maiorCodigo = tabela.reduce((max, c) => Math.max(max, Number(c.codigo) || 0), 0);
     const proximoNumero = maiorCodigo + 1;
 
+    // Insere o código gerado no campo 
     const campoCodigo = document.getElementById('codigo');
-    if (campoCodigo) campoCodigo.value = proximoNumero;
+    if (campoCodigo) {
+        campoCodigo.value = proximoNumero;
+    }
 
-    // Reseta padrões
+    // Reseta padrões visuais e variáveis globais
     const campoUf = document.getElementById('uf');
     if (campoUf) campoUf.value = "RS"; 
     
-    tipoTerceiro = "";
+    tipoTerceiro = "Cliente"; 
     optUf = "RS";
-    idCliente = -1; 
+    idCliente = 0;            
+    indiceExistente = -1;     
+    
     const contador = document.getElementById('contador');
-    if (contador) contador.innerText = "Novo Cadastro";
+    if (contador) {
+        contador.innerText = "Novo Cadastro";
+    }
 }
-
-
