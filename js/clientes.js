@@ -26,8 +26,10 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault(); 
         });
     }
+    setTimeout(() => {
+        limparCliente(); 
+    }, 100);
     
-    limparCliente(); 
     
     tpTerceiro?.addEventListener('change', (e) => tipoTerceiro = e.target.value);
     uf?.addEventListener('change', (e) => optUf = e.target.value);
