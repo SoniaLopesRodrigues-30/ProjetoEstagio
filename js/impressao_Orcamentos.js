@@ -1,10 +1,3 @@
-
-// botão imprimir
-const btnimprimir = document.getElementById('btnImprimir');
-if (btnimprimir) {
-    btnimprimir.addEventListener('click', imprimirOrcamento);
-}
-
 function imprimirOrcamento() {    
     const nrOrcInput = document.getElementById('nrOrc');
     const nrOrc = nrOrcInput?.value.trim() || "";
@@ -31,13 +24,16 @@ function imprimirOrcamento() {
         return;
     }
 
-    // Mapeia os dados 
+    // Mapeia os dados básicos
     const dataOrc = orcamento.data || "";
     const nmcliente = orcamento.cliente || "";
     const cnpj = orcamento.cnpj || "";
     const fone = orcamento.foneCli || "";
     const obs = orcamento.obs || "Nenhuma";
-    const vltotgeral = orcamento.vlTotGeral || "0.00";
+    
+    // Garante que o valor total seja tratado como número para aplicar o toFixed(2)
+    const vltotgeralNum = parseFloat(orcamento.vlTotGeral) || 0;
+    const vltotgeralFormatado = vltotgeralNum.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     
     let linhashtml = "";
     const listaItens = orcamento.itens || [];
@@ -53,14 +49,15 @@ function imprimirOrcamento() {
             <tr>
                 <td>${desc}</td>
                 <td style="text-align: center;">${qtd}</td>
-                <td style="text-align: right;">R$ ${valor.toFixed(2)}</td>
-                <td style="text-align: right;">R$ ${total.toFixed(2)}</td>
+                <td style="text-align: right;">R$ ${valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                <td style="text-align: right;">R$ ${total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
             </tr>
         `;
     });
 
-    // ABRE A JANELA DE IMPRESSÃO 
+    // ABRE A JANELA DE IMPRESSÃO
     const janelaimpressao = window.open('', '_blank', 'width=850,height=900');
+    
     if (!janelaimpressao) {
         alert("O bloqueador de pop-ups impediu a abertura da impressão.");
         return;
@@ -71,7 +68,7 @@ function imprimirOrcamento() {
     const cidadeUF = `${orcamento.endCidade || ""} - ${orcamento.endUF || ""}`.trim();
     const condPgto = orcamento.condPgto || "A combinar";  
 
-    // 1. Cálculos de data e validade automática (15 dias úteis/corridos padrão)
+    //  Cálculos de data e validade automática (15 dias úteis/corridos padrão)
     const dataEmissaoVal = orcamento.data ? new Date(orcamento.data + 'T00:00:00') : new Date();
     const dataFormatada = orcamento.data ? orcamento.data.split('-').reverse().join('/') : dataEmissaoVal.toLocaleDateString('pt-BR');
     
@@ -111,15 +108,15 @@ function imprimirOrcamento() {
                 </div>
             </div>
             
-                        <!-- Informações do Cliente e Pagamento -->
+            <!-- Informações do Cliente e Pagamento -->
             <div class="grid-info">
                 <div class="card">
                     <div class="card-title">Dados do Cliente</div>
                     <div class="info-item"><strong>Cliente:</strong> ${nmcliente}</div>
                     ${cnpj ? `<div class="info-item"><strong>CNPJ/CPF:</strong> ${cnpj}</div>` : ''}
                     ${fone ? `<div class="info-item"><strong>Telefone:</strong> ${fone}</div>` : ''}
-                    ${enderecoCompleto ? `<div class="info-item"><strong>Endereço:</strong> ${enderecoCompleto}</div>` : ''}
-                    ${cidadeUF ? `<div class="info-item"><strong>Cidade:</strong> ${cidadeUF}</div>` : ''}
+                    ${enderecoCompleto && enderecoCompleto !== ',' ? `<div class="info-item"><strong>Endereço:</strong> ${enderecoCompleto}</div>` : ''}
+                    ${cidadeUF && cidadeUF !== '-' ? `<div class="info-item"><strong>Cidade:</strong> ${cidadeUF}</div>` : ''}
                 </div>
                 
                 <div class="card">
@@ -149,18 +146,18 @@ function imprimirOrcamento() {
             <!-- Blocos Finais -->
             <div class="resumo-container">
                 <div class="observacoes">
-                    <strong>Observações / Termos:</strong>
+                    <strong>Observações / Termos:</strong><br>
                     ${obs}
                 </div>
                 
                 <div class="valores-finais">
                     <div class="total-row">
                         <span class="label">Subtotal dos itens</span>
-                        <span>R$ ${vltotgeral}</span>
+                        <span>R$ ${vltotgeralFormatado}</span>
                     </div>
                     <div class="total-row principal">
                         <span class="label">TOTAL GERAL</span>
-                        <span class="valor-total">R$ ${vltotgeral}</span>
+                        <span class="valor-total">R$ ${vltotgeralFormatado}</span>
                     </div>
                 </div>
             </div>
@@ -182,6 +179,4 @@ function imprimirOrcamento() {
     `);
 
     janelaimpressao.document.close();
-    
-    
 }
